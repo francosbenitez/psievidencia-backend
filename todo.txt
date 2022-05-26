@@ -1,0 +1,2 @@
+- It will work as a Google Forms.
+  - It will allow loading photos statically.
