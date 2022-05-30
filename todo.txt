@@ -1,5 +1,7 @@
+
 - It will work as a Google Forms. PENDING TO REVIEW
   - It will allow loading photos statically. PENDING TO REVIEW
 - Implement pagination.
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
+- Change SQLite for PostgreSQL. DONE
