@@ -30,9 +30,7 @@
     <h2>Page Number: {{ page.number }}</h2>
 
     {% for psychologist in page.object_list %}
-    <div class="psychologist-item">
-      {{ psychologist.title }} by {{ psychologist.author}}
-    </div>
+    <div class="psychologist-item">{{ psychologist.name }}</div>
     <br />
     {% endfor %}
 
