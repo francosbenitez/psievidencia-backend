@@ -77,7 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'psievidencia-db',
-        'USER': 'francobenitez',
+        'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': 5432,
