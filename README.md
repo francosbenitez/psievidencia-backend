@@ -1,4 +1,4 @@
-# Psievidencia backend
+# Psievidencia Backend
 - Built a server application with Python.
 
 ## Code and Resources Used
@@ -7,7 +7,7 @@
 ## Live Demo
 - *Not available yet.* 
 
-## Running locally
+## Running Locally
 
 1. Clone this repo
 1. cd into this repo
