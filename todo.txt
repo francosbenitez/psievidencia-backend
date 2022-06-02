@@ -6,3 +6,5 @@
 - Serialize PaginatedPsychologists. DONE
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
+- Delete db.sqlite3.
+- Test deleting staticfiles, to see how necessary they are.
