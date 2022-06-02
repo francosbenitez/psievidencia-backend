@@ -1,8 +1,10 @@
 
 - It will work as a Google Forms. PENDING TO REVIEW
   - It will allow loading photos statically. PENDING TO REVIEW
-- Implement pagination.
+- Implement pagination. DONE
+- Change SQLite for PostgreSQL. DONE
+- Serialize PaginatedPsychologists. DONE
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
-- Change SQLite for PostgreSQL. DONE
-- Serialize PaginatedPsychologists
+- Delete db.sqlite3.
+- Test deleting staticfiles, to see how necessary they are.
