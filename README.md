@@ -1,37 +1,13 @@
-# Psievidencia backend
+# Psievidencia Backend
+- Built a server application with Python.
 
-## Schema
+## Code and Resources Used
+- **Main Technologies:** Django, PostgreSQL, Django REST Framework.
 
-**User**
+## Live Demo
+- *Not available yet.* 
 
-* email
-* password
-
-**UserProfile**
-
-* user_id
-* first_name
-* last_name
-* image
-* facebook_profile
-* twitter_profile
-* linkedin_profile
-* instagram_profile
-
-## API
-
-**/users**
-
-* GET
-* POST
-
-**/users/:id**
-
-* GET
-* PUT
-* DELETE
-
-## Running locally
+## Running Locally
 
 1. Clone this repo
 1. cd into this repo
