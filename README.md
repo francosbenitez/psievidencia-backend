@@ -5,7 +5,7 @@
 - **Main Technologies:** Django, PostgreSQL, Django REST Framework.
 
 ## Live Demo
-- *Not available yet.* 
+- [API](https://secret-hamlet-81810.herokuapp.com/)
 
 ## Running Locally
 
