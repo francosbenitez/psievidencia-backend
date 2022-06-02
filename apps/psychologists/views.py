@@ -17,7 +17,7 @@ class PaginatedPsychologists(APIView):
     serializer = PsychologistSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-class LatestPsychologistsList(APIView):
+class LatestPsychologists(APIView):
   def get(self, request, format=None):
     psychologists = Psychologist.objects.all()[0:4]
     serializer = PsychologistSerializer(psychologists, many=True)
