@@ -1,35 +1,11 @@
 # Psievidencia backend
+- Built a server application with Python.
 
-## Schema
+## Code and Resources Used
+- **Main Technologies:** Django, PostgreSQL, Django REST Framework.
 
-**User**
-
-* email
-* password
-
-**UserProfile**
-
-* user_id
-* first_name
-* last_name
-* image
-* facebook_profile
-* twitter_profile
-* linkedin_profile
-* instagram_profile
-
-## API
-
-**/users**
-
-* GET
-* POST
-
-**/users/:id**
-
-* GET
-* PUT
-* DELETE
+## Live Demo
+- *Not available yet.* 
 
 ## Running locally
 
