@@ -5,3 +5,4 @@
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
 - Change SQLite for PostgreSQL. DONE
+- Serialize PaginatedPsychologists
