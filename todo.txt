@@ -7,5 +7,6 @@
 - Delete db.sqlite3. DONE
 - Test deleting staticfiles, to see how necessary they are. DONE
 - Setup search API.
+- Create PsychologistDetail API. DONE
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
