@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator 
 from django.http import Http404
+from django.db.models import Q
 
 from .models import Psychologist
 from .serializers import PsychologistSerializer
@@ -8,6 +9,7 @@ from .serializers import PsychologistSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import api_view
 
 class PaginatedPsychologists(APIView):
   def get(self, request, format=None):
@@ -29,3 +31,22 @@ class PsychologistDetail(APIView):
     psychologist = self.get_object(psychologist_id)
     serializer = PsychologistSerializer(psychologist)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def search(request):
+  print('>> request', request)
+  query = request.data.get('query', '')
+  print('>> query: ', query)
+  if query:
+    psychologists = Psychologist.objects.filter(
+        Q(name__icontains=query)
+      )
+    serializer = PsychologistSerializer(psychologists, many=True)
+    return Response(serializer.data)
+  else:
+    return Response({"psychologists": []})
+
+# TO-DO: Pass the following JSON structure to the content
+# {
+#   "query": "fr"
+# }
