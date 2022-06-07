@@ -13,7 +13,8 @@ from rest_framework.decorators import api_view
 
 class PaginatedPsychologists(APIView):
   def get(self, request, format=None):
-    psychologists = Psychologist.objects.all()
+    psychologists = Psychologist.objects.all().order_by('id') 
+
     paginator = PageNumberPagination()
     paginator.page_size = 10
     result_page = paginator.paginate_queryset(psychologists, request)
@@ -34,7 +35,7 @@ class PsychologistDetail(APIView):
 
 @api_view(['GET'])
 def search(request, format=None):
-  psychologists = Psychologist.objects.order_by('-id')  
+  psychologists = Psychologist.objects.order_by('id')  
 
   name = None
   specialization = None
