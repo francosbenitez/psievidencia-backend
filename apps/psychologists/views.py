@@ -32,21 +32,27 @@ class PsychologistDetail(APIView):
     serializer = PsychologistSerializer(psychologist)
     return Response(serializer.data)
 
-@api_view(['POST'])
-def search(request):
-  print('>> request', request)
-  query = request.data.get('query', '')
-  print('>> query: ', query)
-  if query:
-    psychologists = Psychologist.objects.filter(
-        Q(name__icontains=query)
-      )
+@api_view(['GET'])
+def search(request, format=None):
+  psychologists = Psychologist.objects.order_by('-id')  
+
+  name = None
+  specialization = None
+
+  if 'name' in request.GET:
+    name = request.GET['name']
+
+  if 'specialization' in request.GET:
+    specialization = request.GET['specialization']
+  
+  if name or specialization:
+    if name is not None: 
+        psychologists = psychologists.filter(name__icontains=name)
+
+    if specialization is not None: 
+        psychologists = psychologists.filter(specialization__icontains=specialization)
+
     serializer = PsychologistSerializer(psychologists, many=True)
     return Response(serializer.data)
   else:
     return Response({"psychologists": []})
-
-# TO-DO: Pass the following JSON structure to the content
-# {
-#   "query": "fr"
-# }
