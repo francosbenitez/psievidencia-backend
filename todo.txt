@@ -1,6 +1,6 @@
 
-- It will work as a Google Forms. PENDING TO REVIEW
-  - It will allow loading photos statically. PENDING TO REVIEW
+- Build the form (as a Google Forms).
+  - Allow loading photos statically.
 - Implement pagination. DONE
 - Change SQLite for PostgreSQL. DONE
 - Serialize PaginatedPsychologists. DONE
