@@ -1,7 +1,0 @@
-{
-  "python.formatting.provider": "black",
-  "editor.defaultFormatter": null,
-  "editor.insertSpaces": true,
-  "editor.tabSize": 2,
-  "editor.formatOnSave": true
-}
