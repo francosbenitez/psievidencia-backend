@@ -25,3 +25,6 @@ class Command(BaseCommand):
         #   "id": 1
         # }
         # When people select the filter by specialization -let's say by "Sexología"-, it must appear the set of psychologists ("id") who have an specialization in "Sexología".
+        # API: /api/psychologists?specialization[]=1
+        # where "1" is the ID of the specialization.j
+        # The result will be the set of psychologists who has that specialization.
