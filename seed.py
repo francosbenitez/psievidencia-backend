@@ -29,7 +29,7 @@ with open(CSV_PATH, newline="") as csvfile:
     for i, row in enumerate(reader):
         print("row", row)
         Psychologist.objects.create(
-            id=i,
+            id=i + 1,
             date=row[0],
             name=row[1],
             email=row[2],
