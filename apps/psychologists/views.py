@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.db.models import Q
 import pandas as pd
-from .models import Psychologist
+from .models import Psychologist, Specialization
 from .serializers import PsychologistSerializer, SpecializationSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -36,21 +36,7 @@ class PsychologistDetail(APIView):
 
 class SpecializationsList(APIView):
     def get(self, request, format=None):
-        df = pd.DataFrame(list(Psychologist.objects.all().values()))
-        new_df = (
-            df[["id", "specialization"]]
-            .assign(specialization=df["specialization"].str.split(","))
-            .explode("specialization")
-            .reset_index(drop=True)
-        )
-        new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
-        new_df["id"] = new_df.index + 1
-
-        new_df["specialization"] = new_df["specialization"].apply(
-            lambda row: row.strip() if row is not None else row
-        )
-
-        specializations = new_df.to_dict("records")
+        specializations = Specialization.objects.all()
         serializer = SpecializationSerializer(specializations, many=True)
         return Response(serializer.data)
 
