@@ -1,12 +1,13 @@
 import os
 import django
 import requests
+import pandas as pd
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 import csv
-from apps.psychologists.models import Psychologist
+from apps.psychologists.models import Psychologist, Specialization
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
@@ -19,15 +20,12 @@ csv_file.close()
 
 CSV_PATH = "./psychologists.csv"
 
-contSuccess = 0
 Psychologist.objects.all().delete()
 
 with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
     next(reader)
-    print("Loading...")
     for i, row in enumerate(reader):
-        print("row", row)
         Psychologist.objects.create(
             id=i + 1,
             date=row[0],
@@ -57,5 +55,24 @@ with open(CSV_PATH, newline="") as csvfile:
             additional_data=row[24],
             name_2=row[25],
         )
-        contSuccess += 1
-    print(f"{str(contSuccess)} inserted successfully! ")
+
+    df = pd.DataFrame(list(Psychologist.objects.all().values()))
+    new_df = (
+        df[["id", "specialization"]]
+        .assign(specialization=df["specialization"].str.split(","))
+        .explode("specialization")
+        .reset_index(drop=True)
+    )
+    new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
+    new_df["id"] = new_df.index + 1
+
+    new_df["specialization"] = new_df["specialization"].apply(
+        lambda row: row.strip() if row is not None else row
+    )
+
+    for row in new_df.itertuples():
+        Specialization.objects.create(
+            id=row[0],
+            psychologist_id=row[1],
+            specialization=row[2],
+        )
