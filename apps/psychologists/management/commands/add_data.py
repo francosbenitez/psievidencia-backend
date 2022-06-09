@@ -56,3 +56,8 @@ class Command(BaseCommand):
         df.to_sql(
             Psychologist._meta.db_table, if_exists="replace", con=engine, index=False
         )
+
+        with engine.connect() as con:
+            con.execute(
+                'ALTER TABLE psychologists_psychologist ADD PRIMARY KEY ("id");'
+            )
