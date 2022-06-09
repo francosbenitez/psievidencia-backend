@@ -43,7 +43,7 @@ class SpecializationsList(APIView):
             .explode("specialization")
             .reset_index(drop=True)
         )
-        new_df.columns = new_df.columns.str.replace("id", "psychologistId")
+        new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
         new_df["id"] = new_df.index + 1
 
         new_df["specialization"] = new_df["specialization"].apply(

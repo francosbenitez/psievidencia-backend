@@ -39,4 +39,4 @@ class PsychologistSerializer(serializers.ModelSerializer):
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialization
-        fields = ("id", "specialization", "psychologistId")
+        fields = ("id", "specialization", "psychologist_id")
