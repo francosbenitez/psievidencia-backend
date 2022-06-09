@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Psychologist(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.DateField(auto_now=True)
@@ -28,6 +29,15 @@ class Psychologist(models.Model):
     phone_number = models.CharField(max_length=1000, default="")
     additional_data = models.CharField(max_length=1000, default="")
     name_2 = models.CharField(max_length=1000, default="")
-    
+
     def __str__(self):
         return self.name
+
+
+class Specialization(models.Model):
+    id = models.IntegerField(primary_key=True)
+    specialization = models.CharField(max_length=1000, default="")
+    psychologistId = models.IntegerField(default=0)
+
+    # def __str__(self):
+    #     return self.specialization
