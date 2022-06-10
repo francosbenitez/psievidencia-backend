@@ -44,6 +44,7 @@ class SpecializationsList(APIView):
 @api_view(["GET"])
 def search(request, format=None):
     psychologists = Psychologist.objects.order_by("id")
+    specializations = Specialization.objects.all()
 
     name = None
     specialization = None
@@ -53,8 +54,8 @@ def search(request, format=None):
     if "name" in request.GET:
         name = request.GET["name"]
 
-    if "specialization" in request.GET:
-        specialization = request.GET["specialization"]
+    if "specialization[]" in request.GET:
+        specialization = list(map(int, request.GET.getlist("specialization[]")))
 
     if "work_population" in request.GET:
         work_population = request.GET["work_population"]
@@ -67,9 +68,7 @@ def search(request, format=None):
             psychologists = psychologists.filter(name__icontains=name)
 
         if specialization is not None:
-            psychologists = psychologists.filter(
-                specialization__icontains=specialization
-            )
+            psychologists = psychologists.filter(specializations__in=specialization)
 
         if work_population is not None:
             psychologists = psychologists.filter(
