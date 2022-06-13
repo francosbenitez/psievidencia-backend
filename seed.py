@@ -70,9 +70,17 @@ with open(CSV_PATH, newline="") as csvfile:
         lambda row: row.strip() if row is not None else row
     )
 
-    for row in new_df.itertuples():
+    specialization_options = new_df["specialization"].value_counts().index.tolist()
+
+    for i, item in enumerate(specialization_options):
         Specialization.objects.create(
-            id=row[0],
-            psychologist_id=row[1],
-            specialization=row[2],
+            id=i,
+            specialization=item,
         )
+
+    for row in new_df.itertuples():
+        for specialization_option in Specialization.objects.all().values():
+            if row[2] == specialization_option["specialization"]:
+                Specialization.objects.get(
+                    pk=specialization_option["id"]
+                ).psychologists.add(row[1])

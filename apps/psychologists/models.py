@@ -37,9 +37,7 @@ class Psychologist(models.Model):
 class Specialization(models.Model):
     id = models.IntegerField(primary_key=True)
     specialization = models.CharField(max_length=1000, default="")
-    psychologist = models.ForeignKey(
-        Psychologist, related_name="specializations", on_delete=models.CASCADE
-    )
+    psychologists = models.ManyToManyField(Psychologist, related_name="specializations")
 
     # def __str__(self):
     #     return self.specialization
