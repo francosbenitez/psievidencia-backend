@@ -72,7 +72,7 @@ with open(CSV_PATH, newline="") as csvfile:
 
     specialization_options = new_df["specialization"].value_counts().index.tolist()
 
-    for i, item in enumerate(specialization_options):
+    for i, item in enumerate(specialization_options, start=1):
         Specialization.objects.create(
             id=i,
             specialization=item,
