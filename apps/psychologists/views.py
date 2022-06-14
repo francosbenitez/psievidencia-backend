@@ -69,7 +69,9 @@ def search(request, format=None):
 
         if specialization is not None:
             print("specialization", specialization)
-            psychologists = psychologists.filter(specializations__id__in=specialization)
+            psychologists = psychologists.filter(
+                specializations__id__in=specialization
+            ).distinct("id")
 
         if work_population is not None:
             psychologists = psychologists.filter(
