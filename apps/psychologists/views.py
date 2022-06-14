@@ -68,7 +68,8 @@ def search(request, format=None):
             psychologists = psychologists.filter(name__icontains=name)
 
         if specialization is not None:
-            psychologists = psychologists.filter(specializations__in=specialization)
+            print("specialization", specialization)
+            psychologists = psychologists.filter(specializations__id__in=specialization)
 
         if work_population is not None:
             psychologists = psychologists.filter(
@@ -80,7 +81,10 @@ def search(request, format=None):
                 therapeutic_model__icontains=therapeutic_model
             )
 
-        serializer = PsychologistSerializer(psychologists, many=True)
-        return Response(serializer.data)
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(psychologists, request)
+        serializer = PsychologistSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
     else:
         return Response({"psychologists": []})
