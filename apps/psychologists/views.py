@@ -36,9 +36,12 @@ class PsychologistDetail(APIView):
 
 class SpecializationsList(APIView):
     def get(self, request, format=None):
-        specializations = Specialization.objects.all()
-        serializer = SpecializationSerializer(specializations, many=True)
-        return Response(serializer.data)
+        specializations = Specialization.objects.all().order_by("id")
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(specializations, request)
+        serializer = SpecializationSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(["GET"])
