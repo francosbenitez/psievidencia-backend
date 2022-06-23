@@ -41,15 +41,15 @@ class PaginatedPsychologists(APIView):
                 cursor = connection.cursor()
                 query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."date", "psychologists_psychologist"."name", "psychologists_psychologist"."email", "psychologists_psychologist"."gender", "psychologists_psychologist"."registration_type", "psychologists_psychologist"."registration_number", "psychologists_psychologist"."institution", "psychologists_psychologist"."team", "psychologists_psychologist"."province", "psychologists_psychologist"."city", "psychologists_psychologist"."education", "psychologists_psychologist"."therapeutic_model", "psychologists_psychologist"."gender_perspective", "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population", "psychologists_psychologist"."work_modality", "psychologists_psychologist"."online", "psychologists_psychologist"."prepaid", "psychologists_psychologist"."prepaid_type", "psychologists_psychologist"."invoice", "psychologists_psychologist"."sign_language", "psychologists_psychologist"."session_languages", "psychologists_psychologist"."social_networks", "psychologists_psychologist"."phone_number", "psychologists_psychologist"."additional_data", "psychologists_psychologist"."name_2" FROM "psychologists_psychologist" INNER JOIN "psychologists_specialization_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_specialization_psychologists"."psychologist_id") WHERE "psychologists_specialization_psychologists"."specialization_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
 
-                specializationLen = len(specialization)
-                specializationTuple = tuple(specialization)
+                specialization_len = len(specialization)
+                specialization_tuple = tuple(specialization)
 
-                if specializationLen == 1:
-                    specializationTuple = "(%s)" % ", ".join(
-                        map(repr, specializationTuple)
+                if specialization_len == 1:
+                    specialization_tuple = "(%s)" % ", ".join(
+                        map(repr, specialization_tuple)
                     )
 
-                query = query.format(specializationTuple, specializationLen)
+                query = query.format(specialization_tuple, specialization_len)
 
                 def dictfetchall(cursor):
                     "Returns all rows from a cursor as a dict"
