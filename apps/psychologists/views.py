@@ -60,7 +60,7 @@ class PaginatedPsychologists(APIView):
                     ]
 
                 cursor.execute(query)
-                psychologists = dictfetchall(cursor)
+                psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
             if work_population is not None:
                 psychologists = psychologists.filter(
