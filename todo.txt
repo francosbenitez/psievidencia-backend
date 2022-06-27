@@ -10,3 +10,4 @@
 - Create PsychologistDetail API. DONE
 - Format data for visualization easily. 
   - To be consumed by JavaScript (D3.js or any other library).
+- Possibility to vote psychologists with -stars- by different, but unique (via email), users.
