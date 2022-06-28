@@ -25,17 +25,26 @@ class PaginatedPsychologists(APIView):
         work_population = None
         therapeutic_model = None
 
+        def dictfetchall(cursor):
+            "Returns all rows from a cursor as a dict"
+            desc = cursor.description
+            return [
+                dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()
+            ]
+
         if "name" in request.GET:
             name = request.GET["name"]
 
         if "specialization[]" in request.GET:
             specialization = list(map(int, request.GET.getlist("specialization[]")))
 
+        if "therapeutic_model[]" in request.GET:
+            therapeutic_model = list(
+                map(int, request.GET.getlist("therapeutic_model[]"))
+            )
+
         if "work_population" in request.GET:
             work_population = request.GET["work_population"]
-
-        if "therapeutic_model" in request.GET:
-            therapeutic_model = request.GET["therapeutic_model"]
 
         if name or specialization or work_population or therapeutic_model:
             if name is not None:
@@ -55,21 +64,25 @@ class PaginatedPsychologists(APIView):
 
                 query = query.format(specialization_tuple, specialization_len)
 
-                def dictfetchall(cursor):
-                    "Returns all rows from a cursor as a dict"
-                    desc = cursor.description
-                    return [
-                        dict(zip([col[0] for col in desc], row))
-                        for row in cursor.fetchall()
-                    ]
-
                 cursor.execute(query)
                 psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
             if therapeutic_model is not None:
-                psychologists = psychologists.filter(
-                    therapeutic_model__icontains=therapeutic_model
-                )
+                cursor = connection.cursor()
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."therapeutic_model",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population" FROM "psychologists_psychologist" INNER JOIN "psychologists_therapeuticmodel_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_therapeuticmodel_psychologists"."psychologist_id") WHERE "psychologists_therapeuticmodel_psychologists"."therapeuticmodel_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+
+                therapeutic_model_len = len(therapeutic_model)
+                therapeutic_model_tuple = tuple(therapeutic_model)
+
+                if therapeutic_model_len == 1:
+                    therapeutic_model_tuple = "(%s)" % ", ".join(
+                        map(repr, therapeutic_model_tuple)
+                    )
+
+                query = query.format(therapeutic_model_tuple, therapeutic_model_len)
+
+                cursor.execute(query)
+                psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
             if work_population is not None:
                 psychologists = psychologists.filter(
