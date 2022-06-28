@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Psychologist, Specialization
+from .models import Psychologist, Specialization, TherapeuticModel
 
 
 class PsychologistSerializer(serializers.ModelSerializer):
@@ -40,3 +40,9 @@ class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialization
         fields = ("id", "specialization")
+
+
+class TherapeuticModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TherapeuticModel
+        fields = ("id", "therapeutic_model")

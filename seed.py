@@ -7,7 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 import csv
-from apps.psychologists.models import Psychologist, Specialization
+from apps.psychologists.models import Psychologist, Specialization, TherapeuticModel
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
@@ -25,6 +25,8 @@ Psychologist.objects.all().delete()
 with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
     next(reader)
+
+    # Seed psychologists
     for i, row in enumerate(reader):
         Psychologist.objects.create(
             id=i + 1,
@@ -56,21 +58,28 @@ with open(CSV_PATH, newline="") as csvfile:
             name_2=row[25],
         )
 
+    # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
-    new_df = (
+
+    # Seed 'specialization'
+    df_specialization = (
         df[["id", "specialization"]]
         .assign(specialization=df["specialization"].str.split(","))
         .explode("specialization")
         .reset_index(drop=True)
     )
-    new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
-    new_df["id"] = new_df.index + 1
+    df_specialization.columns = df_specialization.columns.str.replace(
+        "id", "psychologist_id"
+    )
+    df_specialization["id"] = df_specialization.index + 1
 
-    new_df["specialization"] = new_df["specialization"].apply(
+    df_specialization["specialization"] = df_specialization["specialization"].apply(
         lambda row: row.strip() if row is not None else row
     )
 
-    specialization_options = new_df["specialization"].value_counts().index.tolist()
+    specialization_options = (
+        df_specialization["specialization"].value_counts().index.tolist()
+    )
 
     for i, item in enumerate(specialization_options, start=1):
         Specialization.objects.create(
@@ -78,7 +87,7 @@ with open(CSV_PATH, newline="") as csvfile:
             specialization=item,
         )
 
-    for row in new_df.itertuples():
+    for row in df_specialization.itertuples():
         for specialization_option in Specialization.objects.all().values():
             if row[2] == specialization_option["specialization"]:
                 Specialization.objects.get(

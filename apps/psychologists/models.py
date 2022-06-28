@@ -39,5 +39,10 @@ class Specialization(models.Model):
     specialization = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(Psychologist, related_name="specializations")
 
-    # def __str__(self):
-    #     return self.specialization
+
+class TherapeuticModel(models.Model):
+    id = models.IntegerField(primary_key=True)
+    therapeutic_model = models.CharField(max_length=1000, default="")
+    psychologists = models.ManyToManyField(
+        Psychologist, related_name="therapeutic_models"
+    )
