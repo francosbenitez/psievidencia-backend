@@ -3,8 +3,12 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.db.models import Q
 import pandas as pd
-from .models import Psychologist, Specialization
-from .serializers import PsychologistSerializer, SpecializationSerializer
+from .models import Psychologist, Specialization, TherapeuticModel
+from .serializers import (
+    PsychologistSerializer,
+    SpecializationSerializer,
+    TherapeuticModelSerializer,
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -62,14 +66,14 @@ class PaginatedPsychologists(APIView):
                 cursor.execute(query)
                 psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
-            if work_population is not None:
-                psychologists = psychologists.filter(
-                    work_population__icontains=work_population
-                )
-
             if therapeutic_model is not None:
                 psychologists = psychologists.filter(
                     therapeutic_model__icontains=therapeutic_model
+                )
+
+            if work_population is not None:
+                psychologists = psychologists.filter(
+                    work_population__icontains=work_population
                 )
 
         paginator = PageNumberPagination()
@@ -99,4 +103,14 @@ class SpecializationsList(APIView):
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(specializations, request)
         serializer = SpecializationSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+
+class TherapeuticModelsList(APIView):
+    def get(self, request, format=None):
+        therapeutic_models = TherapeuticModel.objects.all().order_by("id")
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(therapeutic_models, request)
+        serializer = TherapeuticModelSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
