@@ -61,35 +61,51 @@ with open(CSV_PATH, newline="") as csvfile:
     # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
 
+    # Create seed function to seed 'specialization' & 'therapeutic_model'
+    def seed(new_df, column_name, model):
+        new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
+        new_df["id"] = new_df.index + 1
+
+        new_df[column_name] = new_df[column_name].apply(
+            lambda row: row.strip() if row is not None else row
+        )
+
+        new_df_options = new_df[column_name].value_counts().index.tolist()
+
+        if column_name == "specialization":
+            for i, item in enumerate(new_df_options, start=1):
+                model.objects.create(
+                    id=i,
+                    specialization=item,
+                )
+        else:
+            for i, item in enumerate(new_df_options, start=1):
+                model.objects.create(
+                    id=i,
+                    therapeutic_model=item,
+                )
+
+        for row in new_df.itertuples():
+            for option in model.objects.all().values():
+                if row[2] == option[column_name]:
+                    model.objects.get(pk=option["id"]).psychologists.add(row[1])
+
     # Seed 'specialization'
-    df_specialization = (
+    specialization_df = (
         df[["id", "specialization"]]
         .assign(specialization=df["specialization"].str.split(","))
         .explode("specialization")
         .reset_index(drop=True)
     )
-    df_specialization.columns = df_specialization.columns.str.replace(
-        "id", "psychologist_id"
-    )
-    df_specialization["id"] = df_specialization.index + 1
 
-    df_specialization["specialization"] = df_specialization["specialization"].apply(
-        lambda row: row.strip() if row is not None else row
-    )
+    seed(specialization_df, "specialization", Specialization)
 
-    specialization_options = (
-        df_specialization["specialization"].value_counts().index.tolist()
+    # Seed 'therapeutic_model'
+    therapeutic_model_df = (
+        df[["id", "therapeutic_model"]]
+        .assign(therapeutic_model=df["therapeutic_model"].str.split(","))
+        .explode("therapeutic_model")
+        .reset_index(drop=True)
     )
 
-    for i, item in enumerate(specialization_options, start=1):
-        Specialization.objects.create(
-            id=i,
-            specialization=item,
-        )
-
-    for row in df_specialization.itertuples():
-        for specialization_option in Specialization.objects.all().values():
-            if row[2] == specialization_option["specialization"]:
-                Specialization.objects.get(
-                    pk=specialization_option["id"]
-                ).psychologists.add(row[1])
+    seed(therapeutic_model_df, "therapeutic_model", TherapeuticModel)
