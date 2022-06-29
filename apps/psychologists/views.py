@@ -48,6 +48,7 @@ class PaginatedPsychologists(APIView):
 
         if name or specialization or work_population or therapeutic_model:
             if name is not None:
+                # Allow searching by name including accents
                 psychologists = psychologists.filter(name__icontains=name)
 
             if specialization is not None:

@@ -72,22 +72,15 @@ with open(CSV_PATH, newline="") as csvfile:
 
         new_df_options = new_df[column_name].value_counts().index.tolist()
 
-        if column_name == "specialization":
-            for i, item in enumerate(new_df_options, start=1):
-                model.objects.create(
-                    id=i,
-                    specialization=item,
-                )
-        else:
-            for i, item in enumerate(new_df_options, start=1):
-                model.objects.create(
-                    id=i,
-                    therapeutic_model=item,
-                )
+        for i, item in enumerate(new_df_options, start=1):
+            model.objects.create(
+                id=i,
+                name=item,
+            )
 
         for row in new_df.itertuples():
             for option in model.objects.all().values():
-                if row[2] == option[column_name]:
+                if row[2] == option["name"]:
                     model.objects.get(pk=option["id"]).psychologists.add(row[1])
 
     # Seed 'specialization'

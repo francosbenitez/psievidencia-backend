@@ -36,13 +36,13 @@ class Psychologist(models.Model):
 
 class Specialization(models.Model):
     id = models.IntegerField(primary_key=True)
-    specialization = models.CharField(max_length=1000, default="")
+    name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(Psychologist, related_name="specializations")
 
 
 class TherapeuticModel(models.Model):
     id = models.IntegerField(primary_key=True)
-    therapeutic_model = models.CharField(max_length=1000, default="")
+    name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(
         Psychologist, related_name="therapeutic_models"
     )
