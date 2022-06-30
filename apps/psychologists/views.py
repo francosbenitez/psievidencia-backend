@@ -3,11 +3,12 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.db.models import Q
 import pandas as pd
-from .models import Psychologist, Specialization, TherapeuticModel
+from .models import Psychologist, Specialization, TherapeuticModel, WorkPopulation
 from .serializers import (
     PsychologistSerializer,
     SpecializationSerializer,
     TherapeuticModelSerializer,
+    WorkPopulationSerializer,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -43,12 +44,11 @@ class PaginatedPsychologists(APIView):
                 map(int, request.GET.getlist("therapeutic_model[]"))
             )
 
-        if "work_population" in request.GET:
-            work_population = request.GET["work_population"]
+        if "work_population[]" in request.GET:
+            work_population = list(map(int, request.GET.getlist("work_population[]")))
 
         if name or specialization or work_population or therapeutic_model:
             if name is not None:
-                # Allow searching by name including accents
                 psychologists = psychologists.filter(name__icontains=name)
 
             if specialization is not None:
@@ -86,9 +86,21 @@ class PaginatedPsychologists(APIView):
                 psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
             if work_population is not None:
-                psychologists = psychologists.filter(
-                    work_population__icontains=work_population
-                )
+                cursor = connection.cursor()
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_population",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population" FROM "psychologists_psychologist" INNER JOIN "psychologists_workpopulation_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workpopulation_psychologists"."psychologist_id") WHERE "psychologists_workpopulation_psychologists"."workpopulation_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+
+                work_population_len = len(work_population)
+                work_population_tuple = tuple(work_population)
+
+                if work_population_len == 1:
+                    work_population_tuple = "(%s)" % ", ".join(
+                        map(repr, work_population_tuple)
+                    )
+
+                query = query.format(work_population_tuple, work_population_len)
+
+                cursor.execute(query)
+                psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
         paginator = PageNumberPagination()
         paginator.page_size = 12
@@ -127,4 +139,14 @@ class TherapeuticModelsList(APIView):
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(therapeutic_models, request)
         serializer = TherapeuticModelSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+
+class WorkPopulationsList(APIView):
+    def get(self, request, format=None):
+        work_populations = WorkPopulation.objects.all().order_by("id")
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(work_populations, request)
+        serializer = WorkPopulationSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)

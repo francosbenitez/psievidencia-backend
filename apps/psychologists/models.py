@@ -46,3 +46,11 @@ class TherapeuticModel(models.Model):
     psychologists = models.ManyToManyField(
         Psychologist, related_name="therapeutic_models"
     )
+
+
+class WorkPopulation(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=1000, default="")
+    psychologists = models.ManyToManyField(
+        Psychologist, related_name="work_populations"
+    )

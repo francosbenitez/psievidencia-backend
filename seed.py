@@ -7,7 +7,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 import csv
-from apps.psychologists.models import Psychologist, Specialization, TherapeuticModel
+from apps.psychologists.models import (
+    Psychologist,
+    Specialization,
+    TherapeuticModel,
+    WorkPopulation,
+)
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
@@ -61,7 +66,7 @@ with open(CSV_PATH, newline="") as csvfile:
     # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
 
-    # Create seed function to seed 'specialization' & 'therapeutic_model'
+    # Create seed function to seed 'specialization', 'therapeutic_model' & 'work_population'
     def seed(new_df, column_name, model):
         new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
         new_df["id"] = new_df.index + 1
@@ -102,3 +107,13 @@ with open(CSV_PATH, newline="") as csvfile:
     )
 
     seed(therapeutic_model_df, "therapeutic_model", TherapeuticModel)
+
+    # Seed 'work_population'
+    work_population_df = (
+        df[["id", "work_population"]]
+        .assign(work_population=df["work_population"].str.split(","))
+        .explode("work_population")
+        .reset_index(drop=True)
+    )
+
+    seed(work_population_df, "work_population", WorkPopulation)
