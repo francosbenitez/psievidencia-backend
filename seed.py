@@ -2,6 +2,7 @@ import os
 import django
 import requests
 import pandas as pd
+import unidecode
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -33,6 +34,8 @@ with open(CSV_PATH, newline="") as csvfile:
 
     # Seed psychologists
     for i, row in enumerate(reader):
+        row[1] = unidecode.unidecode(row[1]).lower().title()
+
         Psychologist.objects.create(
             id=i + 1,
             date=row[0],
