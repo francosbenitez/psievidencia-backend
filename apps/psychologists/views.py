@@ -3,7 +3,13 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.db.models import Q
 import pandas as pd
-from .models import Psychologist, Specialization, TherapeuticModel, WorkPopulation
+from .models import (
+    Psychologist,
+    Specialization,
+    TherapeuticModel,
+    WorkPopulation,
+    Education,
+)
 from .serializers import (
     PsychologistSerializer,
     SpecializationSerializer,
@@ -22,6 +28,7 @@ class PaginatedPsychologists(APIView):
         psychologists = Psychologist.objects.all().order_by("id")
         specializations = Specialization.objects.all()
         name = None
+        education = None
         specialization = None
         work_population = None
         therapeutic_model = None
@@ -36,6 +43,9 @@ class PaginatedPsychologists(APIView):
         if "name" in request.GET:
             name = request.GET["name"]
 
+        if "education" in request.GET:
+            education = request.GET["education"]
+
         if "specialization[]" in request.GET:
             specialization = list(map(int, request.GET.getlist("specialization[]")))
 
@@ -47,9 +57,20 @@ class PaginatedPsychologists(APIView):
         if "work_population[]" in request.GET:
             work_population = list(map(int, request.GET.getlist("work_population[]")))
 
-        if name or specialization or work_population or therapeutic_model:
+        if name or education or specialization or work_population or therapeutic_model:
             if name is not None:
                 psychologists = psychologists.filter(name__icontains=name)
+
+            if education is not None:
+                if (
+                    education == "licenciatura"
+                    or education == "maestria"
+                    or education == "doctorado"
+                    or education == "especialidad"
+                ):
+                    psychologists = psychologists.filter(
+                        educations__name__icontains=education
+                    )
 
             if specialization is not None:
                 cursor = connection.cursor()

@@ -13,6 +13,7 @@ from apps.psychologists.models import (
     Specialization,
     TherapeuticModel,
     WorkPopulation,
+    Education,
 )
 
 req = requests.get(
@@ -120,3 +121,17 @@ with open(CSV_PATH, newline="") as csvfile:
     )
 
     seed(work_population_df, "work_population", WorkPopulation)
+
+    # Seed 'education'
+    education_df = df[["id", "education"]]
+
+    education_df["education"] = education_df["education"].apply(
+        lambda row: unidecode.unidecode(row).lower()
+    )
+
+    for row in education_df.itertuples():
+        Education.objects.create(
+            id=row[0],
+            psychologists_id=row[1],
+            name=row[2],
+        )

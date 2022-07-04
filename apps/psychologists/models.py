@@ -54,3 +54,10 @@ class WorkPopulation(models.Model):
     psychologists = models.ManyToManyField(
         Psychologist, related_name="work_populations"
     )
+
+
+class Education(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="educations", on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=1000, default="")
