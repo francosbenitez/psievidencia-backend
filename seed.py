@@ -123,7 +123,7 @@ with open(CSV_PATH, newline="") as csvfile:
     seed(work_population_df, "work_population", WorkPopulation)
 
     # Seed 'education'
-    education_df = df[["id", "education"]]
+    education_df = df[["id", "education"]].copy(deep=True)
 
     education_df["education"] = education_df["education"].apply(
         lambda row: unidecode.unidecode(row).lower()
