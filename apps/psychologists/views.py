@@ -146,6 +146,15 @@ class PsychologistDetail(APIView):
 class SpecializationsList(APIView):
     def get(self, request, format=None):
         specializations = Specialization.objects.all().order_by("id")
+        name = None
+
+        if "name" in request.GET:
+            name = request.GET["name"]
+
+        if name:
+            if name is not None:
+                specializations = specializations.filter(name__icontains=name)
+
         paginator = PageNumberPagination()
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(specializations, request)
