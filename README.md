@@ -1,4 +1,4 @@
-# Psievidencia Backend
+# PsiEvidencia Backend
 - Built a server application with Python.
 
 ## Code and Resources Used
