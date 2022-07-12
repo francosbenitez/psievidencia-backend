@@ -98,7 +98,7 @@ class PaginatedPsychologists(APIView):
                 if (
                     gender_identity == "varon"
                     or gender_identity == "mujer"
-                    or gender_identity == "no binarie"
+                    or gender_identity == "no_binarie"
                 ):
                     psychologists = psychologists.filter(
                         gender_identities__gender_identity__icontains=gender_identity

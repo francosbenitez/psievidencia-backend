@@ -155,8 +155,10 @@ with open(CSV_PATH, newline="") as csvfile:
     # Seed 'gender_identity'
     gender_identity_df = df[["id", "gender_identity"]].copy(deep=True)
 
-    gender_identity_df["gender_identity"] = gender_identity_df["gender_identity"].apply(
-        lambda row: unidecode.unidecode(row).lower()
+    gender_identity_df["gender_identity"] = (
+        gender_identity_df["gender_identity"]
+        .apply(lambda row: unidecode.unidecode(row).lower())
+        .apply(lambda row: row.replace(" ", "_"))
     )
 
     for row in gender_identity_df.itertuples():
