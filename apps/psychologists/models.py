@@ -39,6 +39,9 @@ class Specialization(models.Model):
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(Psychologist, related_name="specializations")
 
+    def __str__(self):
+        return self.name
+
 
 class TherapeuticModel(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -46,6 +49,9 @@ class TherapeuticModel(models.Model):
     psychologists = models.ManyToManyField(
         Psychologist, related_name="therapeutic_models"
     )
+
+    def __str__(self):
+        return self.name
 
 
 class WorkPopulation(models.Model):
@@ -55,9 +61,22 @@ class WorkPopulation(models.Model):
         Psychologist, related_name="work_populations"
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Education(models.Model):
     psychologists = models.ForeignKey(
         Psychologist, related_name="educations", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=1000, default="")
+
+    def __str__(self):
+        return self.name
+
+
+class GenderPerspective(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="gender_perspectives", on_delete=models.CASCADE
+    )
+    has_perspective = models.CharField(max_length=1000, default="")
