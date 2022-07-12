@@ -14,6 +14,7 @@ from apps.psychologists.models import (
     TherapeuticModel,
     WorkPopulation,
     Education,
+    GenderPerspective,
 )
 
 req = requests.get(
@@ -134,4 +135,18 @@ with open(CSV_PATH, newline="") as csvfile:
             id=row[0],
             psychologists_id=row[1],
             name=row[2],
+        )
+
+    # Seed 'gender_perspective'
+    gender_perspective_df = df[["id", "gender_perspective"]].copy(deep=True)
+
+    gender_perspective_df["gender_perspective"] = gender_perspective_df[
+        "gender_perspective"
+    ].apply(lambda row: unidecode.unidecode(row).lower())
+
+    for row in gender_perspective_df.itertuples():
+        GenderPerspective.objects.create(
+            id=row[0],
+            psychologists_id=row[1],
+            has_perspective=row[2],
         )

@@ -29,6 +29,7 @@ class PaginatedPsychologists(APIView):
         specializations = Specialization.objects.all()
         name = None
         education = None
+        has_perspective = None
         specialization = None
         work_population = None
         therapeutic_model = None
@@ -46,6 +47,9 @@ class PaginatedPsychologists(APIView):
         if "education" in request.GET:
             education = request.GET["education"]
 
+        if "has_perspective" in request.GET:
+            has_perspective = request.GET["has_perspective"]
+
         if "specialization[]" in request.GET:
             specialization = list(map(int, request.GET.getlist("specialization[]")))
 
@@ -57,7 +61,14 @@ class PaginatedPsychologists(APIView):
         if "work_population[]" in request.GET:
             work_population = list(map(int, request.GET.getlist("work_population[]")))
 
-        if name or education or specialization or work_population or therapeutic_model:
+        if (
+            name
+            or education
+            or has_perspective
+            or specialization
+            or work_population
+            or therapeutic_model
+        ):
             if name is not None:
                 psychologists = psychologists.filter(name__icontains=name)
 
@@ -70,6 +81,12 @@ class PaginatedPsychologists(APIView):
                 ):
                     psychologists = psychologists.filter(
                         educations__name__icontains=education
+                    )
+
+            if has_perspective is not None:
+                if has_perspective == "si" or has_perspective == "no":
+                    psychologists = psychologists.filter(
+                        gender_perspectives__has_perspective__icontains=has_perspective
                     )
 
             if specialization is not None:
