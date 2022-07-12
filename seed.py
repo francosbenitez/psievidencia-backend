@@ -37,37 +37,40 @@ with open(CSV_PATH, newline="") as csvfile:
 
     # Seed psychologists
     for i, row in enumerate(reader):
-        row[1] = unidecode.unidecode(row[1]).lower().title()
+        if row[25] != "":
+            if row[1] == "":
+                row[1] = row[25]
+            row[1] = unidecode.unidecode(row[1]).lower().title()
 
-        Psychologist.objects.create(
-            id=i + 1,
-            date=row[0],
-            name=row[1],
-            email=row[2],
-            gender_identity=row[3],
-            registration_type=row[4],
-            registration_number=row[5],
-            institution=row[6],
-            team=row[7],
-            province=row[8],
-            city=row[9],
-            education=row[10],
-            therapeutic_model=row[11],
-            gender_perspective=row[12],
-            specialization=row[13],
-            work_population=row[14],
-            work_modality=row[15],
-            online=row[16],
-            prepaid=row[17],
-            prepaid_type=row[18],
-            invoice=row[19],
-            sign_language=row[20],
-            session_languages=row[21],
-            social_networks=row[22],
-            phone_number=row[23],
-            additional_data=row[24],
-            name_2=row[25],
-        )
+            Psychologist.objects.create(
+                id=i + 1,
+                date=row[0],
+                name=row[1],
+                email=row[2],
+                gender_identity=row[3],
+                registration_type=row[4],
+                registration_number=row[5],
+                institution=row[6],
+                team=row[7],
+                province=row[8],
+                city=row[9],
+                education=row[10],
+                therapeutic_model=row[11],
+                gender_perspective=row[12],
+                specialization=row[13],
+                work_population=row[14],
+                work_modality=row[15],
+                online=row[16],
+                prepaid=row[17],
+                prepaid_type=row[18],
+                invoice=row[19],
+                sign_language=row[20],
+                session_languages=row[21],
+                social_networks=row[22],
+                phone_number=row[23],
+                additional_data=row[24],
+                name_2=row[25],
+            )
 
     # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
