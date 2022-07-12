@@ -33,6 +33,7 @@ class PaginatedPsychologists(APIView):
         specialization = None
         work_population = None
         therapeutic_model = None
+        gender_identity = None
 
         def dictfetchall(cursor):
             "Returns all rows from a cursor as a dict"
@@ -50,6 +51,9 @@ class PaginatedPsychologists(APIView):
         if "has_perspective" in request.GET:
             has_perspective = request.GET["has_perspective"]
 
+        if "gender_identity" in request.GET:
+            gender_identity = request.GET["gender_identity"]
+
         if "specialization[]" in request.GET:
             specialization = list(map(int, request.GET.getlist("specialization[]")))
 
@@ -65,6 +69,7 @@ class PaginatedPsychologists(APIView):
             name
             or education
             or has_perspective
+            or gender_identity
             or specialization
             or work_population
             or therapeutic_model
@@ -87,6 +92,16 @@ class PaginatedPsychologists(APIView):
                 if has_perspective == "si" or has_perspective == "no":
                     psychologists = psychologists.filter(
                         gender_perspectives__has_perspective__icontains=has_perspective
+                    )
+
+            if gender_identity is not None:
+                if (
+                    gender_identity == "varon"
+                    or gender_identity == "mujer"
+                    or gender_identity == "no binarie"
+                ):
+                    psychologists = psychologists.filter(
+                        gender_identities__gender_identity__icontains=gender_identity
                     )
 
             if specialization is not None:

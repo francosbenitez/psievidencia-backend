@@ -6,7 +6,7 @@ class Psychologist(models.Model):
     date = models.DateField(auto_now=True)
     name = models.CharField(max_length=1000, default="")
     email = models.CharField(max_length=1000, default="")
-    gender = models.CharField(max_length=1000, default="")
+    gender_identity = models.CharField(max_length=1000, default="")
     registration_type = models.CharField(max_length=1000, default="")
     registration_number = models.CharField(max_length=1000, default="")
     institution = models.CharField(max_length=1000, default="")
@@ -80,3 +80,10 @@ class GenderPerspective(models.Model):
         Psychologist, related_name="gender_perspectives", on_delete=models.CASCADE
     )
     has_perspective = models.CharField(max_length=1000, default="")
+
+
+class GenderIdentity(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="gender_identities", on_delete=models.CASCADE
+    )
+    gender_identity = models.CharField(max_length=1000, default="")
