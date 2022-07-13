@@ -1,11 +1,11 @@
-# Psievidencia Backend
-- Built a server application with Python.
+# PsiEvidencia Backend
+- The API for [psievidencia.com](https://github.com/francosbenitez/psievidencia-frontend).
 
 ## Code and Resources Used
-- **Main Technologies:** Django, PostgreSQL, Django REST Framework.
+- **Main Technologies:** Django, PostgreSQL, Django REST Framework
 
 ## Live Demo
-- [API](https://secret-hamlet-81810.herokuapp.com/)
+- [Link](https://secret-hamlet-81810.herokuapp.com/)
 
 ## Running Locally
 
