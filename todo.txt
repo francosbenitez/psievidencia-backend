@@ -13,3 +13,6 @@
 - Possibility to vote psychologists with -stars- by different, but unique (via email), users.
 - Add possibility to filter by education ("Licenciatura", "Maestría", etc.) DONE
 - Allow filtering among specializations, like "specializations?name=trastornos".
+- Add:
+  - Filter by city (M:O)
+  - Filter by work modality (M:M)
