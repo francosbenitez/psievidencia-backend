@@ -16,3 +16,5 @@
 - Add:
   - Filter by city (M:O)
   - Filter by work modality (M:M)
+  - A "bug/suggestion" model.
+    - Make it a POST endpoint, to allow people uploading comments about the website via a form/pop-up.
