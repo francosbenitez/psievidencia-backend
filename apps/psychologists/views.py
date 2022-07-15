@@ -165,7 +165,7 @@ class PaginatedPsychologists(APIView):
 
             if work_modality is not None:
                 cursor = connection.cursor()
-                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_modality",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_modality" FROM "psychologists_psychologist" INNER JOIN "psychologists_workpopulation_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workpopulation_psychologists"."psychologist_id") WHERE "psychologists_workpopulation_psychologists"."workpopulation_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_modality",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_modality" FROM "psychologists_psychologist" INNER JOIN "psychologists_workmodality_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workmodality_psychologists"."psychologist_id") WHERE "psychologists_workmodality_psychologists"."workmodality_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
 
                 work_modality_len = len(work_modality)
                 work_modality_tuple = tuple(work_modality)
