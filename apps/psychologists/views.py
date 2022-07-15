@@ -241,9 +241,28 @@ class WorkPopulationsList(APIView):
 
 class ProvincesList(APIView):
     def get(self, request, format=None):
-        provinces = Province.objects.order_by("id").distinct()
+        provinces = Province.objects.all().order_by("id")
+        #
+        result = Province.objects.values()
+        list_result = [entry for entry in result]
+
+        print("list_result", list_result)
+
+        results2 = [item["name"] for item in list_result]
+        results2 = list(set(results2))
+        print("results2", results2)
+
+        list_of_dict = []
+        for i, item in enumerate(results2):
+            dic = {}
+            dic["id"] = i
+            dic["name"] = item
+            list_of_dict.append(dic)
+
+        print("list_of_dict", list_of_dict)
+        #
         paginator = PageNumberPagination()
         paginator.page_size = 10
-        result_page = paginator.paginate_queryset(provinces, request)
+        result_page = paginator.paginate_queryset(list_of_dict, request)
         serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
