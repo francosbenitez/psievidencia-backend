@@ -20,4 +20,5 @@
     - Make it a POST endpoint, to allow people uploading comments about the website via a form/pop-up.
 - Implement 'Add a favorites'. 
   - For that, we need to set up the users effectively, with /login and /signup endpoints.
+  - /users/:id/favorites
 - Split up the seed code.
