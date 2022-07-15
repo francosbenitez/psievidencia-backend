@@ -44,11 +44,17 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    # "djoser",
+    "knox",
     "apps.psychologists",
     "apps.users",
     "whitenoise.runserver_nostatic",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "knox.auth.TokenAuthentication",
+    ]
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
