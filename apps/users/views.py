@@ -10,6 +10,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from .models import Suggestion
 from .serializers import SuggestionSerializer
+from rest_framework import status
 
 
 class UsersList(APIView):
@@ -52,3 +53,12 @@ class SuggestionsList(APIView):
         suggestions = Suggestion.objects.all()
         serializer = SuggestionSerializer(suggestions, many=True)
         return Response(serializer.data)
+
+
+class CreateSuggestion(APIView):
+    def post(self, request, format=None):
+        serializer = SuggestionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

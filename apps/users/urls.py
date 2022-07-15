@@ -5,6 +5,7 @@ from apps.users import views
 urlpatterns = [
     path("users", views.UsersList.as_view()),
     path("suggestions", views.SuggestionsList.as_view()),
+    path("suggestions/create", views.CreateSuggestion.as_view()),
     path("register", views.RegisterAPI.as_view()),
     path("login", views.LoginAPI.as_view()),
     path("logout", knox_views.LogoutView.as_view()),
