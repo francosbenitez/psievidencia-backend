@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import Suggestion
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,3 +22,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data["password"],
         )
         return user
+
+
+class SuggestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Suggestion
+        fields = ("id", "title", "description")

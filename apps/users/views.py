@@ -8,6 +8,8 @@ from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
+from .models import Suggestion
+from .serializers import SuggestionSerializer
 
 
 class UsersList(APIView):
@@ -43,3 +45,10 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data["user"]
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+
+class SuggestionsList(APIView):
+    def get(self, request, format=None):
+        suggestions = Suggestion.objects.all()
+        serializer = SuggestionSerializer(suggestions, many=True)
+        return Response(serializer.data)
