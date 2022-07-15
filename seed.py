@@ -16,6 +16,8 @@ from apps.psychologists.models import (
     Education,
     GenderPerspective,
     GenderIdentity,
+    WorkModality,
+    Province,
 )
 
 req = requests.get(
@@ -127,6 +129,16 @@ with open(CSV_PATH, newline="") as csvfile:
 
     seed(work_population_df, "work_population", WorkPopulation)
 
+    # Seed 'work_modality'
+    work_modality_df = (
+        df[["id", "work_modality"]]
+        .assign(work_modality=df["work_modality"].str.split(","))
+        .explode("work_modality")
+        .reset_index(drop=True)
+    )
+
+    seed(work_modality_df, "work_modality", WorkModality)
+
     # Seed 'education'
     education_df = df[["id", "education"]].copy(deep=True)
 
@@ -136,6 +148,20 @@ with open(CSV_PATH, newline="") as csvfile:
 
     for row in education_df.itertuples():
         Education.objects.create(
+            id=row[0],
+            psychologists_id=row[1],
+            name=row[2],
+        )
+
+    # Seed 'province'
+    province_df = df[["id", "province"]].copy(deep=True)
+
+    province_df["province"] = province_df["province"].apply(
+        lambda row: unidecode.unidecode(row).lower()
+    )
+
+    for row in province_df.itertuples():
+        Province.objects.create(
             id=row[0],
             psychologists_id=row[1],
             name=row[2],

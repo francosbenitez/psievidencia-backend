@@ -8,4 +8,5 @@ urlpatterns = [
     path("psychologists/specializations", views.SpecializationsList.as_view()),
     path("psychologists/therapeutic_models", views.TherapeuticModelsList.as_view()),
     path("psychologists/work_populations", views.WorkPopulationsList.as_view()),
+    path("psychologists/provinces", views.ProvincesList.as_view()),
 ]

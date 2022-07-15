@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import Psychologist, Specialization, TherapeuticModel, WorkPopulation
+from .models import (
+    Psychologist,
+    Specialization,
+    TherapeuticModel,
+    WorkPopulation,
+    Province,
+)
 
 
 class PsychologistSerializer(serializers.ModelSerializer):
@@ -51,4 +57,10 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
 class WorkPopulationSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkPopulation
+        fields = ("id", "name")
+
+
+class ProvinceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Province
         fields = ("id", "name")
