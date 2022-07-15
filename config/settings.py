@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "djoser",
     "apps.psychologists",
+    "apps.users",
     "whitenoise.runserver_nostatic",
 ]
 
