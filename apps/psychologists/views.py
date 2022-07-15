@@ -241,7 +241,7 @@ class WorkPopulationsList(APIView):
 
 class ProvincesList(APIView):
     def get(self, request, format=None):
-        provinces = Province.objects.all().order_by("id")
+        provinces = Province.objects.order_by("id").distinct()
         paginator = PageNumberPagination()
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(provinces, request)
