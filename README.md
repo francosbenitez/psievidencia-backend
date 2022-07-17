@@ -1,6 +1,6 @@
 # Psievidencia Backend
 
-- The API for [psievidencia.com](https://github.com/francosbenitez/psievidencia-frontend).
+- The API for [psievidencia.com](https://github.com/francosbenitez/psievidencia.com).
 
 ## Code and Resources Used
 
