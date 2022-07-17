@@ -9,12 +9,15 @@ from .models import (
     TherapeuticModel,
     WorkPopulation,
     Education,
+    WorkModality,
+    Province,
 )
 from .serializers import (
     PsychologistSerializer,
     SpecializationSerializer,
     TherapeuticModelSerializer,
     WorkPopulationSerializer,
+    ProvinceSerializer,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -34,6 +37,7 @@ class PaginatedPsychologists(APIView):
         work_population = None
         therapeutic_model = None
         gender_identity = None
+        work_modality = None
 
         def dictfetchall(cursor):
             "Returns all rows from a cursor as a dict"
@@ -65,6 +69,9 @@ class PaginatedPsychologists(APIView):
         if "work_population[]" in request.GET:
             work_population = list(map(int, request.GET.getlist("work_population[]")))
 
+        if "work_modality[]" in request.GET:
+            work_modality = list(map(int, request.GET.getlist("work_modality[]")))
+
         if (
             name
             or education
@@ -73,6 +80,7 @@ class PaginatedPsychologists(APIView):
             or specialization
             or work_population
             or therapeutic_model
+            or work_modality
         ):
             if name is not None:
                 psychologists = psychologists.filter(name__icontains=name)
@@ -155,6 +163,23 @@ class PaginatedPsychologists(APIView):
                 cursor.execute(query)
                 psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
+            if work_modality is not None:
+                cursor = connection.cursor()
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_modality",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_modality" FROM "psychologists_psychologist" INNER JOIN "psychologists_workmodality_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workmodality_psychologists"."psychologist_id") WHERE "psychologists_workmodality_psychologists"."workmodality_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+
+                work_modality_len = len(work_modality)
+                work_modality_tuple = tuple(work_modality)
+
+                if work_modality_len == 1:
+                    work_modality_tuple = "(%s)" % ", ".join(
+                        map(repr, work_modality_tuple)
+                    )
+
+                query = query.format(work_modality_tuple, work_modality_len)
+
+                cursor.execute(query)
+                psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
+
         paginator = PageNumberPagination()
         paginator.page_size = 12
         result_page = paginator.paginate_queryset(psychologists, request)
@@ -211,4 +236,33 @@ class WorkPopulationsList(APIView):
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(work_populations, request)
         serializer = WorkPopulationSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+
+class ProvincesList(APIView):
+    def get(self, request, format=None):
+        provinces = Province.objects.all().order_by("id")
+        #
+        result = Province.objects.values()
+        list_result = [entry for entry in result]
+
+        print("list_result", list_result)
+
+        results2 = [item["name"] for item in list_result]
+        results2 = list(set(results2))
+        print("results2", results2)
+
+        list_of_dict = []
+        for i, item in enumerate(results2):
+            dic = {}
+            dic["id"] = i
+            dic["name"] = item
+            list_of_dict.append(dic)
+
+        print("list_of_dict", list_of_dict)
+        #
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(list_of_dict, request)
+        serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)

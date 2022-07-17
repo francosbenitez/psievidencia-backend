@@ -65,6 +65,25 @@ class WorkPopulation(models.Model):
         return self.name
 
 
+class WorkModality(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=1000, default="")
+    psychologists = models.ManyToManyField(Psychologist, related_name="work_modalities")
+
+    def __str__(self):
+        return self.name
+
+
+class Province(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="provinces", on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=1000, default="")
+
+    def __str__(self):
+        return self.name
+
+
 class Education(models.Model):
     psychologists = models.ForeignKey(
         Psychologist, related_name="educations", on_delete=models.CASCADE
