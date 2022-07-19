@@ -66,12 +66,6 @@ class CreateSuggestion(APIView):
 
 
 class CreateFavorite(APIView):
-    def get_object(self, psychologist_id):
-        try:
-            return Psychologist.objects.get(id=psychologist_id)
-        except Psychologist.DoesNotExist:
-            raise Http404
-
     def post(self, request, psychologist_id, format=None):
         user_id = request.user.id
         favorite = Favorite.objects.create(
