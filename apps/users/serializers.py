@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Suggestion
+from .models import Suggestion, Favorite
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,3 +28,9 @@ class SuggestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suggestion
         fields = ("id", "title", "description")
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ("id", "psychologist_id", "user_id")

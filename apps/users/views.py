@@ -8,8 +8,9 @@ from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
-from .models import Suggestion
-from .serializers import SuggestionSerializer
+from .models import Suggestion, Favorite
+from apps.psychologists.models import Psychologist
+from .serializers import SuggestionSerializer, FavoriteSerializer
 from rest_framework import status
 
 
@@ -62,3 +63,19 @@ class CreateSuggestion(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateFavorite(APIView):
+    def get_object(self, psychologist_id):
+        try:
+            return Psychologist.objects.get(id=psychologist_id)
+        except Psychologist.DoesNotExist:
+            raise Http404
+
+    def post(self, request, psychologist_id, format=None):
+        user_id = request.user.id
+        favorite = Favorite.objects.create(
+            psychologist_id=psychologist_id, user_id=user_id
+        )
+        serializer = FavoriteSerializer(favorite)
+        return Response(serializer.data)

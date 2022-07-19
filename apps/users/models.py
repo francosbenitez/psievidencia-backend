@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from apps.psychologists.models import Psychologist
 
 
 class Suggestion(models.Model):
@@ -10,3 +11,11 @@ class Suggestion(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Favorite(models.Model):
+
+    user = models.ForeignKey(User, related_name="favorites", on_delete=models.CASCADE)
+    psychologist = models.ForeignKey(
+        Psychologist, related_name="favorites", on_delete=models.CASCADE
+    )
