@@ -75,6 +75,16 @@ class CreateFavorite(APIView):
         return Response(serializer.data)
 
 
+class DeleteFavorite(APIView):
+    def delete(self, request, psychologist_id, format=None):
+        user_id = request.user.id
+        favorite = Favorite.objects.filter(
+            psychologist_id=psychologist_id, user_id=user_id
+        ).delete()
+        serializer = FavoriteSerializer(favorite)
+        return Response(serializer.data)
+
+
 class FavoritesList(APIView):
     def get(self, request, format=None):
         user_id = request.user.id
