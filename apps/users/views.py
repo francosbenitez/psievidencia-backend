@@ -73,3 +73,11 @@ class CreateFavorite(APIView):
         )
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data)
+
+
+class FavoritesList(APIView):
+    def get(self, request, format=None):
+        user_id = request.user.id
+        favorites = Favorite.objects.filter(user_id=user_id)
+        serializer = FavoriteSerializer(favorites, many=True)
+        return Response(serializer.data)
