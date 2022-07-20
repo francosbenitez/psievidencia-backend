@@ -68,6 +68,12 @@ class CreateSuggestion(APIView):
 class CreateFavorite(APIView):
     def post(self, request, psychologist_id, format=None):
         user_id = request.user.id
+        favorites = list(Favorite.objects.filter(user_id=user_id).values())
+
+        for item in favorites:
+            if psychologist_id == item["psychologist_id"]:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
         favorite = Favorite.objects.create(
             psychologist_id=psychologist_id, user_id=user_id
         )
