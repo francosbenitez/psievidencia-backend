@@ -11,6 +11,7 @@ from knox.views import LoginView as KnoxLoginView
 from .models import Suggestion, Favorite
 from apps.psychologists.models import Psychologist
 from .serializers import SuggestionSerializer, FavoriteSerializer
+from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
 
 
@@ -95,5 +96,10 @@ class FavoritesList(APIView):
     def get(self, request, format=None):
         user_id = request.user.id
         favorites = Favorite.objects.filter(user_id=user_id)
-        serializer = FavoriteSerializer(favorites, many=True)
+        favorites_psychologists = [
+            Psychologist.objects.filter(id=item["psychologist_id"])[0]
+            for item in favorites.values()
+        ]
+
+        serializer = PsychologistSerializer(favorites_psychologists, many=True)
         return Response(serializer.data)
