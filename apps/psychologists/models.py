@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class Psychologist(models.Model):
@@ -30,16 +29,9 @@ class Psychologist(models.Model):
     phone_number = models.CharField(max_length=1000, default="")
     additional_data = models.CharField(max_length=1000, default="")
     name_2 = models.CharField(max_length=1000, default="")
-    # liked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-
-
-class Liked(models.Model):
-    psychologist = models.ForeignKey(Psychologist, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    liked = models.BooleanField(default=False)
 
 
 class Specialization(models.Model):
