@@ -72,6 +72,7 @@ with open(CSV_PATH, newline="") as csvfile:
                 phone_number=row[23],
                 additional_data=row[24],
                 name_2=row[25],
+                liked=False,
             )
 
     # Build df
