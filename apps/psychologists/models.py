@@ -37,9 +37,7 @@ class Psychologist(models.Model):
 
 
 class Liked(models.Model):
-    psychologist = models.OneToOneField(
-        Psychologist, on_delete=models.CASCADE, primary_key=True
-    )
+    psychologist = models.ForeignKey(Psychologist, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     liked = models.BooleanField(default=False)
 
