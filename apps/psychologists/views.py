@@ -38,6 +38,7 @@ class PaginatedPsychologists(APIView):
         therapeutic_model = None
         gender_identity = None
         work_modality = None
+        province = None
 
         def dictfetchall(cursor):
             "Returns all rows from a cursor as a dict"
@@ -57,6 +58,9 @@ class PaginatedPsychologists(APIView):
 
         if "gender_identity" in request.GET:
             gender_identity = request.GET["gender_identity"]
+
+        if "province" in request.GET:
+            province = request.GET["province"]
 
         if "specialization[]" in request.GET:
             specialization = list(map(int, request.GET.getlist("specialization[]")))
@@ -81,9 +85,15 @@ class PaginatedPsychologists(APIView):
             or work_population
             or therapeutic_model
             or work_modality
+            or province
         ):
             if name is not None:
                 psychologists = psychologists.filter(name__icontains=name)
+
+            if province is not None:
+                psychologists = psychologists.filter(
+                    provinces__name__icontains=province
+                )
 
             if education is not None:
                 if (
@@ -246,11 +256,11 @@ class ProvincesList(APIView):
         result = Province.objects.values()
         list_result = [entry for entry in result]
 
-        print("list_result", list_result)
+        # print("list_result", list_result)
 
         results2 = [item["name"] for item in list_result]
         results2 = list(set(results2))
-        print("results2", results2)
+        # print("results2", results2)
 
         list_of_dict = []
         for i, item in enumerate(results2):
@@ -259,7 +269,7 @@ class ProvincesList(APIView):
             dic["name"] = item
             list_of_dict.append(dic)
 
-        print("list_of_dict", list_of_dict)
+        # print("list_of_dict", list_of_dict)
         #
         paginator = PageNumberPagination()
         paginator.page_size = 10
