@@ -73,7 +73,7 @@ class CreateFavorite(APIView):
         if user_id == None:
             return Response(
                 {"detail": "You are not logged in. Please log in and try again."},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         favorites = list(Favorite.objects.filter(user_id=user_id).values())
