@@ -24,3 +24,13 @@
 - Split up the seed code.
 - Allow scoring psychologists from 0 to 100, showing the points as stars (five stars), next to the average score. 
 - Add psychologist to /favorites should only modify *said psychologist* by *that specific user*.
+- New and important tasks: 
+  - Clean up code:
+    - Add meaningful BAD responses.
+  - Implement favorites correctly:
+    - By user. 
+    - By 'liked: false' or 'liked: true'.
+      - Each psychologist (from the /api/psychologists) should have its respective value based on the user (if there is no user at all, the 'liked' values should be always *false*).
+    - Implement the possiblity to score psychologists by stars.
+      - From 0 to 5.
+        - The stars score will be an average from the total scores.
