@@ -5,10 +5,23 @@ from .models import (
     TherapeuticModel,
     WorkPopulation,
     Province,
+    Liked,
 )
 
 
+class LikedSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation["liked"]
+
+    class Meta:
+        model = Liked
+        fields = ("liked",)
+
+
 class PsychologistSerializer(serializers.ModelSerializer):
+    liked = LikedSerializer(source="*")
+
     class Meta:
         model = Psychologist
         fields = (

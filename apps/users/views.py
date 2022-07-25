@@ -9,7 +9,7 @@ from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from .models import Suggestion, Favorite
-from apps.psychologists.models import Psychologist
+from apps.psychologists.models import Psychologist, Liked
 from .serializers import SuggestionSerializer, FavoriteSerializer
 from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
@@ -80,8 +80,13 @@ class CreateFavorite(APIView):
         )
 
         psychologist = Psychologist.objects.get(id=psychologist_id)
-        psychologist.liked = True
-        psychologist.save()
+        # psychologist.liked = True
+        # psychologist.save()
+
+        liked = Liked.objects.create(
+            psychologist=psychologist, liked=True, user_id=user_id
+        )
+        # liked.save()
 
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data)
@@ -95,8 +100,13 @@ class DeleteFavorite(APIView):
         ).delete()
 
         psychologist = Psychologist.objects.get(id=psychologist_id)
-        psychologist.liked = False
-        psychologist.save()
+        # psychologist.liked = False
+        # psychologist.save()
+
+        liked = Liked.objects.filter(
+            psychologist=psychologist, liked=True, user_id=user_id
+        ).delete()
+        # liked.save()
 
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data)
