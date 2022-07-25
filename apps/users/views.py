@@ -69,6 +69,13 @@ class CreateSuggestion(APIView):
 class CreateFavorite(APIView):
     def post(self, request, psychologist_id, format=None):
         user_id = request.user.id
+
+        if user_id == None:
+            return Response(
+                {"detail": "You are not logged in. Please log in and try again."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         favorites = list(Favorite.objects.filter(user_id=user_id).values())
 
         for item in favorites:
