@@ -156,8 +156,13 @@ with open(CSV_PATH, newline="") as csvfile:
     # Seed 'province'
     province_df = df[["id", "province"]].copy(deep=True)
 
-    province_df["province"] = province_df["province"].apply(
-        lambda row: unidecode.unidecode(row).lower()
+    province_df["province"] = (
+        province_df["province"]
+        .apply(lambda row: unidecode.unidecode(row).lower())
+        .apply(lambda row: row.replace("buenos aires capital federal", "caba"))
+        .apply(lambda row: row.replace("buenos aires provincia", "gba"))
+        .apply(lambda row: row.replace("santiago del estero", "santiago"))
+        .apply(lambda row: row.replace(" ", "_"))
     )
 
     for row in province_df.itertuples():
