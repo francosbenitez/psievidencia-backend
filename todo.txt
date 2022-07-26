@@ -39,3 +39,5 @@
     - Instead of showing all the psychologists samely:
       - Search the favorites, and filter the psychologists *by the favorites*. 
         - Based on this, change the attribute 'liked' for X psychologist.
+    - Don't modify data, do all in the serializer.
+      - If X psychologist is placed in the /favorites list, send the serializer data with a { liked: true } value.
