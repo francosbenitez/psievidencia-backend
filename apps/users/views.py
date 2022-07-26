@@ -86,6 +86,10 @@ class CreateFavorite(APIView):
             psychologist_id=psychologist_id, user_id=user_id
         )
 
+        # psychologist = Psychologist.objects.get(id=psychologist_id)
+        # psychologist.liked = True
+        # psychologist.save()
+
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data)
 
@@ -97,6 +101,10 @@ class DeleteFavorite(APIView):
             psychologist_id=psychologist_id, user_id=user_id
         ).delete()
 
+        # psychologist = Psychologist.objects.get(id=psychologist_id)
+        # psychologist.liked = False
+        # psychologist.save()
+
         serializer = FavoriteSerializer(favorite)
         return Response(serializer.data)
 
@@ -105,10 +113,14 @@ class FavoritesList(APIView):
     def get(self, request, format=None):
         user_id = request.user.id
         favorites = Favorite.objects.filter(user_id=user_id)
-        favorites_psychologists = [
-            Psychologist.objects.filter(id=item["psychologist_id"])[0]
-            for item in favorites.values()
-        ]
+        favorites_psychologists = []
+
+        for item in favorites.values():
+            favorite = Psychologist.objects.filter(id=item["psychologist_id"]).values()
+            favorites_psychologists.append(favorite[0])
+
+        for item in favorites_psychologists:
+            item["liked"] = True
 
         serializer = PsychologistSerializer(favorites_psychologists, many=True)
         return Response(serializer.data)

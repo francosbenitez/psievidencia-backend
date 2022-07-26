@@ -19,6 +19,7 @@ from apps.psychologists.models import (
     WorkModality,
     Province,
 )
+from django.contrib.auth.models import User
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
@@ -32,6 +33,10 @@ csv_file.close()
 CSV_PATH = "./psychologists.csv"
 
 Psychologist.objects.all().delete()
+
+# Seed user
+user = User.objects.create_user("test", "test@email.com", "test")
+user.save()
 
 with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')

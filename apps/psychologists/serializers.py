@@ -39,6 +39,7 @@ class PsychologistSerializer(serializers.ModelSerializer):
             "phone_number",
             "additional_data",
             "name_2",
+            "liked",
         )
 
 

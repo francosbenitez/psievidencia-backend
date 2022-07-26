@@ -19,6 +19,7 @@ from .serializers import (
     WorkPopulationSerializer,
     ProvinceSerializer,
 )
+from apps.users.models import Favorite
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -190,9 +191,29 @@ class PaginatedPsychologists(APIView):
                 cursor.execute(query)
                 psychologists = psychologists.filter(id__in=(x[0] for x in cursor))
 
+        list_psychologists = list(psychologists.values())
+
+        user_id = request.user.id
+        if user_id:
+
+            favorites = Favorite.objects.filter(user_id=user_id)
+            favorites_psychologists = []
+
+            for item in favorites.values():
+                try:
+                    favorite = psychologists.filter(id=item["psychologist_id"]).values()
+                    favorites_psychologists.append(favorite[0])
+                except IndexError:
+                    pass
+
+            for item_fa in favorites_psychologists:
+                for item_ps in list_psychologists:
+                    if item_fa == item_ps:
+                        item_ps["liked"] = True
+
         paginator = PageNumberPagination()
         paginator.page_size = 12
-        result_page = paginator.paginate_queryset(psychologists, request)
+        result_page = paginator.paginate_queryset(list_psychologists, request)
         serializer = PsychologistSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
