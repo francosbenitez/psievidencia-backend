@@ -34,3 +34,8 @@
     - Implement the possiblity to score psychologists by stars.
       - From 0 to 5.
         - The stars score will be an average from the total scores.
+- PsychologistView:
+  - If 'user':
+    - Instead of showing all the psychologists samely:
+      - Search the favorites, and filter the psychologists *by the favorites*. 
+        - Based on this, change the attribute 'liked' for X psychologist.
