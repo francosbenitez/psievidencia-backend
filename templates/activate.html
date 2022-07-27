@@ -203,19 +203,12 @@
                                                 color: #51545e;
                                               "
                                             >
-                                              {% comment %}
                                               <a
                                                 href="https://{{domain}}{% url 'activate' uidb64=uid token=token %}"
                                                 target="_blank"
                                                 data-saferedirecturl="https://www.google.com/url?q=https://{{domain}}{% url 'activate' uidb64=uid token=token %}"
-                                                >https://<span class="il"
-                                                  >{{domain}}</span
-                                                >.com/<wbr />{% url 'activate'
-                                                %}<wbr />{% url uidb64=uid
-                                                %}<wbr />{% url token=token
-                                                %}<wbr />vrio</a
+                                                >https://{{domain}}/api/activate-user/{{uid}}/{{token}}</a
                                               >
-                                              {% endcomment %}
                                             </p>
                                           </td>
                                         </tr>
