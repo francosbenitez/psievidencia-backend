@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, RegisterSerializer
-from django.contrib.auth.models import User
+
+# from django.contrib.auth.models import User
+from apps.users.models import User
 from django.contrib.auth import login
 from rest_framework.response import Response
 from knox.models import AuthToken
@@ -57,8 +59,8 @@ def activate_user(request, uidb64, token):
         user = None
 
     if user and generate_token.check_token(user, token):
-        # user.is_email_verified = True
-        user.first_name = "I was activated"
+        user.is_email_verified = True
+        # user.first_name = "I was activated"
         user.save()
 
         return render(request, "successful.html", {"user": user})

@@ -19,7 +19,9 @@ from apps.psychologists.models import (
     WorkModality,
     Province,
 )
-from django.contrib.auth.models import User
+
+# from django.contrib.auth.models import User
+from apps.users.models import User
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
