@@ -24,6 +24,7 @@ from .utils import generate_token
 from django.utils.encoding import force_str, force_bytes, smart_bytes
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.contrib.auth import authenticate
 
 
 def send_activation_email(user, request):
@@ -105,6 +106,20 @@ class LoginAPI(KnoxLoginView):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
+
+        username = request.data["username"]
+        password = request.data["password"]
+
+        authentication = authenticate(
+            request.data, username=username, password=password
+        )
+
+        if authentication and not authentication.is_email_verified:
+            return Response(
+                {"detail": "Email is not verified, please check your email inbox."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
 
