@@ -34,16 +34,22 @@ def send_activation_email(user, request):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = generate_token.make_token(user)
 
-    email_body = render_to_string(
+    msg_plain = render_to_string(
+        "activate.txt",
+        {"user": user, "domain": current_site, "uid": uidb64, "token": token},
+    )
+
+    msg_html = render_to_string(
         "activate.html",
         {"user": user, "domain": current_site, "uid": uidb64, "token": token},
     )
 
     send_mail(
         email_subject,
-        email_body,
+        msg_plain,
         settings.EMAIL_HOST_USER,
         [user.email],
+        html_message=msg_html,
         fail_silently=False,
     )
 
