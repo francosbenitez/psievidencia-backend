@@ -20,6 +20,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import generate_token
 from django.utils.encoding import force_str, force_bytes, smart_bytes
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 
 
@@ -47,9 +48,6 @@ def send_activation_email(user, request):
 
 def activate_user(request, uidb64, token):
 
-    uid = force_str(urlsafe_base64_decode(uidb64))
-    print(uid)
-
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
 
@@ -58,23 +56,14 @@ def activate_user(request, uidb64, token):
     except Exception as e:
         user = None
 
-    print("user", user)
-
-    print(
-        "generate_token.check_token(user, token)",
-        generate_token.check_token(user, token),
-    )
-
     if user and generate_token.check_token(user, token):
         # user.is_email_verified = True
         user.first_name = "I was activated"
         user.save()
 
-        # messages.add_message(
-        #     request, messages.SUCCESS, "Email verified, you can now login"
-        # )
-        return render(request, "worked.html", {"user": user})
-    return render(request, "didntWork.html", {"user": user})
+        return render(request, "successful.html", {"user": user})
+        # return redirect("https://www.psievidencia.com/")
+    return render(request, "failed.html", {"user": user})
 
 
 class UsersList(APIView):
@@ -91,10 +80,7 @@ class RegisterAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-
-        #
         send_activation_email(user, request)
-        #
 
         return Response(
             {
