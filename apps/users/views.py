@@ -26,7 +26,7 @@ from django.template.loader import render_to_string
 def send_activation_email(user, request):
     current_site = get_current_site(request)
 
-    email_subject = "Activate your account"
+    email_subject = "Activá tu cuenta"
 
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = generate_token.make_token(user)
