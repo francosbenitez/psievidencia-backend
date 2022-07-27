@@ -66,12 +66,10 @@ def activate_user(request, uidb64, token):
 
     if user and generate_token.check_token(user, token):
         user.is_email_verified = True
-        # user.first_name = "I was activated"
         user.save()
 
-        return render(request, "successful.html", {"user": user})
-        # return redirect("https://www.psievidencia.com/")
-    return render(request, "failed.html", {"user": user})
+        return redirect("https://www.psievidencia.com/")
+    return redirect("https://www.psievidencia.com/error")
 
 
 class UsersList(APIView):
