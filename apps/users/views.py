@@ -13,6 +13,92 @@ from apps.psychologists.models import Psychologist
 from .serializers import SuggestionSerializer, FavoriteSerializer
 from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+# from django.utils.encoding import smart_bytes
+from django.contrib.auth.tokens import default_token_generator
+
+from django.contrib.sites.shortcuts import get_current_site
+from .utils import generate_token
+
+from django.utils.encoding import force_str, force_bytes, smart_bytes
+
+
+def send_activation_email(user, request):
+    current_site = get_current_site(request)
+
+    print("current_site", current_site)
+
+    # uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+    # token = default_token_generator.make_token(user=user)
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = generate_token.make_token(user)
+
+    email_body = (
+        "Hola, " + user.username + ":\n"
+        "Clickeá el enlace debajo para activar tu cuenta:\nhttp://127.0.0.1:8000/api/activate-user/"
+        + uidb64
+        + "/"
+        + token
+    )
+    send_mail(
+        "Activá tu cuenta",
+        email_body,
+        settings.EMAIL_HOST_USER,
+        [user.email],
+        fail_silently=False,
+    )
+
+    # current_site = get_current_site(request)
+    # email_subject = 'Activate your account'
+    # email_body = render_to_string('authentication/activate.html', {
+    #     'user': user,
+    #     'domain': current_site,
+    #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+    #     'token': generate_token.make_token(user)
+    # })
+
+    # email = EmailMessage(subject=email_subject, body=email_body,
+    #                      from_email=settings.EMAIL_FROM_USER,
+    #                      to=[user.email]
+    #                      )
+
+    # if not settings.TESTING:
+    #     EmailThread(email).start()
+
+
+def activate_user(request, uidb64, token):
+
+    uid = force_str(urlsafe_base64_decode(uidb64))
+    print(uid)
+
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+
+        user = User.objects.get(pk=uid)
+
+    except Exception as e:
+        user = None
+
+    print("user", user)
+
+    print(
+        "generate_token.check_token(user, token)",
+        generate_token.check_token(user, token),
+    )
+
+    if user and generate_token.check_token(user, token):
+        # user.is_email_verified = True
+        user.first_name = "I was activated"
+        user.save()
+
+        # messages.add_message(
+        #     request, messages.SUCCESS, "Email verified, you can now login"
+        # )
+        return render(request, "worked.html", {"user": user})
+    return render(request, "didntWork.html", {"user": user})
 
 
 class UsersList(APIView):
@@ -29,6 +115,11 @@ class RegisterAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        #
+        send_activation_email(user, request)
+        #
+
         return Response(
             {
                 "user": UserSerializer(
