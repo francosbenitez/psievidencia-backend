@@ -90,12 +90,13 @@ class RegisterAPI(generics.GenericAPIView):
         send_activation_email(user, request)
 
         return Response(
-            {
-                "user": UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
-                "token": AuthToken.objects.create(user)[1],
-            }
+            # {
+            #     "user": UserSerializer(
+            #         user, context=self.get_serializer_context()
+            #     ).data,
+            #     "token": AuthToken.objects.create(user)[1],
+            # }
+            UserSerializer(user, context=self.get_serializer_context()).data
         )
 
 
