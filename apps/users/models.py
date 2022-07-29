@@ -6,6 +6,7 @@ from apps.psychologists.models import Psychologist
 
 class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
+    email = models.EmailField(unique=True)
 
     def __str__(self):
         return self.email

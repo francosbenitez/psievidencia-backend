@@ -37,7 +37,12 @@ CSV_PATH = "./psychologists.csv"
 Psychologist.objects.all().delete()
 
 # Seed user
-user = User.objects.create_user("test", "test@email.com", "test")
+user = User.objects.create_user(
+    username="username",
+    email="username@email.com",
+    password="password",
+    is_email_verified=True,
+)
 user.save()
 
 with open(CSV_PATH, newline="") as csvfile:
