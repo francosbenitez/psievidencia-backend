@@ -1,0 +1,4 @@
+- Allow user editing their own data. That is, 
+  - their name account, and
+  - their password
+- 
