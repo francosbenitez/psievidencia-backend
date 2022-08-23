@@ -23,8 +23,8 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: secret-hamlet-81810
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "secret-hamlet-81810"
+          heroku_email: "francosbenitez@gmail.com"
           justlogin: true
       - run: heroku auth:whoami
 
