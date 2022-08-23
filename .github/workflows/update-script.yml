@@ -19,15 +19,20 @@ jobs:
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
-
-      - name: Login to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          justlogin: true
-
+          fetch-depth: 0
+      - name: Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Add Heroku remote
         run: heroku git:remote --app secret-hamlet-81810
 
@@ -39,11 +44,3 @@ jobs:
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
           heroku run python3 seed.py
-
-      # - name: Commit and Push Changes
-      #   run: |
-      #     git config --local user.email "actions@github.com"
-      #     git config --local user.name "GitHub Actions"
-      #     git add .
-      #     git commit -m "Updated script on `date` with GitHub Actions"
-      #     git push origin master
