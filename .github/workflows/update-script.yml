@@ -35,7 +35,7 @@ jobs:
               login $HEROKU_EMAIL
               password $HEROKU_API_KEY
           EOF
-          heroku git:remote --app $HEROKU_APP_NAME
+          heroku git:remote -a $HEROKU_APP_NAME
           heroku run python3 manage.py seed.py
       - name: Commit and Push Changes
         run: |
