@@ -36,10 +36,10 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
-      - name: Add Heroku remote
-        run: heroku git:remote -a secret-hamlet-81810
-        # env:
-        # HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      # - name: Add Heroku remote
+      # run: heroku git:remote -a secret-hamlet-81810
+      # env:
+      # HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
       - name: Run Script and Update
         env:
@@ -48,6 +48,7 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
+          heroku git:remote -app secret-hamlet-81810
           heroku run python3 seed.py
 
       - name: Commit and Push Changes
