@@ -8,14 +8,16 @@ jobs:
     name: Update script with GitHub Actions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ""
-          heroku_email: "YOUR EMAIL"
-          justlogin: true
-      - run: heroku auth:whoami
+      - name: Checkout
+        uses: actions/checkout@v2
+      # - uses: actions/checkout@v2
+      # - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      #   with:
+      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+      #     heroku_app_name: ""
+      #     heroku_email: "YOUR EMAIL"
+      #     justlogin: true
+      # - run: heroku auth:whoami
 
       - name: Setup Python
         uses: actions/setup-python@v2
