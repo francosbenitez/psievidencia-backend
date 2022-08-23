@@ -38,9 +38,9 @@ jobs:
             machine git.heroku.com
               login $HEROKU_EMAIL
               password $HEROKU_API_KEY
+            heroku git:remote -a secret-hamlet-81810
+            heroku run bash --app secret-hamlet-81810 python3 seed.py
           EOF
-          heroku git:remote -a secret-hamlet-81810
-          heroku run bash --app secret-hamlet-81810 python3 seed.py
 
       # - name: Commit and Push Changes
       #   run: |
