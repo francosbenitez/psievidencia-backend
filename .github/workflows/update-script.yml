@@ -48,7 +48,7 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
-          heroku git:remote -app secret-hamlet-81810
+          heroku git:remote --app secret-hamlet-81810
           heroku run python3 seed.py
 
       - name: Commit and Push Changes
