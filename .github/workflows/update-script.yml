@@ -39,14 +39,11 @@ jobs:
       #   env:
       #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       #     HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-
       # - name: Add Heroku remote
       #   run: heroku git:remote --app secret-hamlet-81810
-
       # Test
-      - name: Push to Heroku
-        run: git push heroku main
-
+      # - name: Push to Heroku
+      #   run: git push heroku main
       # Test 2
       - name: Run Script and Update 2
         env:
