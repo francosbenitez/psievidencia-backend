@@ -48,7 +48,7 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
-          heroku run python3 manage.py seed.py
+          heroku run python3 seed.py
 
       - name: Commit and Push Changes
         run: |
