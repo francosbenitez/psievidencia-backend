@@ -28,3 +28,14 @@ jobs:
 
       - name: Run Script and Update
         run: heroku run --app ${{ secrets.HEROKU_APP_NAME }} python3 seed.py
+
+      - name: Update CSV
+        run: python3 update_csv.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Updated script on `date` with GitHub Actions"
+          git push origin main
