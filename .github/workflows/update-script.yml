@@ -11,12 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Login to Heroku Container registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: heroku login
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -26,8 +20,15 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Script and Update
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
-          python3 manage.py seed.py
+          heroku login
+          heroku run python3 manage.py seed.py
       - name: Commit and Push Changes
         run: |
           git config --local user.email "actions@github.com"
