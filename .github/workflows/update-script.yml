@@ -26,25 +26,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      # - name: Heroku login credentials
-      #   run: |
-      #     cat > ~/.netrc <<EOF
-      #       machine api.heroku.com
-      #         login $HEROKU_EMAIL
-      #         password $HEROKU_API_KEY
-      #       machine git.heroku.com
-      #         login $HEROKU_EMAIL
-      #         password $HEROKU_API_KEY
-      #     EOF
-      #   env:
-      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      #     HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-      # - name: Add Heroku remote
-      #   run: heroku git:remote --app secret-hamlet-81810
-      # Test
-      # - name: Push to Heroku
-      #   run: git push heroku main
-      # Test 2
+      # Test 1
       - name: Run Script and Update 2
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
@@ -54,27 +36,7 @@ jobs:
         run: |
           heroku run --app secret-hamlet-81810 python3 seed.py
 
-        # Test 3
-      - name: Run Script and Update 3
-        env:
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
-        run: |
-          heroku run bash --app secret-hamlet-81810 python3 seed.py
-
-      # Test 4
-      - name: Run Script and Update 4
-        env:
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
-        run: |
-          python3 seed.py
-
-      # Test 5
+      # Test 2
       - name: Run Script and Update 5
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
