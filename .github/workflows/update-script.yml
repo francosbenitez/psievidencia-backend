@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Login to Heroku Container registry
-        run: heroku login
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
