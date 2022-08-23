@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Updating Ubuntu system and Heroku
-        env: 
+        env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: sudo apt update && sudo apt install heroku neofetch
+        run: sudo apt update && sudo apt install heroku3 neofetch
       - name: Checking the info
         run: neofetch
       - uses: actions/checkout@v2
