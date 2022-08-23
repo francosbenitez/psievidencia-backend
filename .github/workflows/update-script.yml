@@ -38,7 +38,7 @@ jobs:
 
       # Test
       - name: Push to Heroku
-      run: git push heroku main
+        run: git push heroku main
 
       # Test 2
       - name: Run Script and Update 2
@@ -50,7 +50,7 @@ jobs:
         run: |
           heroku run --app secret-hamlet-81810 python3 seed.py
 
-       # Test 3
+        # Test 3
       - name: Run Script and Update 3
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
