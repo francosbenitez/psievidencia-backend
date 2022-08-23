@@ -27,4 +27,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Script and Update
-        run: heroku run --app ${{ secrets.HEROKU_EMAIL }} python3 seed.py
+        run: heroku run --app ${{ secrets.HEROKU_APP_NAME }} python3 seed.py
