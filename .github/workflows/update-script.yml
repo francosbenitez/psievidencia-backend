@@ -17,7 +17,7 @@ jobs:
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
-        run: heroku container:login
+        run: heroku login
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
