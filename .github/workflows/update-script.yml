@@ -19,8 +19,7 @@ jobs:
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
-        with:
-          fetch-depth: 0
+
       - name: Heroku login credentials
         run: |
           cat > ~/.netrc <<EOF
