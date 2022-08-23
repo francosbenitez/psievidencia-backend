@@ -29,7 +29,7 @@ jobs:
           justlogin: true
 
       - name: Add Heroku remote
-        run: heroku git:remote --app ${{ secrets.HEROKU_APP_NAME }}
+        run: heroku git:remote --app secret-hamlet-81810
 
       - name: Run Script and Update
         env:
