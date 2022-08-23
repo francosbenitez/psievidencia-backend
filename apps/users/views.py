@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, RegisterSerializer
-
-# from django.contrib.auth.models import User
 from apps.users.models import User
 from django.contrib.auth import login
 from rest_framework.response import Response
@@ -25,6 +23,11 @@ from django.utils.encoding import force_str, force_bytes, smart_bytes
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import datetime
+from googleapiclient.errors import HttpError
 
 
 def send_activation_email(user, request):
@@ -90,12 +93,6 @@ class RegisterAPI(generics.GenericAPIView):
         send_activation_email(user, request)
 
         return Response(
-            # {
-            #     "user": UserSerializer(
-            #         user, context=self.get_serializer_context()
-            #     ).data,
-            #     "token": AuthToken.objects.create(user)[1],
-            # }
             UserSerializer(user, context=self.get_serializer_context()).data
         )
 
@@ -134,6 +131,28 @@ class SuggestionsList(APIView):
 
 class CreateSuggestion(APIView):
     def post(self, request, format=None):
+
+        try:
+            scope = [
+                "https://spreadsheets.google.com/feeds",
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive.file",
+                "https://www.googleapis.com/auth/drive",
+            ]
+
+            creds = ServiceAccountCredentials.from_json_keyfile_name(
+                "gcp_key.json", scope
+            )
+            client = gspread.authorize(creds)
+            gsheet = client.open("Psievidencia feedback").worksheet("Main")
+
+            time = datetime.datetime.now()
+            time = time.strftime("%m/%d/%Y %H:%M:%S")
+            row = [time, request.data["title"], request.data["description"]]
+            gsheet.append_row(row, 2)
+        except HttpError as error:
+            print(f"An error occurred: {error}")
+
         serializer = SuggestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
