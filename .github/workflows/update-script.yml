@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Heroku login credentials
+      - name: Run Script and Update
         run: |
           cat > ~/.netrc <<EOF
             machine api.heroku.com
@@ -32,24 +32,15 @@ jobs:
               login $HEROKU_EMAIL
               password $HEROKU_API_KEY
           EOF
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-
-      # - name: Add Heroku remote
-      # run: heroku git:remote -a secret-hamlet-81810
-      # env:
-      # HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-
-      - name: Run Script and Update
+          heroku git:remote --app secret-hamlet-81810
+          heroku run python3 seed.py
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
-        run: |
-          heroku git:remote --app secret-hamlet-81810
-          heroku run python3 seed.py
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
 
       - name: Commit and Push Changes
         run: |
