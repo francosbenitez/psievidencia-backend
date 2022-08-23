@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -22,25 +20,22 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          justlogin: true
+      - run: heroku auth:whoami
+
       - name: Run Script and Update
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
-          cat > ~/.netrc <<EOF
-            machine api.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
-            machine git.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
-            heroku git:remote -a secret-hamlet-81810
-            heroku run bash --app secret-hamlet-81810 python3 seed.py
-          EOF
+          heroku run python3 seed.py
 
       # - name: Commit and Push Changes
       #   run: |
