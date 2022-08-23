@@ -1,0 +1,29 @@
+name: Update Script
+on:
+  schedule:
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+jobs:
+  update_script:
+    name: Update script with GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      - name: Run Script and Update
+        run: |
+          python3 manage.py seed.py
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Updated script on `date` with GitHub Actions"
+          git push origin master

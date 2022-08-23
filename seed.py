@@ -37,13 +37,17 @@ CSV_PATH = "./psychologists.csv"
 Psychologist.objects.all().delete()
 
 # Seed user
-user = User.objects.create_user(
-    username="username",
-    email="username@email.com",
-    password="password",
-    is_email_verified=True,
-)
-user.save()
+
+if User.objects.filter(username="username").exists():
+    pass
+else:
+    user = User.objects.create_user(
+        username="username",
+        email="username@email.com",
+        password="password",
+        is_email_verified=True,
+    )
+    user.save()
 
 with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
@@ -56,6 +60,7 @@ with open(CSV_PATH, newline="") as csvfile:
                 row[1] = row[25]
             row[1] = unidecode.unidecode(row[1]).lower().title()
 
+        if not Psychologist.objects.filter(id=i + 1).exists():
             Psychologist.objects.create(
                 id=i + 1,
                 date=row[0],
@@ -101,10 +106,11 @@ with open(CSV_PATH, newline="") as csvfile:
         new_df_options = new_df[column_name].value_counts().index.tolist()
 
         for i, item in enumerate(new_df_options, start=1):
-            model.objects.create(
-                id=i,
-                name=item,
-            )
+            if not model.objects.filter(id=i).exists():
+                model.objects.create(
+                    id=i,
+                    name=item,
+                )
 
         for row in new_df.itertuples():
             for option in model.objects.all().values():
@@ -159,11 +165,12 @@ with open(CSV_PATH, newline="") as csvfile:
     )
 
     for row in education_df.itertuples():
-        Education.objects.create(
-            id=row[0],
-            psychologists_id=row[1],
-            name=row[2],
-        )
+        if not Education.objects.filter(id=row[0]).exists():
+            Education.objects.create(
+                id=row[0],
+                psychologists_id=row[1],
+                name=row[2],
+            )
 
     # Seed 'province'
     province_df = df[["id", "province"]].copy(deep=True)
@@ -178,11 +185,12 @@ with open(CSV_PATH, newline="") as csvfile:
     )
 
     for row in province_df.itertuples():
-        Province.objects.create(
-            id=row[0],
-            psychologists_id=row[1],
-            name=row[2],
-        )
+        if not Province.objects.filter(id=row[0]).exists():
+            Province.objects.create(
+                id=row[0],
+                psychologists_id=row[1],
+                name=row[2],
+            )
 
     # Seed 'gender_perspective'
     gender_perspective_df = df[["id", "gender_perspective"]].copy(deep=True)
@@ -192,11 +200,12 @@ with open(CSV_PATH, newline="") as csvfile:
     ].apply(lambda row: unidecode.unidecode(row).lower())
 
     for row in gender_perspective_df.itertuples():
-        GenderPerspective.objects.create(
-            id=row[0],
-            psychologists_id=row[1],
-            has_perspective=row[2],
-        )
+        if not GenderPerspective.objects.filter(id=row[0]).exists():
+            GenderPerspective.objects.create(
+                id=row[0],
+                psychologists_id=row[1],
+                has_perspective=row[2],
+            )
 
     # Seed 'gender_identity'
     gender_identity_df = df[["id", "gender_identity"]].copy(deep=True)
@@ -208,8 +217,9 @@ with open(CSV_PATH, newline="") as csvfile:
     )
 
     for row in gender_identity_df.itertuples():
-        GenderIdentity.objects.create(
-            id=row[0],
-            psychologists_id=row[1],
-            gender_identity=row[2],
-        )
+        if not GenderIdentity.objects.filter(id=row[0]).exists():
+            GenderIdentity.objects.create(
+                id=row[0],
+                psychologists_id=row[1],
+                gender_identity=row[2],
+            )
