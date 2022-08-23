@@ -26,7 +26,6 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      # Test 1
       - name: Run Script and Update 2
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
@@ -35,13 +34,3 @@ jobs:
           RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
         run: |
           heroku run --app secret-hamlet-81810 python3 seed.py
-
-      # Test 2
-      - name: Run Script and Update 5
-        env:
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RECIPIENT_ADDRESS: ${{ secrets.RECIPIENT_ADDRESS }}
-        run: |
-          heroku run python3 seed.py
