@@ -24,7 +24,7 @@ from apps.psychologists.models import (
 from apps.users.models import User
 
 req = requests.get(
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQngt5TxTabbOavo5qHaZz5ohs9o_46sWrhQMKT5gJdedIG3Icq0qvuUX1dfdkcrmqNUxzCjOk2egSo/pub?gid=160193944&single=true&output=csv"
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vS95wGgZlEivufodGteKLOxDzeC1dCCae38NCYiQZ7xIWSKnXMUc0-kionSL_BBRNO4xdrqAe1VDQ-P/pub?output=csv"
 )
 url_content = req.content
 csv_file = open("psychologists.csv", "wb")
