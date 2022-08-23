@@ -17,18 +17,6 @@ jobs:
           justlogin: true
       - run: heroku auth:whoami
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-          cache: "pip"
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run Script and Update
-        run: heroku run --app ${{ secrets.HEROKU_APP_NAME }} python3 seed.py
-
       - name: Update CSV
         run: python3 update_csv.py
 
@@ -44,7 +32,23 @@ jobs:
         run: |
           echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
 
+      - name: Setup Python
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Dependencies
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Run Script and Update
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: heroku run --app ${{ secrets.HEROKU_APP_NAME }} python3 seed.py
+
       - name: Commit and Push Changes
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
