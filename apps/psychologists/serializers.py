@@ -64,4 +64,4 @@ class WorkPopulationSerializer(serializers.ModelSerializer):
 class ProvinceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
-        fields = ("id", "name")
+        fields = ("id", "name", "slug")

@@ -37,7 +37,7 @@ CSV_PATH = "./psychologists.csv"
 Psychologist.objects.all().delete()
 
 # Seed user
-
+print("Seeding user...")
 if User.objects.filter(username="username").exists():
     pass
 else:
@@ -48,12 +48,14 @@ else:
         is_email_verified=True,
     )
     user.save()
+print("User seeded!")
 
 with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
     next(reader)
 
     # Seed psychologists
+    print("Seeding psychologists...")
     for i, row in enumerate(reader):
         if row[25] != "":
             if row[1] == "":
@@ -90,12 +92,14 @@ with open(CSV_PATH, newline="") as csvfile:
                 additional_data=row[24],
                 name_2=row[25],
             )
+    print("Psychologists seeded!")
 
     # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
 
     # Create seed function to seed 'specialization', 'therapeutic_model' & 'work_population'
     def seed(new_df, column_name, model):
+        print(f"Seeding {column_name.replace('_', ' ')}...")
         new_df.columns = new_df.columns.str.replace("id", "psychologist_id")
         new_df["id"] = new_df.index + 1
 
@@ -116,6 +120,7 @@ with open(CSV_PATH, newline="") as csvfile:
             for option in model.objects.all().values():
                 if row[2] == option["name"]:
                     model.objects.get(pk=option["id"]).psychologists.add(row[1])
+        print(f"{column_name.replace('_', ' ')} seeded!")
 
     # Seed 'specialization'
     specialization_df = (
@@ -158,6 +163,7 @@ with open(CSV_PATH, newline="") as csvfile:
     seed(work_modality_df, "work_modality", WorkModality)
 
     # Seed 'education'
+    print("Seeding education...")
     education_df = df[["id", "education"]].copy(deep=True)
 
     education_df["education"] = education_df["education"].apply(
@@ -171,9 +177,13 @@ with open(CSV_PATH, newline="") as csvfile:
                 psychologists_id=row[1],
                 name=row[2],
             )
+    print("Education seeded!")
 
     # Seed 'province'
+    print("Seeding province...")
     province_df = df[["id", "province"]].copy(deep=True)
+
+    province_df["slug"] = province_df["province"]
 
     province_df["province"] = (
         province_df["province"]
@@ -186,13 +196,14 @@ with open(CSV_PATH, newline="") as csvfile:
 
     for row in province_df.itertuples():
         if not Province.objects.filter(id=row[0]).exists():
-            Province.objects.create(
-                id=row[0],
-                psychologists_id=row[1],
-                name=row[2],
-            )
+            if row[2] != "":
+                Province.objects.create(
+                    id=row[0], psychologists_id=row[1], name=row[2], slug=row[3]
+                )
+    print("Province seeded!")
 
     # Seed 'gender_perspective'
+    print("Seeding gender perspective...")
     gender_perspective_df = df[["id", "gender_perspective"]].copy(deep=True)
 
     gender_perspective_df["gender_perspective"] = gender_perspective_df[
@@ -206,8 +217,10 @@ with open(CSV_PATH, newline="") as csvfile:
                 psychologists_id=row[1],
                 has_perspective=row[2],
             )
+    print("Gender perspective seeded!")
 
     # Seed 'gender_identity'
+    print("Seeding gender identity..")
     gender_identity_df = df[["id", "gender_identity"]].copy(deep=True)
 
     gender_identity_df["gender_identity"] = (
@@ -223,3 +236,5 @@ with open(CSV_PATH, newline="") as csvfile:
                 psychologists_id=row[1],
                 gender_identity=row[2],
             )
+    print("Gender identity seeded!")
+    print("Seeder was applied successfully!")
