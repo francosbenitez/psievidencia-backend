@@ -273,28 +273,28 @@ class WorkPopulationsList(APIView):
 class ProvincesList(APIView):
     def get(self, request, format=None):
         provinces = Province.objects.all().order_by("id")
+        provinces_values = Province.objects.values()
+        provinces_list = [entry for entry in provinces_values]
 
-        result = Province.objects.values()
-        list_result = [entry for entry in result]
-
-        list_result_2 = [item for item in list_result]
+        # Removes provinces list duplicates
         found = set()
-        list_result_3 = []
-        for dct in list_result_2:
+        remove_provinces_list_duplicates = []
+        for dct in provinces_list:
             if dct["name"] not in found:
-                list_result_3.append(dct)
+                remove_provinces_list_duplicates.append(dct)
                 found.add(dct["name"])
 
-        list_of_dict = []
-        for i, item in enumerate(list_result_3):
+        # Creates a list of dictionaries to be sent as a JSON
+        json = []
+        for i, item in enumerate(remove_provinces_list_duplicates):
             dic = {}
             dic["id"] = i
             dic["name"] = item["name"]
             dic["slug"] = item["slug"]
-            list_of_dict.append(dic)
+            json.append(dic)
 
         paginator = PageNumberPagination()
         paginator.page_size = 10
-        result_page = paginator.paginate_queryset(list_of_dict, request)
+        result_page = paginator.paginate_queryset(json, request)
         serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
