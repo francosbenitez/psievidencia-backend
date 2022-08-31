@@ -1,4 +1,4 @@
 - Allow user editing their own data. That is, 
-  - their name account, and
+  - their username, and
   - their password
-- 
+- Allow user recovering their passwordw with email.
