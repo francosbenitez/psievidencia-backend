@@ -3,7 +3,7 @@ from django.db import models
 
 class Psychologist(models.Model):
     id = models.IntegerField(primary_key=True)
-    date = models.DateField(auto_now=True)
+    date = models.DateField()
     name = models.CharField(max_length=1000, default="")
     email = models.CharField(max_length=1000, default="")
     gender_identity = models.CharField(max_length=1000, default="")

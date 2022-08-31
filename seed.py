@@ -3,6 +3,7 @@ import django
 import requests
 import pandas as pd
 import unidecode
+from datetime import datetime, timedelta, date
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -61,6 +62,25 @@ with open(CSV_PATH, newline="") as csvfile:
             if row[1] == "":
                 row[1] = row[25]
             row[1] = unidecode.unidecode(row[1]).lower().title()
+
+        if row[0] == "":
+            format = "%d/%m/%Y %H:%M:%S"
+            today = date.today()
+            inctime = today.strftime("%d/%m/%Y %H:%M:%S")
+
+            # Convert the time to a database time
+            time = datetime.strptime(inctime, format)
+            time.strftime("%Y/%m/%d %H:%M:%S")
+
+            row[0] = time
+        else:
+            format = "%d/%m/%Y %H:%M:%S"
+            inctime = row[0]
+            time = datetime.strptime(inctime, format)
+
+            # Convert the time to a database time
+            time.strftime("%Y/%m/%d %H:%M:%S")
+            row[0] = time
 
         if not Psychologist.objects.filter(id=i + 1).exists():
             Psychologist.objects.create(
