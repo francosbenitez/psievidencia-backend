@@ -29,7 +29,7 @@ from django.db import connection
 
 class PaginatedPsychologists(APIView):
     def get(self, request, format=None):
-        psychologists = Psychologist.objects.all().order_by("id")
+        psychologists = Psychologist.objects.all().order_by("-id")
         specializations = Specialization.objects.all()
         name = None
         education = None
