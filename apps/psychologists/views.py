@@ -221,12 +221,36 @@ class PaginatedPsychologists(APIView):
 class PsychologistDetail(APIView):
     def get_object(self, psychologist_id):
         try:
-            return Psychologist.objects.get(id=psychologist_id)
+            # Create an object taking the 'psychologist_id' parameter from the URL
+            return Psychologist.objects.filter(id=psychologist_id).values()[0]
         except Psychologist.DoesNotExist:
             raise Http404
 
     def get(self, request, psychologist_id, format=None):
+        # Check if this psychologist is in the 'favorites_psychologists' list
         psychologist = self.get_object(psychologist_id)
+
+        user_id = request.user.id
+        if user_id:
+
+            favorites = Favorite.objects.filter(user_id=user_id)
+            favorites_psychologists = []
+
+            # Add items to the 'favorites_psychologists' list
+            for item in favorites.values():
+                try:
+                    favorite = Psychologist.objects.filter(
+                        id=item["psychologist_id"]
+                    ).values()
+                    favorites_psychologists.append(favorite[0])
+                except IndexError:
+                    pass
+
+            # Check if any item in the 'favorites_psychologists' list matches to the 'psychologist' variable
+            for item_fa in favorites_psychologists:
+                if item_fa == psychologist:
+                    psychologist["liked"] = True
+
         serializer = PsychologistSerializer(psychologist)
         return Response(serializer.data)
 
