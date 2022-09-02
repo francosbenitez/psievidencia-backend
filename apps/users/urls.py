@@ -14,4 +14,5 @@ urlpatterns = [
     path("logout", knox_views.LogoutView.as_view()),
     path("logoutall", knox_views.LogoutAllView.as_view()),
     path("activate-user/<uidb64>/<token>", views.activate_user, name="activate"),
+    path("verify-token", views.VerifyToken.as_view()),
 ]

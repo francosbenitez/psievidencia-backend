@@ -29,6 +29,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 from googleapiclient.errors import HttpError
 
+from rest_framework.permissions import IsAuthenticated
+from knox.auth import TokenAuthentication
+
 
 def send_activation_email(user, request):
     current_site = get_current_site(request)
@@ -120,6 +123,15 @@ class LoginAPI(KnoxLoginView):
 
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+
+class VerifyToken(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        content = {"valid": "true"}
+        return Response(content)
 
 
 class SuggestionsList(APIView):
