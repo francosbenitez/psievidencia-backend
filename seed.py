@@ -58,60 +58,61 @@ with open(CSV_PATH, newline="") as csvfile:
     # Seed psychologists
     print("Seeding psychologists...")
     for i, row in enumerate(reader):
-        if row[25] != "":
-            if row[1] == "":
-                row[1] = row[25]
-            row[1] = unidecode.unidecode(row[1]).lower().title()
+        if row[2] != "":
+            if row[25] != "":
+                if row[1] == "":
+                    row[1] = row[25]
+                row[1] = unidecode.unidecode(row[1]).lower().title()
 
-        if row[0] == "":
-            format = "%d/%m/%Y %H:%M:%S"
-            today = date.today()
-            inctime = today.strftime("%d/%m/%Y %H:%M:%S")
+            if row[0] == "":
+                format = "%d/%m/%Y %H:%M:%S"
+                today = date.today()
+                inctime = today.strftime("%d/%m/%Y %H:%M:%S")
 
-            # Convert the time to a database time
-            time = datetime.strptime(inctime, format)
-            time.strftime("%Y/%m/%d %H:%M:%S")
+                # Convert the time to a database time
+                time = datetime.strptime(inctime, format)
+                time.strftime("%Y/%m/%d %H:%M:%S")
 
-            row[0] = time
-        else:
-            format = "%d/%m/%Y %H:%M:%S"
-            inctime = row[0]
-            time = datetime.strptime(inctime, format)
+                row[0] = time
+            else:
+                format = "%d/%m/%Y %H:%M:%S"
+                inctime = row[0]
+                time = datetime.strptime(inctime, format)
 
-            # Convert the time to a database time
-            time.strftime("%Y/%m/%d %H:%M:%S")
-            row[0] = time
+                # Convert the time to a database time
+                time.strftime("%Y/%m/%d %H:%M:%S")
+                row[0] = time
 
-        if not Psychologist.objects.filter(id=i + 1).exists():
-            Psychologist.objects.create(
-                id=i + 1,
-                date=row[0],
-                name=row[1],
-                email=row[2],
-                gender_identity=row[3],
-                registration_type=row[4],
-                registration_number=row[5],
-                institution=row[6],
-                team=row[7],
-                province=row[8],
-                city=row[9],
-                education=row[10],
-                therapeutic_model=row[11],
-                gender_perspective=row[12],
-                specialization=row[13],
-                work_population=row[14],
-                work_modality=row[15],
-                online=row[16],
-                prepaid=row[17],
-                prepaid_type=row[18],
-                invoice=row[19],
-                sign_language=row[20],
-                session_languages=row[21],
-                social_networks=row[22],
-                phone_number=row[23],
-                additional_data=row[24],
-                name_2=row[25],
-            )
+            if not Psychologist.objects.filter(id=i).exists():
+                Psychologist.objects.create(
+                    id=i,
+                    date=row[0],
+                    name=row[1],
+                    email=row[2],
+                    gender_identity=row[3],
+                    registration_type=row[4],
+                    registration_number=row[5],
+                    institution=row[6],
+                    team=row[7],
+                    province=row[8],
+                    city=row[9],
+                    education=row[10],
+                    therapeutic_model=row[11],
+                    gender_perspective=row[12],
+                    specialization=row[13],
+                    work_population=row[14],
+                    work_modality=row[15],
+                    online=row[16],
+                    prepaid=row[17],
+                    prepaid_type=row[18],
+                    invoice=row[19],
+                    sign_language=row[20],
+                    session_languages=row[21],
+                    social_networks=row[22],
+                    phone_number=row[23],
+                    additional_data=row[24],
+                    name_2=row[25],
+                )
     print("Psychologists seeded!")
 
     # Build df
