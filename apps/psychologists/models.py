@@ -102,9 +102,15 @@ class GenderPerspective(models.Model):
     )
     has_perspective = models.CharField(max_length=1000, default="")
 
+    def __str__(self):
+        return self.has_perspective
+
 
 class GenderIdentity(models.Model):
     psychologists = models.ForeignKey(
         Psychologist, related_name="gender_identities", on_delete=models.CASCADE
     )
     gender_identity = models.CharField(max_length=1000, default="")
+
+    def __str__(self):
+        return self.gender_identity

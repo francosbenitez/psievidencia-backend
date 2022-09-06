@@ -28,3 +28,6 @@ class Favorite(models.Model):
     psychologist = models.ForeignKey(
         Psychologist, related_name="favorites", on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return self.psychologist
