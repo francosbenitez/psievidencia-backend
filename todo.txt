@@ -1,4 +1,6 @@
-- Allow user editing their own data. That is, 
+- Allow users to edit their own data. That is, 
   - their username, and
   - their password
-- Allow user recovering their passwordw with email.
+- Allow users to recover their password with their email.
+- Create a "psychologist" role and an account to all the current psychologists who are on the web.
+    - Allow psychologists to be logged in with a "psychologist" role, and show them a view to EDIT and DELETE their current data. 
