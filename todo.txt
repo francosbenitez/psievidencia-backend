@@ -4,3 +4,8 @@
 - Allow users to recover their password with their email.
 - Create a "psychologist" role and an account to all the current psychologists who are on the web.
     - Allow psychologists to be logged in with a "psychologist" role, and show them a view to EDIT and DELETE their current data. 
+
+1) Generate an USER for each psychologist.
+  a) USER -> ROLE "psychologist"
+2) Generate ROLE model.
+  a) We're going to have two roles: i) authenticated, and ii) psychologist.
