@@ -9,3 +9,8 @@
   a) USER -> ROLE "psychologist"
 2) Generate ROLE model.
   a) We're going to have two roles: i) authenticated, and ii) psychologist.
+
+- Generate better docs for the procedure to run the project (backend part).
+  - See how to dockerize it.
+- Delete the /suggestions page.
+- Add a link redirecting to Postman APIs. 
