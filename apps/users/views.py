@@ -84,6 +84,13 @@ class UsersList(APIView):
         return Response(serializer.data)
 
 
+class ProfileView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -115,7 +122,9 @@ class LoginAPI(KnoxLoginView):
 
         if authentication and not authentication.is_email_verified:
             return Response(
-                {"detail": "Email is not verified, please check your email inbox."},
+                {
+                    "detail": "Tu email no está verificado. Por favor, verificá tu correo."
+                },
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
