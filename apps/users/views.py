@@ -23,12 +23,10 @@ from django.utils.encoding import force_str, force_bytes, smart_bytes
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate
-
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 from googleapiclient.errors import HttpError
-
 from rest_framework.permissions import IsAuthenticated
 from knox.auth import TokenAuthentication
 
