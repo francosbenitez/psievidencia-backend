@@ -129,7 +129,14 @@ class LoginAPI(KnoxLoginView):
             )
 
         login(request, user)
-        return super(LoginAPI, self).post(request, format=None)
+
+        x = super(LoginAPI, self).post(request, format=None).data
+
+        y = {"user": UserSerializer(user).data}
+
+        z = dict(list(x.items()) + list(y.items()))
+
+        return Response(z)
 
 
 class VerifyToken(APIView):
