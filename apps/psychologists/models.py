@@ -5,7 +5,7 @@ class Psychologist(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.DateField()
     name = models.CharField(max_length=1000, default="")
-    email = models.CharField(max_length=1000, default="")
+    email = models.EmailField(unique=True)
     gender_identity = models.CharField(max_length=1000, default="")
     registration_type = models.CharField(max_length=1000, default="")
     registration_number = models.CharField(max_length=1000, default="")

@@ -83,7 +83,10 @@ with open(CSV_PATH, newline="") as csvfile:
                 time.strftime("%Y/%m/%d %H:%M:%S")
                 row[0] = time
 
-            if not Psychologist.objects.filter(id=i).exists():
+            if (
+                not Psychologist.objects.filter(id=i).exists()
+                and not Psychologist.objects.filter(email=row[2]).exists()
+            ):
                 Psychologist.objects.create(
                     id=i,
                     date=row[0],
