@@ -106,6 +106,16 @@ class GenderPerspective(models.Model):
         return self.has_perspective
 
 
+class Prepaid(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="prepaids", on_delete=models.CASCADE
+    )
+    has_prepaid = models.CharField(max_length=1000, default="")
+
+    def __str__(self):
+        return self.has_prepaid
+
+
 class GenderIdentity(models.Model):
     psychologists = models.ForeignKey(
         Psychologist, related_name="gender_identities", on_delete=models.CASCADE
