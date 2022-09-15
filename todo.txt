@@ -4,13 +4,14 @@
 - Allow users to recover their password with their email.
 - Create a "psychologist" role and an account to all the current psychologists who are on the web.
     - Allow psychologists to be logged in with a "psychologist" role, and show them a view to EDIT and DELETE their current data. 
-
-1) Generate an USER for each psychologist.
-  a) USER -> ROLE "psychologist"
-2) Generate ROLE model.
-  a) We're going to have two roles: i) authenticated, and ii) psychologist.
-
+- Generate an USER for each psychologist.
+  - USER -> ROLE "psychologist"
+- Generate ROLE model.
+  - We're going to have two roles: i) authenticated, and ii) psychologist.
 - Generate better docs for the procedure to run the project (backend part).
   - See how to dockerize it.
 - Delete the /suggestions page.
 - Add a link redirecting to Postman APIs. 
+- Develop:
+  - 'Confirm password' option when creating the user.
+  - Recover your password via email.
