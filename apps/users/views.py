@@ -237,18 +237,3 @@ class FavoritesList(APIView):
 
         serializer = PsychologistSerializer(favorites_psychologists, many=True)
         return Response(serializer.data)
-
-
-class PasswordResetView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, *args, **kwargs):
-        data = self.request.data
-        email = data.get("email")
-        user = User.objects.filter(email=email).first()
-        if user:
-            print("user", user)
-        return Response(
-            {"message": "Please do check your email for further instructions!"},
-            status=status.HTTP_200_OK,
-        )
