@@ -34,18 +34,19 @@ class SuggestionSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "description")
 
 
-# class FavoriteSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Favorite
-#         fields = ("id", "psychologist_id", "user_id")
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ("id", "psychologist_id", "user_id")
 
-# class ResetPasswordEmailRequestSerializer(serializers.Serializer):
-#     email = serializers.EmailField(min_length=2)
 
-#     redirect_url = serializers.CharField(max_length=500, required=False)
+class ResetPasswordEmailRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=2)
 
-#     class Meta:
-#         fields = ['email']
+    redirect_url = serializers.CharField(max_length=500, required=False)
+
+    class Meta:
+        fields = ["email"]
 
 
 # class SetNewPasswordSerializer(serializers.Serializer):

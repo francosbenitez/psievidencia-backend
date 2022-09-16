@@ -10,7 +10,11 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from .models import Suggestion, Favorite
 from apps.psychologists.models import Psychologist
-from .serializers import SuggestionSerializer, FavoriteSerializer
+from .serializers import (
+    SuggestionSerializer,
+    FavoriteSerializer,
+    ResetPasswordEmailRequestSerializer,
+)
 from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
 from django.core.mail import send_mail
@@ -29,6 +33,9 @@ import datetime
 from googleapiclient.errors import HttpError
 from rest_framework.permissions import IsAuthenticated
 from knox.auth import TokenAuthentication
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.urls import reverse
+from .utils import Util
 
 # from .tasks import activate_user, send_activation_email
 
@@ -239,31 +246,46 @@ class FavoritesList(APIView):
         return Response(serializer.data)
 
 
-# class RequestPasswordResetEmail(generics.GenericAPIView):
-#     serializer_class = ResetPasswordEmailRequestSerializer
+class RequestPasswordResetEmail(generics.GenericAPIView):
+    serializer_class = ResetPasswordEmailRequestSerializer
 
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
 
-#         email = request.data.get('email', '')
+        email = request.data.get("email", "")
 
-#         if User.objects.filter(email=email).exists():
-#             user = User.objects.get(email=email)
-#             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
-#             token = PasswordResetTokenGenerator().make_token(user)
-#             current_site = get_current_site(
-#                 request=request).domain
-#             relativeLink = reverse(
-#                 'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+            current_site = get_current_site(request=request).domain
+            relativeLink = reverse(
+                "password-reset-confirm", kwargs={"uidb64": uidb64, "token": token}
+            )
 
-#             redirect_url = request.data.get('redirect_url', '')
-#             absurl = 'http://'+current_site + relativeLink
-#             email_body = 'Hello, \n Use link below to reset your password  \n' + \
-#                 absurl+"?redirect_url="+redirect_url
-#             data = {'email_body': email_body, 'to_email': user.email,
-#                     'email_subject': 'Reset your passsword'}
-#             Util.send_email(data)
-#         return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+            redirect_url = request.data.get("redirect_url", "")
+            absurl = "http://" + current_site + relativeLink
+            email_body = (
+                "Hello, \n Use link below to reset your password  \n"
+                + absurl
+                + "?redirect_url="
+                + redirect_url
+            )
+            data = {
+                "email_body": email_body,
+                "to_email": user.email,
+                "email_subject": "Reset your passsword",
+            }
+            Util.send_email(data)
+        return Response(
+            {"success": "We have sent you a link to reset your password"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class PasswordTokenCheckAPI(generics.GenericAPIView):
+    pass
+
 
 # class SetNewPasswordAPIView(generics.GenericAPIView):
 #     serializer_class = SetNewPasswordSerializer
