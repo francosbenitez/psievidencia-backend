@@ -14,6 +14,7 @@ from .serializers import (
     SuggestionSerializer,
     FavoriteSerializer,
     ResetPasswordEmailRequestSerializer,
+    SetNewPasswordSerializer,
 )
 from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
@@ -23,7 +24,13 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import generate_token
-from django.utils.encoding import force_str, force_bytes, smart_bytes
+from django.utils.encoding import (
+    force_str,
+    force_bytes,
+    smart_bytes,
+    smart_str,
+    DjangoUnicodeDecodeError,
+)
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate
@@ -36,8 +43,15 @@ from knox.auth import TokenAuthentication
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
 from .utils import Util
+from django.http import HttpResponsePermanentRedirect
 
 # from .tasks import activate_user, send_activation_email
+
+
+class CustomRedirect(HttpResponsePermanentRedirect):
+
+    # allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
+    allowed_schemes = ["", "http", "https"]
 
 
 def send_activation_email(user, request):
@@ -81,8 +95,8 @@ def activate_user(request, uidb64, token):
         user.is_email_verified = True
         user.save()
 
-        return redirect("https://www.psievidencia.com/")
-    return redirect("https://www.psievidencia.com/error")
+        return redirect("http://localhost:3000//")
+    return redirect("http://localhost:3000//error")
 
 
 class UsersList(APIView):
@@ -284,7 +298,45 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
-    pass
+    serializer_class = SetNewPasswordSerializer
+
+    def get(self, request, uidb64, token):
+        redirect_url = request.GET.get("redirect_url")
+
+        try:
+            id = smart_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                if len(redirect_url) > 3:
+                    return CustomRedirect(redirect_url + "?token_valid=False")
+                else:
+                    return CustomRedirect(
+                        "http://localhost:3000/" + "?token_valid=False"
+                    )
+
+            if redirect_url and len(redirect_url) > 3:
+                return CustomRedirect(
+                    redirect_url
+                    + "?token_valid=True&message=Credentials Valid&uidb64="
+                    + uidb64
+                    + "&token="
+                    + token
+                )
+            else:
+                return CustomRedirect("http://localhost:3000/" + "?token_valid=False")
+
+        except DjangoUnicodeDecodeError as identifier:
+            try:
+                print("user", user)
+                if not PasswordResetTokenGenerator().check_token(user):
+                    return CustomRedirect(redirect_url + "?token_valid=False")
+
+            except UnboundLocalError as e:
+                return Response(
+                    {"error": "Token is not valid, please request a new one"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
 
 # class SetNewPasswordAPIView(generics.GenericAPIView):
