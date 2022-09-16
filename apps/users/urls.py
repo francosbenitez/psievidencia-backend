@@ -16,4 +16,19 @@ urlpatterns = [
     path("activate-user/<uidb64>/<token>", views.activate_user, name="activate"),
     path("verify-token", views.VerifyToken.as_view()),
     path("profile", views.ProfileView.as_view()),
+    # path(
+    #     "request-reset-email/",
+    #     RequestPasswordResetEmail.as_view(),
+    #     name="request-reset-email",
+    # ),
+    # path(
+    #     "password-reset/<uidb64>/<token>/",
+    #     PasswordTokenCheckAPI.as_view(),
+    #     name="password-reset-confirm",
+    # ),
+    # path(
+    #     "password-reset-complete",
+    #     SetNewPasswordAPIView.as_view(),
+    #     name="password-reset-complete",
+    # ),
 ]
