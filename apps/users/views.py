@@ -347,7 +347,25 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        context = self.get_serializer_context()
+        print("context", context)
+
+        token = request.data["token"]
+        id = force_str(urlsafe_base64_decode(request.data["uidb64"]))
+        user = User.objects.get(id=id)
+
+        response = {"token": token, "user": UserSerializer(user).data}
+
         return Response(
-            {"success": True, "message": "Password reset success"},
+            response,
             status=status.HTTP_200_OK,
         )
+
+    def get_serializer_context(self):
+        """
+        pass request attribute to serializer
+        """
+        context = super(SetNewPasswordAPIView, self).get_serializer_context()
+        print("context", context)
+        return context
