@@ -62,11 +62,6 @@ def send_activation_email(user, request):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = generate_token.make_token(user)
 
-    msg_plain = render_to_string(
-        "activate.txt",
-        {"user": user, "domain": current_site, "uid": uidb64, "token": token},
-    )
-
     msg_html = render_to_string(
         "activate.html",
         {"user": user, "domain": current_site, "uid": uidb64, "token": token},
@@ -74,7 +69,7 @@ def send_activation_email(user, request):
 
     send_mail(
         email_subject,
-        msg_plain,
+        "",
         settings.EMAIL_HOST_USER,
         [user.email],
         html_message=msg_html,
@@ -279,18 +274,25 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
             redirect_url = request.data.get("redirect_url", "")
             absurl = "http://" + current_site + relativeLink
-            email_body = (
-                "Hello, \n Use link below to reset your password  \n"
-                + absurl
-                + "?redirect_url="
-                + redirect_url
+
+            url = absurl + "?redirect_url=" + redirect_url
+
+            email_subject = "Recuperá tu contraseña"
+
+            msg_html = render_to_string(
+                "reset_password.html",
+                {"url": url},
             )
-            data = {
-                "email_body": email_body,
-                "to_email": user.email,
-                "email_subject": "Reset your passsword",
-            }
-            Util.send_email(data)
+
+            send_mail(
+                email_subject,
+                "",
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                html_message=msg_html,
+                fail_silently=False,
+            )
+
         return Response(
             {"success": "We have sent you a link to reset your password"},
             status=status.HTTP_200_OK,
