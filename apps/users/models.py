@@ -1,6 +1,6 @@
 from django.db import models
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from apps.psychologists.models import Psychologist
 
 
@@ -26,8 +26,16 @@ class User(AbstractUser):
         return self.email
 
 
+class AuthenticatedManager(BaseUserManager):
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(role=User.Role.AUTHENTICATED)
+
+
 class Authenticated(User):
     base_role = User.Role.AUTHENTICATED
+
+    authenticated = AuthenticatedManager()
 
     class Meta:
         proxy = True
