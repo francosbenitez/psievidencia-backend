@@ -8,6 +8,20 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
 
+    class Role(models.TextChoices):
+        ADMIN = "ADMIN", "Admin"
+        AUTHENTICATED = "AUTHENTICATED", "Authenticated"
+        PSYCHOLOGIST = "PSYCHOLOGIST", "Psychologist"
+
+    base_role = Role.ADMIN
+
+    role = models.CharField(max_length=50, choices=Role.choices, default="")
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.role = self.base_role
+            return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.email
 
