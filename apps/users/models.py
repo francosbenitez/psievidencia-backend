@@ -26,6 +26,16 @@ class User(AbstractUser):
         return self.email
 
 
+class Authenticated(User):
+    base_role = User.Role.AUTHENTICATED
+
+    class Meta:
+        proxy = True
+
+    def welcome(self):
+        return "Only for authenticated users"
+
+
 class Suggestion(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=1000, default="")
