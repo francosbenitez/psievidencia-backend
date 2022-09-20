@@ -46,7 +46,6 @@ from django.http import HttpResponsePermanentRedirect
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):
-
     # allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
     allowed_schemes = ["", "http", "https"]
 
@@ -87,8 +86,8 @@ def activate_user(request, uidb64, token):
         user.is_email_verified = True
         user.save()
 
-        return redirect("http://localhost:3000//")
-    return redirect("http://localhost:3000//error")
+        return redirect(settings.FRONTEND_URL)
+    return redirect(settings.FRONTEND_URL + "error")
 
 
 class ProfileView(generics.RetrieveAPIView):
@@ -213,9 +212,7 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
                 if len(redirect_url) > 3:
                     return CustomRedirect(redirect_url + "?token_valid=False")
                 else:
-                    return CustomRedirect(
-                        "http://localhost:3000/" + "?token_valid=False"
-                    )
+                    return CustomRedirect(settings.FRONTEND_URL + "?token_valid=False")
 
             if redirect_url and len(redirect_url) > 3:
                 return CustomRedirect(
@@ -226,7 +223,7 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
                     + token
                 )
             else:
-                return CustomRedirect("http://localhost:3000/" + "?token_valid=False")
+                return CustomRedirect(settings.FRONTEND_URL + "?token_valid=False")
 
         except DjangoUnicodeDecodeError as identifier:
             try:
