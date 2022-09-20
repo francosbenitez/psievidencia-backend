@@ -1,4 +1,5 @@
 from .models import Favorite
+from rest_framework import serializers
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

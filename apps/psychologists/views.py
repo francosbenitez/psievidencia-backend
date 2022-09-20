@@ -242,9 +242,12 @@ class PsychologistDetail(APIView):
         psychologist = self.get_object(psychologist_id)
 
         user_id = request.user.id
+        print("user_id", user_id)
+
         if user_id:
 
-            favorites = Favorite.objects.filter(user_id=user_id)
+            # favorites = Favorite.objects.filter(user_id=user_id)
+            favorites = Favorite.objects.filter(id=user_id)
             favorites_psychologists = []
 
             # Add items to the 'favorites_psychologists' list

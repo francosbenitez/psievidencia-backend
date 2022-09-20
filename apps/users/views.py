@@ -8,7 +8,7 @@ from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
-from apps.psychologists.models import Psychologist
+from apps.users.models import Psychologist
 from .serializers import (
     ResetPasswordEmailRequestSerializer,
     SetNewPasswordSerializer,

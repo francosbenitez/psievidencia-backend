@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "knox",
-    "apps.psychologists",
     "apps.users",
+    "apps.psychologists",
     "apps.favorites",
     "whitenoise.runserver_nostatic",
 ]

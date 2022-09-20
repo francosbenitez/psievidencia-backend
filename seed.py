@@ -10,7 +10,6 @@ django.setup()
 
 import csv
 from apps.psychologists.models import (
-    Psychologist,
     Specialization,
     TherapeuticModel,
     WorkPopulation,
@@ -22,8 +21,7 @@ from apps.psychologists.models import (
     Province,
 )
 
-# from django.contrib.auth.models import User
-from apps.users.models import User
+from apps.users.models import Authenticated, Psychologist
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vS95wGgZlEivufodGteKLOxDzeC1dCCae38NCYiQZ7xIWSKnXMUc0-kionSL_BBRNO4xdrqAe1VDQ-P/pub?output=csv"
@@ -39,11 +37,11 @@ CSV_PATH = "./psychologists.csv"
 Psychologist.objects.all().delete()
 
 # Seed user
-print("Seeding user...")
-if User.objects.filter(username="username").exists():
+print("Seeding authenticated user...")
+if Authenticated.objects.filter(username="username").exists():
     pass
 else:
-    user = User.objects.create_user(
+    user = Authenticated.objects.create_user(
         username="username",
         email="username@email.com",
         password="password",
@@ -59,6 +57,7 @@ with open(CSV_PATH, newline="") as csvfile:
     # Seed psychologists
     print("Seeding psychologists...")
     for i, row in enumerate(reader):
+
         if row[2] != "":
             if row[25] != "":
                 if row[1] == "":
@@ -89,10 +88,12 @@ with open(CSV_PATH, newline="") as csvfile:
                 and not Psychologist.objects.filter(email=row[2]).exists()
             ):
                 Psychologist.objects.create(
-                    id=i,
+                    # id=i,
                     date=row[0],
                     name=row[1],
                     email=row[2],
+                    username=row[2].split("@")[0],
+                    password=row[2].split("@")[0],
                     gender_identity=row[3],
                     registration_type=row[4],
                     registration_number=row[5],

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from apps.psychologists.models import Psychologist
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
@@ -12,7 +13,7 @@ class User(AbstractUser):
         AUTHENTICATED = "AUTHENTICATED", "Authenticated"
         PSYCHOLOGIST = "PSYCHOLOGIST", "Psychologist"
 
-    base_role = Role.ADMIN
+    base_role = Role.AUTHENTICATED
 
     role = models.CharField(max_length=50, choices=Role.choices, default="")
 
@@ -25,19 +26,38 @@ class User(AbstractUser):
         return self.email
 
 
-class AuthenticatedManager(BaseUserManager):
-    def get_queryset(self, *args, **kwargs):
-        results = super().get_queryset(*args, **kwargs)
-        return results.filter(role=User.Role.AUTHENTICATED)
-
-
 class Authenticated(User):
     base_role = User.Role.AUTHENTICATED
 
-    authenticated = AuthenticatedManager()
 
-    class Meta:
-        proxy = True
+class Psychologist(User):
+    base_role = User.Role.PSYCHOLOGIST
 
-    def welcome(self):
-        return "Only for authenticated users"
+    # id = models.IntegerField(primary_key=True)
+    date = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=1000, default="")
+    # email = models.EmailField(unique=True)
+    gender_identity = models.CharField(max_length=1000, default="")
+    registration_type = models.CharField(max_length=1000, default="")
+    registration_number = models.CharField(max_length=1000, default="")
+    institution = models.CharField(max_length=1000, default="")
+    team = models.CharField(max_length=1000, default="")
+    province = models.CharField(max_length=1000, default="")
+    city = models.CharField(max_length=1000, default="")
+    education = models.CharField(max_length=1000, default="")
+    therapeutic_model = models.CharField(max_length=1000, default="")
+    gender_perspective = models.CharField(max_length=1000, default="")
+    specialization = models.CharField(max_length=1000, default="")
+    work_population = models.CharField(max_length=1000, default="")
+    work_modality = models.CharField(max_length=1000, default="")
+    online = models.CharField(max_length=1000, default="")
+    prepaid = models.CharField(max_length=1000, default="")
+    prepaid_type = models.CharField(max_length=1000, default="")
+    invoice = models.CharField(max_length=1000, default="")
+    sign_language = models.CharField(max_length=1000, default="")
+    session_languages = models.CharField(max_length=1000, default="")
+    social_networks = models.CharField(max_length=1000, default="")
+    phone_number = models.CharField(max_length=1000, default="")
+    additional_data = models.CharField(max_length=1000, default="")
+    name_2 = models.CharField(max_length=1000, default="")
+    liked = models.BooleanField(default=False)

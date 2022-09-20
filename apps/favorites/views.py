@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .models import Favorite
-from apps.psychologists.models import Psychologist
 from .serializers import FavoriteSerializer
 from apps.psychologists.serializers import PsychologistSerializer
+from apps.users.models import Psychologist
+from rest_framework.views import APIView
 
 
 class CreateFavorite(APIView):
