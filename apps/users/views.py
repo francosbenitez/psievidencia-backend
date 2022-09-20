@@ -91,13 +91,6 @@ def activate_user(request, uidb64, token):
     return redirect("http://localhost:3000//error")
 
 
-class UsersList(APIView):
-    def get(self, request, format=None):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
-
 class ProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
