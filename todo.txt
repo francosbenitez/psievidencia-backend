@@ -20,3 +20,4 @@
   - Linter, and
   - tests
 in a pipeline.
+- Allow the login/register only with email. NOT username.
