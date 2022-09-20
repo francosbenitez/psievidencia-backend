@@ -3,7 +3,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from .models import Favorite, User
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,12 +28,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data["password"],
         )
         return user
-
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Favorite
-        fields = ("id", "psychologist_id", "user_id")
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):

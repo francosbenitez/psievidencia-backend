@@ -19,7 +19,7 @@ from .serializers import (
     WorkPopulationSerializer,
     ProvinceSerializer,
 )
-from apps.users.models import Favorite
+from apps.favorites.models import Favorite
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
