@@ -87,7 +87,7 @@ with open(CSV_PATH, newline="") as csvfile:
                 not Psychologist.objects.filter(id=i).exists()
                 and not Psychologist.objects.filter(email=row[2]).exists()
             ):
-                Psychologist.objects.create(
+                Psychologist.objects.create_user(
                     # id=i,
                     date=row[0],
                     name=row[1],
