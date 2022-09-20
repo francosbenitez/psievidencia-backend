@@ -4,8 +4,6 @@ from apps.users import views
 
 urlpatterns = [
     path("users", views.UsersList.as_view()),
-    path("suggestions", views.SuggestionsList.as_view()),
-    path("suggestions/create", views.CreateSuggestion.as_view()),
     path("favorites/<int:psychologist_id>/create", views.CreateFavorite.as_view()),
     path("favorites/<int:psychologist_id>/delete", views.DeleteFavorite.as_view()),
     path("favorites", views.FavoritesList.as_view()),
