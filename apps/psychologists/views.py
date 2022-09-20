@@ -4,7 +4,6 @@ from django.http import Http404
 from django.db.models import Q
 import pandas as pd
 from .models import (
-    Psychologist,
     Specialization,
     TherapeuticModel,
     WorkPopulation,
@@ -25,6 +24,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from django.db import connection
+from apps.users.models import Psychologist
 
 
 class PaginatedPsychologists(APIView):
@@ -207,7 +207,8 @@ class PaginatedPsychologists(APIView):
         user_id = request.user.id
         if user_id:
 
-            favorites = Favorite.objects.filter(user_id=user_id)
+            favorites = Favorite.objects.filter(authenticated_id=user_id)
+
             favorites_psychologists = []
 
             for item in favorites.values():
@@ -242,12 +243,10 @@ class PsychologistDetail(APIView):
         psychologist = self.get_object(psychologist_id)
 
         user_id = request.user.id
-        print("user_id", user_id)
 
         if user_id:
 
-            # favorites = Favorite.objects.filter(user_id=user_id)
-            favorites = Favorite.objects.filter(id=user_id)
+            favorites = Favorite.objects.filter(authenticated_id=user_id)
             favorites_psychologists = []
 
             # Add items to the 'favorites_psychologists' list
