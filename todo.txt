@@ -15,3 +15,8 @@
 - Develop:
   - 'Confirm password' option when creating the user.
   - Recover your password via email.
+- Add:
+  - "python3 -m black",
+  - Linter, and
+  - tests
+in a pipeline.

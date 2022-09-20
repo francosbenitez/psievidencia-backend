@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "knox",
     "apps.psychologists",
     "apps.users",
+    "apps.favorites",
     "whitenoise.runserver_nostatic",
 ]
 
