@@ -1,24 +1,19 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, RegisterSerializer
 from apps.users.models import User
 from django.contrib.auth import login
 from rest_framework.response import Response
-from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
-from apps.users.models import Psychologist
 from .serializers import (
     ResetPasswordEmailRequestSerializer,
     SetNewPasswordSerializer,
 )
-from apps.psychologists.serializers import PsychologistSerializer
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import generate_token
 from django.utils.encoding import (
@@ -31,15 +26,10 @@ from django.utils.encoding import (
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import datetime
-from googleapiclient.errors import HttpError
 from rest_framework.permissions import IsAuthenticated
 from knox.auth import TokenAuthentication
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
-from .utils import Util
 from django.http import HttpResponsePermanentRedirect
 
 # from .tasks import activate_user, send_activation_email

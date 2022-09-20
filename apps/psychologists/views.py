@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.core.paginator import Paginator
 from django.http import Http404
 from django.db.models import Q
 import pandas as pd
@@ -7,8 +5,6 @@ from .models import (
     Specialization,
     TherapeuticModel,
     WorkPopulation,
-    Education,
-    WorkModality,
     Province,
 )
 from .serializers import (
@@ -22,7 +18,6 @@ from apps.favorites.models import Favorite
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view
 from django.db import connection
 from apps.users.models import Psychologist
 

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .models import Favorite
 from .serializers import FavoriteSerializer
 from apps.psychologists.serializers import PsychologistSerializer
