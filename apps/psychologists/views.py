@@ -268,10 +268,14 @@ class UpdatePsychologist(generics.GenericAPIView):
 
         if user_id and user_id == psychologist_id:
 
-          psychologist = Psychologist.objects.filter(id=psychologist_id).update(**request.data)
+          Psychologist.objects.filter(id=psychologist_id).update(**request.data)
+          
+          psychologist = Psychologist.objects.filter(id=psychologist_id).values()[0]
+
+          serializer = PsychologistSerializer(psychologist)
 
           return Response(
-            {"message": "success", "data_changed": request.data},
+            {"message": "success", "data": serializer.data},
             status=status.HTTP_200_OK,
         )
 
