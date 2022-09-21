@@ -46,6 +46,7 @@ else:
         email="username@email.com",
         password="password",
         is_email_verified=True,
+        role="AUTHENTICATED"
     )
     user.save()
 print("User seeded!")
@@ -95,6 +96,7 @@ with open(CSV_PATH, newline="") as csvfile:
                     username=row[2].split("@")[0],
                     password=row[2].split("@")[0],
                     is_email_verified=True,
+                    role="PSYCHOLOGIST",
                     gender_identity=row[3],
                     registration_type=row[4],
                     registration_number=row[5],

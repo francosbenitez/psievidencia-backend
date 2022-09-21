@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from apps.users.models import Psychologist
-
+from rest_framework import generics, status
 
 class PaginatedPsychologists(APIView):
     def get(self, request, format=None):
@@ -261,6 +261,24 @@ class PsychologistDetail(APIView):
 
         serializer = PsychologistSerializer(psychologist)
         return Response(serializer.data)
+
+class UpdatePsychologist(generics.GenericAPIView):
+    def patch(self, request, psychologist_id, format=None):
+        user_id = request.user.id
+
+        if user_id and user_id == psychologist_id:
+
+          psychologist = Psychologist.objects.filter(id=psychologist_id).update(**request.data)
+
+          return Response(
+            {"message": "success", "data_changed": request.data},
+            status=status.HTTP_200_OK,
+        )
+
+        return Response(
+            {"message": "error"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class SpecializationsList(APIView):
