@@ -9,15 +9,16 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email")
+        fields = ("id", "username", "email", "role")
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password")
+        fields = ("id", "username", "email", "password", "role")
         extra_kwargs = {
             "password": {"write_only": True},
+            "role": {"required": True, "allow_blank": False},
             "email": {"required": True, "allow_blank": False},
         }
 
@@ -26,6 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data["username"],
             validated_data["email"],
             validated_data["password"],
+            role=validated_data["role"],
         )
         return user
 
