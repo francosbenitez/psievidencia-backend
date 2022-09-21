@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from .serializers import UserSerializer, RegisterSerializer
-from apps.users.models import User
+from apps.psychologists.serializers import PsychologistSerializer
+from apps.users.models import User, Psychologist
 from django.contrib.auth import login
 from rest_framework.response import Response
 from rest_framework import generics, permissions
@@ -80,11 +81,31 @@ def activate_user(request, uidb64, token):
     return redirect(settings.FRONTEND_URL + "error")
 
 
-class ProfileView(generics.RetrieveAPIView):
+class AccountView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
         return self.request.user
+
+class ProfileView(APIView):
+    def get(self, request, format=None):
+
+      user_id = request.user.id
+      user_role = request.user.role
+
+      if user_id and user_role == "PSYCHOLOGIST":
+          try:
+              psychologist = Psychologist.objects.filter(id=user_id).values()[0]
+              serializer = PsychologistSerializer(psychologist)
+              return Response({"data": serializer.data})
+          except Psychologist.DoesNotExist:
+              raise Http404
+            
+      return Response(
+          {"message": "error"},
+          status=status.HTTP_400_BAD_REQUEST,
+      )
+
 
 
 class RegisterAPI(generics.GenericAPIView):
