@@ -6,7 +6,6 @@ from rest_framework.routers import DefaultRouter
 from rest_framework import routers
 
 router = DefaultRouter()
-router.register(r'authors', views.TherapeuticModelViewSet, basename='therapeutic_model')
 router.register(r'books', views.PsychologistViewSet, basename='psychologist')
 
 urlpatterns = [

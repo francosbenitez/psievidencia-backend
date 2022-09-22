@@ -355,15 +355,6 @@ class ProvincesList(APIView):
         serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-class TherapeuticModelViewSet(viewsets.ModelViewSet):
-    """
-    List all workers, or create a new worker.
-    """
-    queryset = TherapeuticModel.objects.all()
-    print('queryset', queryset)
-    serializer_class = TherapeuticModelSerializer
-
-
 class PsychologistViewSet(viewsets.ModelViewSet):
     """
     List all workkers, or create a new worker.
