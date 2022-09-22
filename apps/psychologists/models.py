@@ -4,10 +4,8 @@ from apps.users.models import User
 class Psychologist(User):
     base_role = User.Role.PSYCHOLOGIST
 
-    # id = models.IntegerField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=1000, default="")
-    # email = models.EmailField(unique=True)
     gender_identity = models.CharField(max_length=1000, default="")
     registration_type = models.CharField(max_length=1000, default="")
     registration_number = models.CharField(max_length=1000, default="")
@@ -16,11 +14,11 @@ class Psychologist(User):
     province = models.CharField(max_length=1000, default="")
     city = models.CharField(max_length=1000, default="")
     education = models.CharField(max_length=1000, default="")
-    therapeutic_model = models.CharField(max_length=1000, default="")
+    # therapeutic_model = models.CharField(max_length=1000, default="")
     gender_perspective = models.CharField(max_length=1000, default="")
-    specialization = models.CharField(max_length=1000, default="")
-    work_population = models.CharField(max_length=1000, default="")
-    work_modality = models.CharField(max_length=1000, default="")
+    # specialization = models.CharField(max_length=1000, default="")
+    # work_population = models.CharField(max_length=1000, default="")
+    # work_modality = models.CharField(max_length=1000, default="")
     online = models.CharField(max_length=1000, default="")
     prepaid = models.CharField(max_length=1000, default="")
     prepaid_type = models.CharField(max_length=1000, default="")
@@ -46,7 +44,7 @@ class TherapeuticModel(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(
-        Psychologist, related_name="therapeutic_models"
+        'Psychologist', related_name="therapeutic_models"
     )
 
     def __str__(self):

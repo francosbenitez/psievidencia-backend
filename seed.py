@@ -56,6 +56,13 @@ with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
     next(reader)
 
+    df_test = pd.DataFrame.from_dict({
+      'therapeutic_model': [],
+      'specialization': [],
+      'work_population': [],
+      'work_population': []
+    })
+
     # Seed psychologists
     print("Seeding psychologists...")
     for i, row in enumerate(reader):
@@ -89,6 +96,8 @@ with open(CSV_PATH, newline="") as csvfile:
                 not Psychologist.objects.filter(id=i).exists()
                 and not Psychologist.objects.filter(email=row[2]).exists()
             ):
+                df_test = df_test.append({'therapeutic_model':row[11], 'specialization':row[13], 'work_population':row[14], 'work_modality':row[15]}, ignore_index=True)
+
                 Psychologist.objects.create_user(
                     # id=i,
                     date=row[0],
@@ -106,11 +115,11 @@ with open(CSV_PATH, newline="") as csvfile:
                     province=row[8],
                     city=row[9],
                     education=row[10],
-                    therapeutic_model=row[11],
+                    # therapeutic_model=row[11],
                     gender_perspective=row[12],
-                    specialization=row[13],
-                    work_population=row[14],
-                    work_modality=row[15],
+                    # specialization=row[13],
+                    # work_population=row[14],
+                    # work_modality=row[15],
                     online=row[16],
                     prepaid=row[17],
                     prepaid_type=row[18],
@@ -126,8 +135,9 @@ with open(CSV_PATH, newline="") as csvfile:
 
     # Build df
     df = pd.DataFrame(list(Psychologist.objects.all().values()))
+    df = df.join(df_test)
 
-    # Create seed function to seed 'specialization', 'therapeutic_model' & 'work_population'
+    # Create seed function to seed 'specialization', 'therapeutic_model', 'work_population' & 'work_modality'
     def seed(new_df, column_name, model):
         print(f"Seeding {column_name.replace('_', ' ')}...")
         new_df.columns = new_df.columns.str.replace("id", "psychologist_id")

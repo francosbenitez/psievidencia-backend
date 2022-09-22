@@ -4,43 +4,17 @@ from .models import (
     Specialization,
     TherapeuticModel,
     WorkPopulation,
+    WorkModality,
     Province,
 )
 
 
-class PsychologistSerializer(serializers.ModelSerializer):
+class TherapeuticModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Psychologist
-        fields = (
-            "id",
-            "date",
-            "name",
-            # "email",
-            "gender_identity",
-            "registration_type",
-            "registration_number",
-            "institution",
-            "team",
-            "province",
-            "city",
-            "education",
-            "therapeutic_model",
-            "gender_perspective",
-            "specialization",
-            "work_population",
-            "work_modality",
-            "online",
-            "prepaid",
-            "prepaid_type",
-            "invoice",
-            "sign_language",
-            "session_languages",
-            "social_networks",
-            "phone_number",
-            "additional_data",
-            "name_2",
-            "liked",
-        )
+        model = TherapeuticModel
+        fields = ("id", "name")
+        # fields = ("id", "name", "psychologists")
+        # extra_kwargs = {'psychologists': {'required': False}}
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -49,9 +23,9 @@ class SpecializationSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class TherapeuticModelSerializer(serializers.ModelSerializer):
+class WorkModalitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = TherapeuticModel
+        model = WorkModality
         fields = ("id", "name")
 
 
@@ -65,3 +39,44 @@ class ProvinceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
         fields = ("id", "name", "slug")
+
+
+class PsychologistSerializer(serializers.ModelSerializer):
+    therapeutic_models = TherapeuticModelSerializer(many=True, read_only=True)
+    # specialization = SpecializationSerializer(many=True)
+    # work_population = WorkPopulationSerializer(many=True)
+    # work_modality = WorkModalitySerializer(many=True)
+
+    class Meta:
+        model = Psychologist
+        fields = (
+            "id",
+            "date",
+            "name",
+            "gender_identity",
+            "registration_type",
+            "registration_number",
+            "institution",
+            "team",
+            "province",
+            "city",
+            "education",
+            "therapeutic_models",
+            "gender_perspective",
+            # "specialization",
+            # "work_population",
+            # "work_modality",
+            "online",
+            "prepaid",
+            "prepaid_type",
+            "invoice",
+            "sign_language",
+            "session_languages",
+            "social_networks",
+            "phone_number",
+            "additional_data",
+            "name_2",
+            "liked",
+        )
+        extra_kwargs = {'therapeutic_models': {'required': False}}
+

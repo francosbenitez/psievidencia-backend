@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
-from rest_framework import generics, status
+from rest_framework import generics, routers, serializers, viewsets, status, filters
 
 class PaginatedPsychologists(APIView):
     def get(self, request, format=None):
@@ -259,6 +259,8 @@ class PsychologistDetail(APIView):
                 if item_fa == psychologist:
                     psychologist["liked"] = True
 
+        # psychologist.specializations_set.all()
+
         serializer = PsychologistSerializer(psychologist)
         return Response(serializer.data)
 
@@ -352,3 +354,22 @@ class ProvincesList(APIView):
         result_page = paginator.paginate_queryset(json, request)
         serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+class TherapeuticModelViewSet(viewsets.ModelViewSet):
+    """
+    List all workers, or create a new worker.
+    """
+    queryset = TherapeuticModel.objects.all()
+    print('queryset', queryset)
+    serializer_class = TherapeuticModelSerializer
+
+
+class PsychologistViewSet(viewsets.ModelViewSet):
+    """
+    List all workkers, or create a new worker.
+    """
+    queryset = Psychologist.objects.all()
+    print('queryset', queryset)
+    serializer_class = PsychologistSerializer
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ['date']
