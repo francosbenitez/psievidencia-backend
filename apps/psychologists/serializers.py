@@ -41,9 +41,9 @@ class ProvinceSerializer(serializers.ModelSerializer):
 
 class PsychologistSerializer(serializers.ModelSerializer):
     therapeutic_models = TherapeuticModelSerializer(many=True)
-    # specialization = SpecializationSerializer(many=True)
-    # work_population = WorkPopulationSerializer(many=True)
-    # work_modality = WorkModalitySerializer(many=True)
+    specializations = SpecializationSerializer(many=True)
+    work_populations = WorkPopulationSerializer(many=True)
+    work_modalities = WorkModalitySerializer(many=True)
 
     class Meta:
         model = Psychologist
@@ -61,9 +61,9 @@ class PsychologistSerializer(serializers.ModelSerializer):
             "education",
             "therapeutic_models",
             "gender_perspective",
-            # "specialization",
-            # "work_population",
-            # "work_modality",
+            "specializations",
+            "work_populations",
+            "work_modalities",
             "online",
             "prepaid",
             "prepaid_type",
