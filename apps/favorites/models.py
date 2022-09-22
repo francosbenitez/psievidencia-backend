@@ -1,5 +1,6 @@
 from django.db import models
-from apps.users.models import Authenticated, Psychologist
+from apps.users.models import Authenticated
+from apps.psychologists.models import Psychologist
 
 
 class Favorite(models.Model):

@@ -2,6 +2,7 @@ from django.http import Http404
 from django.db.models import Q
 import pandas as pd
 from .models import (
+    Psychologist,
     Specialization,
     TherapeuticModel,
     WorkPopulation,
@@ -19,7 +20,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
-from apps.users.models import Psychologist
 from rest_framework import generics, status
 
 class PaginatedPsychologists(APIView):

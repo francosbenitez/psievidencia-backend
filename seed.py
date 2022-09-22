@@ -10,6 +10,7 @@ django.setup()
 
 import csv
 from apps.psychologists.models import (
+    Psychologist,
     Specialization,
     TherapeuticModel,
     WorkPopulation,
@@ -21,7 +22,7 @@ from apps.psychologists.models import (
     Province,
 )
 
-from apps.users.models import Authenticated, Psychologist
+from apps.users.models import Authenticated
 
 req = requests.get(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vS95wGgZlEivufodGteKLOxDzeC1dCCae38NCYiQZ7xIWSKnXMUc0-kionSL_BBRNO4xdrqAe1VDQ-P/pub?output=csv"

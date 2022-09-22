@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from .serializers import UserSerializer, RegisterSerializer
 from apps.psychologists.serializers import PsychologistSerializer
-from apps.users.models import User, Psychologist
+from apps.users.models import User
+from apps.psychologists.models import Psychologist
 from django.contrib.auth import login
 from rest_framework.response import Response
 from rest_framework import generics, permissions
