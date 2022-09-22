@@ -225,7 +225,7 @@ class PsychologistViewSet(viewsets.ModelViewSet):
 
 
         custom_list = [item["id"] for item in list_psychologists]
-        queryset = Psychologist.objects.filter(id__in=custom_list)
+        queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
                 
         return queryset
 
