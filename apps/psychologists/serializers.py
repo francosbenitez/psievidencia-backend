@@ -10,24 +10,36 @@ from .models import (
 
 
 class TherapeuticModelSerializer(serializers.ModelSerializer):
+    def to_representation(self, value):
+        return value.name
+
     class Meta:
         model = TherapeuticModel
         fields = ("id", "name")
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
+    def to_representation(self, value):
+        return value.name
+
     class Meta:
         model = Specialization
         fields = ("id", "name")
 
 
 class WorkModalitySerializer(serializers.ModelSerializer):
+    def to_representation(self, value):
+        return value.name
+
     class Meta:
         model = WorkModality
         fields = ("id", "name")
 
 
 class WorkPopulationSerializer(serializers.ModelSerializer):
+    def to_representation(self, value):
+        return value.name
+        
     class Meta:
         model = WorkPopulation
         fields = ("id", "name")

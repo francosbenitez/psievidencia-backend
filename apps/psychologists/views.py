@@ -233,13 +233,11 @@ class PsychologistViewSet(viewsets.ModelViewSet):
 class PsychologistDetail(APIView):
     def get_object(self, psychologist_id):
         try:
-            # Create an object taking the 'psychologist_id' parameter from the URL
             return Psychologist.objects.filter(id=psychologist_id).values()[0]
         except Psychologist.DoesNotExist:
             raise Http404
 
     def get(self, request, psychologist_id, format=None):
-        # Check if this psychologist is in the 'favorites_psychologists' list
         psychologist = self.get_object(psychologist_id)
 
         user_id = request.user.id
@@ -249,7 +247,6 @@ class PsychologistDetail(APIView):
             favorites = Favorite.objects.filter(authenticated_id=user_id)
             favorites_psychologists = []
 
-            # Add items to the 'favorites_psychologists' list
             for item in favorites.values():
                 try:
                     favorite = Psychologist.objects.filter(
@@ -259,14 +256,14 @@ class PsychologistDetail(APIView):
                 except IndexError:
                     pass
 
-            # Check if any item in the 'favorites_psychologists' list matches to the 'psychologist' variable
             for item_fa in favorites_psychologists:
                 if item_fa == psychologist:
                     psychologist["liked"] = True
 
-        # psychologist.specializations_set.all()
 
-        serializer = PsychologistSerializer(psychologist)
+        queryset = Psychologist.objects.get(id=psychologist["id"])
+
+        serializer = PsychologistSerializer(queryset)
         return Response(serializer.data)
 
 class UpdatePsychologist(generics.GenericAPIView):
