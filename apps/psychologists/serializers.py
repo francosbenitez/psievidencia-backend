@@ -13,8 +13,6 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = TherapeuticModel
         fields = ("id", "name")
-        # fields = ("id", "name", "psychologists")
-        # extra_kwargs = {'psychologists': {'required': False}}
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -42,7 +40,7 @@ class ProvinceSerializer(serializers.ModelSerializer):
 
 
 class PsychologistSerializer(serializers.ModelSerializer):
-    therapeutic_models = TherapeuticModelSerializer(many=True, read_only=True)
+    therapeutic_models = TherapeuticModelSerializer(many=True)
     # specialization = SpecializationSerializer(many=True)
     # work_population = WorkPopulationSerializer(many=True)
     # work_modality = WorkModalitySerializer(many=True)
@@ -78,5 +76,4 @@ class PsychologistSerializer(serializers.ModelSerializer):
             "name_2",
             "liked",
         )
-        extra_kwargs = {'therapeutic_models': {'required': False}}
 
