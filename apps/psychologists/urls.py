@@ -2,14 +2,8 @@ from django.urls import path, include
 
 from apps.psychologists import views
 
-from rest_framework.routers import DefaultRouter
-from rest_framework import routers
-
-router = DefaultRouter()
-router.register(r'psychologists', views.PsychologistViewSet, basename='psychologist')
-
 urlpatterns = [
-    path(r'', include(router.urls)),
+    path("psychologists", views.PaginatedPsychologists.as_view()),
     path("psychologists/<int:psychologist_id>", views.PsychologistDetail.as_view()),
     path("psychologists/<int:psychologist_id>/edit", views.UpdatePsychologist.as_view()),
     path("psychologists/specializations", views.SpecializationsList.as_view()),

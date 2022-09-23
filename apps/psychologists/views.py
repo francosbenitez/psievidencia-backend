@@ -10,6 +10,7 @@ from .models import (
 )
 from .serializers import (
     PsychologistSerializer,
+    PsychologistsSerializer,
     SpecializationSerializer,
     TherapeuticModelSerializer,
     WorkPopulationSerializer,
@@ -24,11 +25,8 @@ from rest_framework import generics, routers, serializers, viewsets, status, fil
 from .paginations import CustomPagination
 
 
-class PsychologistViewSet(viewsets.ModelViewSet):
-    serializer_class = PsychologistSerializer
-    pagination_class = CustomPagination
-
-    def get_queryset(self):
+class PaginatedPsychologists(APIView):
+    def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
         specializations = Specialization.objects.all()
         name = None
@@ -49,37 +47,37 @@ class PsychologistViewSet(viewsets.ModelViewSet):
                 dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()
             ]
 
-        if "name" in self.request.GET:
-            name = self.request.GET["name"]
+        if "name" in request.GET:
+            name = request.GET["name"]
 
-        if "education" in self.request.GET:
-            education = self.request.GET["education"]
+        if "education" in request.GET:
+            education = request.GET["education"]
 
-        if "has_perspective" in self.request.GET:
-            has_perspective = self.request.GET["has_perspective"]
+        if "has_perspective" in request.GET:
+            has_perspective = request.GET["has_perspective"]
 
-        if "has_prepaid" in self.request.GET:
-            has_prepaid = self.request.GET["has_prepaid"]
+        if "has_prepaid" in request.GET:
+            has_prepaid = request.GET["has_prepaid"]
 
-        if "gender_identity" in self.request.GET:
-            gender_identity = self.request.GET["gender_identity"]
+        if "gender_identity" in request.GET:
+            gender_identity = request.GET["gender_identity"]
 
-        if "province" in self.request.GET:
-            province = self.request.GET["province"]
+        if "province" in request.GET:
+            province = request.GET["province"]
 
-        if "specialization[]" in self.request.GET:
-            specialization = list(map(int, self.request.GET.getlist("specialization[]")))
+        if "specialization[]" in request.GET:
+            specialization = list(map(int, request.GET.getlist("specialization[]")))
 
-        if "therapeutic_model[]" in self.request.GET:
+        if "therapeutic_model[]" in request.GET:
             therapeutic_model = list(
-                map(int, self.request.GET.getlist("therapeutic_model[]"))
+                map(int, request.GET.getlist("therapeutic_model[]"))
             )
 
-        if "work_population[]" in self.request.GET:
-            work_population = list(map(int, self.request.GET.getlist("work_population[]")))
+        if "work_population[]" in request.GET:
+            work_population = list(map(int, request.GET.getlist("work_population[]")))
 
-        if "work_modality[]" in self.request.GET:
-            work_modality = list(map(int, self.request.GET.getlist("work_modality[]")))
+        if "work_modality[]" in request.GET:
+            work_modality = list(map(int, request.GET.getlist("work_modality[]")))
 
         if (
             name
@@ -204,7 +202,7 @@ class PsychologistViewSet(viewsets.ModelViewSet):
 
         list_psychologists = list(psychologists.values())
 
-        user_id = self.request.user.id
+        user_id = request.user.id
         if user_id:
 
             favorites = Favorite.objects.filter(authenticated_id=user_id)
@@ -226,8 +224,23 @@ class PsychologistViewSet(viewsets.ModelViewSet):
 
         custom_list = [item["id"] for item in list_psychologists]
         queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
+        
+        # TO-DO: 
+        # - Loop through each psychologist in the queryset
+        #   - If the 'psychologist' is in the 'favorites' of the user
+        #     - return {'liked': True} 
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 12
+        result_page = paginator.paginate_queryset(list_psychologists, request)
+
+        # serializer = PsychologistSerializer(result_page, many=True)
+
+        serializer = PsychologistsSerializer(queryset, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
                 
-        return queryset
+        # return queryset
 
 
 class PsychologistDetail(APIView):
@@ -263,7 +276,8 @@ class PsychologistDetail(APIView):
 
         queryset = Psychologist.objects.get(id=psychologist["id"])
 
-        serializer = PsychologistSerializer(queryset)
+        serializer = PsychologistSerializer(queryset, context={'liked': psychologist["liked"]})
+
         return Response(serializer.data)
 
 class UpdatePsychologist(generics.GenericAPIView):
