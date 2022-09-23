@@ -210,7 +210,7 @@ class PaginatedPsychologists(APIView):
         paginator = PageNumberPagination()
         paginator.page_size = 12
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = PsychologistsSerializer(result_page, many=True)
+        serializer = PsychologistsSerializer(result_page, context={'view': 'PaginatedPsychologists'}, many=True)
 
         user_id = request.user.id
         if user_id:

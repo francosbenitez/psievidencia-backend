@@ -14,10 +14,10 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
         data = super(TherapeuticModelSerializer, self).to_representation(value)
         
         if 'view' in self.context:
-          if self.context['view'] == 'PsychologistDetail':
-            return data
+          if self.context['view'] == 'PaginatedPsychologists':
+            return value.name
         else: 
-          return value.name
+          return data
 
     class Meta:
         model = TherapeuticModel
