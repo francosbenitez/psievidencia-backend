@@ -22,10 +22,12 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from rest_framework import generics, routers, serializers, viewsets, status, filters
-from .paginations import CustomPagination
+# from .paginations import CustomPagination
 
 
 class PaginatedPsychologists(APIView):
+    # pagination_class = CustomPagination
+
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
         specializations = Specialization.objects.all()
@@ -232,8 +234,8 @@ class PaginatedPsychologists(APIView):
 
         paginator = PageNumberPagination()
         paginator.page_size = 12
-        result_page = paginator.paginate_queryset(list_psychologists, request)
-        serializer = PsychologistsSerializer(queryset, many=True)
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = PsychologistsSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
 
