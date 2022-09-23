@@ -1,6 +1,6 @@
 from .models import Favorite
 from .serializers import FavoriteSerializer
-from apps.psychologists.serializers import PsychologistSerializer
+from apps.psychologists.serializers import PsychologistsSerializer
 from apps.psychologists.models import Psychologist
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -56,8 +56,12 @@ class FavoritesList(APIView):
             favorite = Psychologist.objects.filter(id=item["psychologist_id"]).values()
             favorites_psychologists.append(favorite[0])
 
-        for item in favorites_psychologists:
+        custom_list = [item["id"] for item in favorites_psychologists]
+        queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
+
+        serializer = PsychologistsSerializer(queryset, many=True)
+
+        for item in serializer.data:
             item["liked"] = True
 
-        serializer = PsychologistSerializer(favorites_psychologists, many=True)
         return Response(serializer.data)
