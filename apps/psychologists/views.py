@@ -204,6 +204,14 @@ class PaginatedPsychologists(APIView):
 
         list_psychologists = list(psychologists.values())
 
+        custom_list = [item["id"] for item in list_psychologists]
+        queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 12
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = PsychologistsSerializer(result_page, many=True)
+
         user_id = request.user.id
         if user_id:
 
@@ -219,23 +227,10 @@ class PaginatedPsychologists(APIView):
                     pass
 
             for item_fa in favorites_psychologists:
-                for item_ps in list_psychologists:
-                    if item_fa == item_ps:
+                for item_ps in serializer.data:
+                    if item_fa['id'] == item_ps['id']:
                         item_ps["liked"] = True
 
-
-        custom_list = [item["id"] for item in list_psychologists]
-        queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
-        
-        # TO-DO: 
-        # - Loop through each psychologist in the queryset
-        #   - If the 'psychologist' is in the 'favorites' of the user
-        #     - return {'liked': True} 
-
-        paginator = PageNumberPagination()
-        paginator.page_size = 12
-        result_page = paginator.paginate_queryset(queryset, request)
-        serializer = PsychologistsSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
 
