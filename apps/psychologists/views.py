@@ -267,7 +267,7 @@ class PsychologistDetail(APIView):
 
         queryset = Psychologist.objects.get(id=psychologist["id"])
 
-        serializer = PsychologistSerializer(queryset, context={'liked': psychologist["liked"]})
+        serializer = PsychologistSerializer(queryset, context={'liked': psychologist["liked"], 'view': 'PsychologistDetail'})
 
         return Response(serializer.data)
 

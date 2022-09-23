@@ -11,7 +11,13 @@ from .models import (
 
 class TherapeuticModelSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
-        return value.name
+        data = super(TherapeuticModelSerializer, self).to_representation(value)
+        
+        if 'view' in self.context:
+          if self.context['view'] == 'PsychologistDetail':
+            return data
+        else: 
+          return value.name
 
     class Meta:
         model = TherapeuticModel
@@ -55,7 +61,6 @@ class PsychologistsSerializer(serializers.ModelSerializer):
     specializations = SpecializationSerializer(many=True)
     work_populations = WorkPopulationSerializer(many=True)
     work_modalities = WorkModalitySerializer(many=True)
-    # liked = serializers.SerializerMethodField()
 
     class Meta:
         model = Psychologist
@@ -88,10 +93,6 @@ class PsychologistsSerializer(serializers.ModelSerializer):
             "name_2",
             "liked",
         )
-
-    # def get_liked(self, obj):
-    #     liked = self.context['liked']
-    #     return liked
 
 class PsychologistSerializer(serializers.ModelSerializer):
     therapeutic_models = TherapeuticModelSerializer(many=True)
@@ -135,9 +136,3 @@ class PsychologistSerializer(serializers.ModelSerializer):
     def get_liked(self, obj):
         liked = self.context['liked']
         return liked
-
-    # def __init__(self, *args, **kwargs):
-    #     print("kwargs['context']", kwargs['context'])
-    #     if kwargs['context']['view'].action == 'get':
-    #         del self.fields['liked']
-    #     super().__init__(*args, **kwargs)
