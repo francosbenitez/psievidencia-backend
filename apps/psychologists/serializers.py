@@ -16,8 +16,8 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
         if 'view' in self.context:
           if self.context['view'] == 'PaginatedPsychologists':
             return value.name
-        else: 
-          return data
+          else: 
+            return data
 
     class Meta:
         model = TherapeuticModel
