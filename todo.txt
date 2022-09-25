@@ -22,4 +22,4 @@
 in a pipeline.
 - Allow the login/register only with email. NOT username.
 - Fix favorites issue. DONE
-- Fix UpdatePsychologist.
+- Fix UpdatePsychologist. DONE
