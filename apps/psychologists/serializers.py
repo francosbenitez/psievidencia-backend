@@ -107,6 +107,7 @@ class PsychologistSerializer(serializers.ModelSerializer):
             "id",
             "date",
             "name",
+            "email",
             "gender_identity",
             "registration_type",
             "registration_number",
