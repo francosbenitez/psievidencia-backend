@@ -33,6 +33,7 @@ from knox.auth import TokenAuthentication
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
 from django.http import HttpResponsePermanentRedirect
+from apps.favorites.models import Favorite
 
 # from .tasks import activate_user, send_activation_email
 
@@ -96,8 +97,24 @@ class ProfileView(APIView):
 
       if user_id and user_role == "PSYCHOLOGIST":
           try:
-              psychologist = Psychologist.objects.filter(id=user_id).values()[0]
-              serializer = PsychologistSerializer(psychologist)
+              psychologist = Psychologist.objects.get(id=user_id)
+              favorites = Favorite.objects.filter(authenticated_id=user_id)
+              favorites_psychologists = []
+
+              for item in favorites.values():
+                  try:
+                      favorite = Psychologist.objects.filter(
+                          id=item["psychologist_id"]
+                      ).values()
+                      favorites_psychologists.append(favorite[0])
+                  except IndexError:
+                      pass
+
+              for item_fa in favorites_psychologists:
+                  if item_fa == psychologist:
+                      psychologist.liked = True
+                      
+              serializer = PsychologistSerializer(psychologist, context={'liked': psychologist.liked})
               return Response({"data": serializer.data})
           except Psychologist.DoesNotExist:
               raise Http404

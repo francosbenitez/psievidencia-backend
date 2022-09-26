@@ -121,7 +121,7 @@ class PaginatedPsychologists(APIView):
             if has_prepaid is not None:
                 if has_prepaid == "si" or has_prepaid == "no":
                     psychologists = psychologists.filter(
-                        gender_perspectives__has_prepaid__icontains=has_prepaid
+                        prepaids__has_prepaid__icontains=has_prepaid
                     )
 
             if gender_identity is not None:
@@ -272,14 +272,28 @@ class PsychologistDetail(APIView):
         return Response(serializer.data)
 
 class UpdatePsychologist(generics.GenericAPIView):
-    def patch(self, request, psychologist_id, format=None):
+    def patch(self, request, format=None):
         user_id = request.user.id
+        user_role = request.user.role
 
-        if user_id and user_id == psychologist_id:
+        if user_id and user_role == "PSYCHOLOGIST":
+          psychologist = Psychologist.objects.get(id=user_id)
 
-          Psychologist.objects.filter(id=psychologist_id).update(**request.data)
+          if request.data.get('therapeutic_models') != None:
+            therapeutic_models = []
 
-          psychologist = Psychologist.objects.get(id=psychologist_id)
+            for therapeutic_model in request.data.get('therapeutic_models'):
+              therapeutic_model = TherapeuticModel.objects.get(id=therapeutic_model["id"])
+              therapeutic_models.append(therapeutic_model)
+
+            psychologist.therapeutic_models.set(therapeutic_models)
+
+          test = request.data
+          del test["therapeutic_models"]
+
+          Psychologist.objects.filter(id=user_id).update(**test)
+
+          psychologist = Psychologist.objects.get(id=user_id)
 
           serializer = PsychologistSerializer(psychologist, context={'liked': psychologist.liked})
 
