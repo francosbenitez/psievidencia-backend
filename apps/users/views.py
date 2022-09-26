@@ -89,41 +89,43 @@ class AccountView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
 class ProfileView(APIView):
     def get(self, request, format=None):
 
-      user_id = request.user.id
-      user_role = request.user.role
+        user_id = request.user.id
+        user_role = request.user.role
 
-      if user_id and user_role == "PSYCHOLOGIST":
-          try:
-              psychologist = Psychologist.objects.get(id=user_id)
-              favorites = Favorite.objects.filter(authenticated_id=user_id)
-              favorites_psychologists = []
+        if user_id and user_role == "PSYCHOLOGIST":
+            try:
+                psychologist = Psychologist.objects.get(id=user_id)
+                favorites = Favorite.objects.filter(authenticated_id=user_id)
+                favorites_psychologists = []
 
-              for item in favorites.values():
-                  try:
-                      favorite = Psychologist.objects.filter(
-                          id=item["psychologist_id"]
-                      ).values()
-                      favorites_psychologists.append(favorite[0])
-                  except IndexError:
-                      pass
+                for item in favorites.values():
+                    try:
+                        favorite = Psychologist.objects.filter(
+                            id=item["psychologist_id"]
+                        ).values()
+                        favorites_psychologists.append(favorite[0])
+                    except IndexError:
+                        pass
 
-              for item_fa in favorites_psychologists:
-                  if item_fa == psychologist:
-                      psychologist.liked = True
-                      
-              serializer = PsychologistSerializer(psychologist, context={'liked': psychologist.liked})
-              return Response({"data": serializer.data})
-          except Psychologist.DoesNotExist:
-              raise Http404
-            
-      return Response(
-          {"message": "error"},
-          status=status.HTTP_400_BAD_REQUEST,
-      )
+                for item_fa in favorites_psychologists:
+                    if item_fa == psychologist:
+                        psychologist.liked = True
 
+                serializer = PsychologistSerializer(
+                    psychologist, context={"liked": psychologist.liked}
+                )
+                return Response({"data": serializer.data})
+            except Psychologist.DoesNotExist:
+                raise Http404
+
+        return Response(
+            {"message": "error"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class RegisterAPI(generics.GenericAPIView):

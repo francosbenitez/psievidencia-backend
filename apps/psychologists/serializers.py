@@ -12,10 +12,10 @@ from .models import (
 class TherapeuticModelSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(TherapeuticModelSerializer, self).to_representation(value)
-        
-        if 'view' in self.context:
-          if self.context['view'] == 'PaginatedPsychologists':
-            return value.name
+
+        if "view" in self.context:
+            if self.context["view"] == "PaginatedPsychologists":
+                return value.name
 
         return data
 
@@ -45,7 +45,7 @@ class WorkModalitySerializer(serializers.ModelSerializer):
 class WorkPopulationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         return value.name
-        
+
     class Meta:
         model = WorkPopulation
         fields = ("id", "name")
@@ -55,6 +55,7 @@ class ProvinceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
         fields = ("id", "name", "slug")
+
 
 class PsychologistsSerializer(serializers.ModelSerializer):
     therapeutic_models = TherapeuticModelSerializer(many=True)
@@ -93,6 +94,7 @@ class PsychologistsSerializer(serializers.ModelSerializer):
             "name_2",
             "liked",
         )
+
 
 class PsychologistSerializer(serializers.ModelSerializer):
     therapeutic_models = TherapeuticModelSerializer(many=True)
@@ -135,5 +137,5 @@ class PsychologistSerializer(serializers.ModelSerializer):
         )
 
     def get_liked(self, obj):
-        liked = self.context['liked']
+        liked = self.context["liked"]
         return liked

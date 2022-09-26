@@ -47,7 +47,7 @@ else:
         email="username@email.com",
         password="password",
         is_email_verified=True,
-        role="AUTHENTICATED"
+        role="AUTHENTICATED",
     )
     user.save()
 print("User seeded!")
@@ -56,12 +56,14 @@ with open(CSV_PATH, newline="") as csvfile:
     reader = csv.reader(csvfile, quotechar='"')
     next(reader)
 
-    df_test = pd.DataFrame.from_dict({
-      'therapeutic_model': [],
-      'specialization': [],
-      'work_population': [],
-      'work_population': []
-    })
+    df_test = pd.DataFrame.from_dict(
+        {
+            "therapeutic_model": [],
+            "specialization": [],
+            "work_population": [],
+            "work_population": [],
+        }
+    )
 
     # Seed psychologists
     print("Seeding psychologists...")
@@ -96,7 +98,15 @@ with open(CSV_PATH, newline="") as csvfile:
                 not Psychologist.objects.filter(id=i).exists()
                 and not Psychologist.objects.filter(email=row[2]).exists()
             ):
-                df_test = df_test.append({'therapeutic_model':row[11], 'specialization':row[13], 'work_population':row[14], 'work_modality':row[15]}, ignore_index=True)
+                df_test = df_test.append(
+                    {
+                        "therapeutic_model": row[11],
+                        "specialization": row[13],
+                        "work_population": row[14],
+                        "work_modality": row[15],
+                    },
+                    ignore_index=True,
+                )
 
                 Psychologist.objects.create_user(
                     # id=i,

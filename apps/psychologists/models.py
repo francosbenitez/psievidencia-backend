@@ -1,6 +1,7 @@
 from django.db import models
 from apps.users.models import User
 
+
 class Psychologist(User):
     base_role = User.Role.PSYCHOLOGIST
 
@@ -31,6 +32,7 @@ class Psychologist(User):
     name_2 = models.CharField(max_length=1000, default="")
     liked = models.BooleanField(default=False)
 
+
 class Specialization(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
@@ -44,7 +46,7 @@ class TherapeuticModel(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(
-        'Psychologist', related_name="therapeutic_models"
+        "Psychologist", related_name="therapeutic_models"
     )
 
     def __str__(self):

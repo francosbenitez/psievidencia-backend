@@ -7,14 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0023_psychologist_alter_education_psychologists_and_more'),
-        ('favorites', '0005_alter_favorite_authenticated_and_more'),
+        ("psychologists", "0023_psychologist_alter_education_psychologists_and_more"),
+        ("favorites", "0005_alter_favorite_authenticated_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='favorite',
-            name='psychologist',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favorites', to='psychologists.psychologist'),
+            model_name="favorite",
+            name="psychologist",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="favorites",
+                to="psychologists.psychologist",
+            ),
         ),
     ]

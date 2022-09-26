@@ -7,22 +7,21 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0003_user_role'),
+        ("users", "0003_user_role"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Authenticated',
-            fields=[
-            ],
+            name="Authenticated",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('users.user',),
+            bases=("users.user",),
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
     ]

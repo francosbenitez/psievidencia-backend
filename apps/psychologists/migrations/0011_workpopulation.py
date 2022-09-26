@@ -6,16 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0010_rename_specialization_specialization_name_and_more'),
+        ("psychologists", "0010_rename_specialization_specialization_name_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WorkPopulation',
+            name="WorkPopulation",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(default='', max_length=1000)),
-                ('psychologists', models.ManyToManyField(related_name='work_populations', to='psychologists.psychologist')),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(default="", max_length=1000)),
+                (
+                    "psychologists",
+                    models.ManyToManyField(
+                        related_name="work_populations", to="psychologists.psychologist"
+                    ),
+                ),
             ],
         ),
     ]

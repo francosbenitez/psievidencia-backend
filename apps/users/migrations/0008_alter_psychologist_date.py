@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0007_remove_authenticatedprofile_user_and_more'),
+        ("users", "0007_remove_authenticatedprofile_user_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='psychologist',
-            name='date',
+            model_name="psychologist",
+            name="date",
             field=models.DateTimeField(auto_now_add=True),
         ),
     ]

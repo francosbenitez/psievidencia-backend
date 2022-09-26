@@ -9,16 +9,38 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('users', '0005_authenticatedprofile_psychologistprofile_and_more'),
+        ("users", "0005_authenticatedprofile_psychologistprofile_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Favorite',
+            name="Favorite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('authenticated', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='authenticad', to='users.authenticated')),
-                ('psychologist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='psychologist', to='users.psychologist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "authenticated",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="authenticad",
+                        to="users.authenticated",
+                    ),
+                ),
+                (
+                    "psychologist",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="psychologist",
+                        to="users.psychologist",
+                    ),
+                ),
             ],
         ),
     ]

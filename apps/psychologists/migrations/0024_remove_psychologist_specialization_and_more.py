@@ -6,24 +6,24 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0023_psychologist_alter_education_psychologists_and_more'),
+        ("psychologists", "0023_psychologist_alter_education_psychologists_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='psychologist',
-            name='specialization',
+            model_name="psychologist",
+            name="specialization",
         ),
         migrations.RemoveField(
-            model_name='psychologist',
-            name='therapeutic_model',
+            model_name="psychologist",
+            name="therapeutic_model",
         ),
         migrations.RemoveField(
-            model_name='psychologist',
-            name='work_modality',
+            model_name="psychologist",
+            name="work_modality",
         ),
         migrations.RemoveField(
-            model_name='psychologist',
-            name='work_population',
+            model_name="psychologist",
+            name="work_population",
         ),
     ]

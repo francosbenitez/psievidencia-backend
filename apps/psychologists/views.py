@@ -22,6 +22,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from rest_framework import generics, routers, serializers, viewsets, status, filters
+
 # from .paginations import CustomPagination
 
 
@@ -210,7 +211,9 @@ class PaginatedPsychologists(APIView):
         paginator = PageNumberPagination()
         paginator.page_size = 12
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = PsychologistsSerializer(result_page, context={'view': 'PaginatedPsychologists'}, many=True)
+        serializer = PsychologistsSerializer(
+            result_page, context={"view": "PaginatedPsychologists"}, many=True
+        )
 
         user_id = request.user.id
         if user_id:
@@ -228,7 +231,7 @@ class PaginatedPsychologists(APIView):
 
             for item_fa in favorites_psychologists:
                 for item_ps in serializer.data:
-                    if item_fa['id'] == item_ps['id']:
+                    if item_fa["id"] == item_ps["id"]:
                         item_ps["liked"] = True
 
         return paginator.get_paginated_response(serializer.data)
@@ -264,12 +267,15 @@ class PsychologistDetail(APIView):
                 if item_fa == psychologist:
                     psychologist["liked"] = True
 
-
         queryset = Psychologist.objects.get(id=psychologist["id"])
 
-        serializer = PsychologistSerializer(queryset, context={'liked': psychologist["liked"], 'view': 'PsychologistDetail'})
+        serializer = PsychologistSerializer(
+            queryset,
+            context={"liked": psychologist["liked"], "view": "PsychologistDetail"},
+        )
 
         return Response(serializer.data)
+
 
 class UpdatePsychologist(generics.GenericAPIView):
     def patch(self, request, format=None):
@@ -277,31 +283,34 @@ class UpdatePsychologist(generics.GenericAPIView):
         user_role = request.user.role
 
         if user_id and user_role == "PSYCHOLOGIST":
-          psychologist = Psychologist.objects.get(id=user_id)
+            psychologist = Psychologist.objects.get(id=user_id)
 
-          test = request.data
+            test = request.data
 
-          if request.data.get('therapeutic_models') != None:
-            therapeutic_models = []
+            if request.data.get("therapeutic_models") != None:
+                therapeutic_models = []
 
-            for therapeutic_model in request.data.get('therapeutic_models'):
-              therapeutic_model = TherapeuticModel.objects.get(id=therapeutic_model["id"])
-              therapeutic_models.append(therapeutic_model)
+                for therapeutic_model in request.data.get("therapeutic_models"):
+                    therapeutic_model = TherapeuticModel.objects.get(
+                        id=therapeutic_model["id"]
+                    )
+                    therapeutic_models.append(therapeutic_model)
 
-            psychologist.therapeutic_models.set(therapeutic_models)
-            del test["therapeutic_models"]
+                psychologist.therapeutic_models.set(therapeutic_models)
+                del test["therapeutic_models"]
 
+            Psychologist.objects.filter(id=user_id).update(**test)
 
-          Psychologist.objects.filter(id=user_id).update(**test)
+            psychologist = Psychologist.objects.get(id=user_id)
 
-          psychologist = Psychologist.objects.get(id=user_id)
+            serializer = PsychologistSerializer(
+                psychologist, context={"liked": psychologist.liked}
+            )
 
-          serializer = PsychologistSerializer(psychologist, context={'liked': psychologist.liked})
-
-          return Response(
-            {"message": "success", "data": serializer.data},
-            status=status.HTTP_200_OK,
-        )
+            return Response(
+                {"message": "success", "data": serializer.data},
+                status=status.HTTP_200_OK,
+            )
 
         return Response(
             {"message": "error"},
@@ -376,4 +385,3 @@ class ProvincesList(APIView):
         result_page = paginator.paginate_queryset(json, request)
         serializer = ProvinceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
-

@@ -7,57 +7,85 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0005_authenticatedprofile_psychologistprofile_and_more'),
-        ('psychologists', '0020_prepaid'),
+        ("users", "0005_authenticatedprofile_psychologistprofile_and_more"),
+        ("psychologists", "0020_prepaid"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='education',
-            name='psychologists',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='educations', to='users.psychologist'),
+            model_name="education",
+            name="psychologists",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="educations",
+                to="users.psychologist",
+            ),
         ),
         migrations.AlterField(
-            model_name='genderidentity',
-            name='psychologists',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='gender_identities', to='users.psychologist'),
+            model_name="genderidentity",
+            name="psychologists",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="gender_identities",
+                to="users.psychologist",
+            ),
         ),
         migrations.AlterField(
-            model_name='genderperspective',
-            name='psychologists',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='gender_perspectives', to='users.psychologist'),
+            model_name="genderperspective",
+            name="psychologists",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="gender_perspectives",
+                to="users.psychologist",
+            ),
         ),
         migrations.AlterField(
-            model_name='prepaid',
-            name='psychologists',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='prepaids', to='users.psychologist'),
+            model_name="prepaid",
+            name="psychologists",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="prepaids",
+                to="users.psychologist",
+            ),
         ),
         migrations.AlterField(
-            model_name='province',
-            name='psychologists',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='provinces', to='users.psychologist'),
+            model_name="province",
+            name="psychologists",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="provinces",
+                to="users.psychologist",
+            ),
         ),
         migrations.AlterField(
-            model_name='specialization',
-            name='psychologists',
-            field=models.ManyToManyField(related_name='specializations', to='users.psychologist'),
+            model_name="specialization",
+            name="psychologists",
+            field=models.ManyToManyField(
+                related_name="specializations", to="users.psychologist"
+            ),
         ),
         migrations.AlterField(
-            model_name='therapeuticmodel',
-            name='psychologists',
-            field=models.ManyToManyField(related_name='therapeutic_models', to='users.psychologist'),
+            model_name="therapeuticmodel",
+            name="psychologists",
+            field=models.ManyToManyField(
+                related_name="therapeutic_models", to="users.psychologist"
+            ),
         ),
         migrations.AlterField(
-            model_name='workmodality',
-            name='psychologists',
-            field=models.ManyToManyField(related_name='work_modalities', to='users.psychologist'),
+            model_name="workmodality",
+            name="psychologists",
+            field=models.ManyToManyField(
+                related_name="work_modalities", to="users.psychologist"
+            ),
         ),
         migrations.AlterField(
-            model_name='workpopulation',
-            name='psychologists',
-            field=models.ManyToManyField(related_name='work_populations', to='users.psychologist'),
+            model_name="workpopulation",
+            name="psychologists",
+            field=models.ManyToManyField(
+                related_name="work_populations", to="users.psychologist"
+            ),
         ),
         migrations.DeleteModel(
-            name='Psychologist',
+            name="Psychologist",
         ),
     ]
