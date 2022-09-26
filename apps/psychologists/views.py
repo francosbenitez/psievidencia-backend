@@ -279,6 +279,8 @@ class UpdatePsychologist(generics.GenericAPIView):
         if user_id and user_role == "PSYCHOLOGIST":
           psychologist = Psychologist.objects.get(id=user_id)
 
+          test = request.data
+
           if request.data.get('therapeutic_models') != None:
             therapeutic_models = []
 
@@ -287,9 +289,8 @@ class UpdatePsychologist(generics.GenericAPIView):
               therapeutic_models.append(therapeutic_model)
 
             psychologist.therapeutic_models.set(therapeutic_models)
+            del test["therapeutic_models"]
 
-          test = request.data
-          del test["therapeutic_models"]
 
           Psychologist.objects.filter(id=user_id).update(**test)
 
