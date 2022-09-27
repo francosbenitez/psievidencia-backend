@@ -26,7 +26,7 @@ from apps.users.models import Authenticated
 
 
 def main_seeder():
-    CSV_PATH = "./psychologists.csv"
+    CSV_PATH = "./seed/psychologists.csv"
 
     Psychologist.objects.all().delete()
 
