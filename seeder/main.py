@@ -97,7 +97,6 @@ def main_seeder():
                     )
 
                     Psychologist.objects.create_user(
-                        # id=i,
                         date=row[0],
                         name=row[1],
                         email=row[2],
