@@ -1,1 +1,0 @@
-echo "from apps.users.models import Authenticated; Authenticated.objects.create_user(username='a1', password='12345678')" | python manage.py shell
