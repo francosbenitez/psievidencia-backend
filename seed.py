@@ -72,18 +72,13 @@ def main_seeder():
                     format = "%d/%m/%Y %H:%M:%S"
                     today = date.today()
                     inctime = today.strftime("%d/%m/%Y %H:%M:%S")
-
-                    # Convert the time to a database time
                     time = datetime.strptime(inctime, format)
                     time.strftime("%Y/%m/%d %H:%M:%S")
-
                     row[0] = time
                 else:
                     format = "%d/%m/%Y %H:%M:%S"
                     inctime = row[0]
                     time = datetime.strptime(inctime, format)
-
-                    # Convert the time to a database time
                     time.strftime("%Y/%m/%d %H:%M:%S")
                     row[0] = time
 
@@ -118,11 +113,7 @@ def main_seeder():
                         province=row[8],
                         city=row[9],
                         education=row[10],
-                        # therapeutic_model=row[11],
                         gender_perspective=row[12],
-                        # specialization=row[13],
-                        # work_population=row[14],
-                        # work_modality=row[15],
                         online=row[16],
                         prepaid=row[17],
                         prepaid_type=row[18],
