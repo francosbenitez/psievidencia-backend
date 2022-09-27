@@ -1,7 +1,6 @@
-import requests
-
-
 def update_csv():
+    import requests
+
     req = requests.get(
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vS95wGgZlEivufodGteKLOxDzeC1dCCae38NCYiQZ7xIWSKnXMUc0-kionSL_BBRNO4xdrqAe1VDQ-P/pub?output=csv"
     )
