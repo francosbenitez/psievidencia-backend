@@ -59,7 +59,7 @@ class FavoritesList(APIView):
         custom_list = [item["id"] for item in favorites_psychologists]
         queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
 
-        serializer = PsychologistsSerializer(queryset, many=True)
+        serializer = PsychologistsSerializer(queryset, many=True, context={"view": "FavoritesList"})
 
         for item in serializer.data:
             item["liked"] = True

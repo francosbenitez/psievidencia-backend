@@ -13,8 +13,10 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(TherapeuticModelSerializer, self).to_representation(value)
 
+        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+
         if "view" in self.context:
-            if self.context["view"] == "PaginatedPsychologists":
+            if self.context["view"] in views:
                 return value.name
 
         return data
@@ -28,8 +30,10 @@ class SpecializationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(SpecializationSerializer, self).to_representation(value)
 
+        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+
         if "view" in self.context:
-            if self.context["view"] == "PaginatedPsychologists":
+            if self.context["view"] in views:
                 return value.name
 
         return data
@@ -42,9 +46,11 @@ class SpecializationSerializer(serializers.ModelSerializer):
 class WorkModalitySerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(WorkModalitySerializer, self).to_representation(value)
+        
+        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
 
         if "view" in self.context:
-            if self.context["view"] == "PaginatedPsychologists":
+            if self.context["view"] in views:
                 return value.name
 
         return data
@@ -57,9 +63,11 @@ class WorkModalitySerializer(serializers.ModelSerializer):
 class WorkPopulationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(WorkPopulationSerializer, self).to_representation(value)
+        
+        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
 
         if "view" in self.context:
-            if self.context["view"] == "PaginatedPsychologists":
+            if self.context["view"] in views:
                 return value.name
 
         return data
