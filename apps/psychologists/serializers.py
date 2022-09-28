@@ -13,7 +13,7 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(TherapeuticModelSerializer, self).to_representation(value)
 
-        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+        views = ['PaginatedPsychologists', 'PsychologistDetail', 'FavoritesList']
 
         if "view" in self.context:
             if self.context["view"] in views:
@@ -30,7 +30,7 @@ class SpecializationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(SpecializationSerializer, self).to_representation(value)
 
-        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+        views = ['PaginatedPsychologists', 'PsychologistDetail', 'FavoritesList']
 
         if "view" in self.context:
             if self.context["view"] in views:
@@ -47,7 +47,7 @@ class WorkModalitySerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(WorkModalitySerializer, self).to_representation(value)
         
-        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+        views = ['PaginatedPsychologists', 'PsychologistDetail', 'FavoritesList']
 
         if "view" in self.context:
             if self.context["view"] in views:
@@ -64,7 +64,7 @@ class WorkPopulationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         data = super(WorkPopulationSerializer, self).to_representation(value)
         
-        views = ['PaginatedPsychologists', 'PsychologistsDetail', 'FavoritesList']
+        views = ['PaginatedPsychologists', 'PsychologistDetail', 'FavoritesList']
 
         if "view" in self.context:
             if self.context["view"] in views:
