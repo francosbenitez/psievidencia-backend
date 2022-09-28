@@ -26,7 +26,13 @@ class TherapeuticModelSerializer(serializers.ModelSerializer):
 
 class SpecializationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
-        return value.name
+        data = super(SpecializationSerializer, self).to_representation(value)
+
+        if "view" in self.context:
+            if self.context["view"] == "PaginatedPsychologists":
+                return value.name
+
+        return data
 
     class Meta:
         model = Specialization
@@ -35,7 +41,13 @@ class SpecializationSerializer(serializers.ModelSerializer):
 
 class WorkModalitySerializer(serializers.ModelSerializer):
     def to_representation(self, value):
-        return value.name
+        data = super(WorkModalitySerializer, self).to_representation(value)
+
+        if "view" in self.context:
+            if self.context["view"] == "PaginatedPsychologists":
+                return value.name
+
+        return data
 
     class Meta:
         model = WorkModality
@@ -44,7 +56,13 @@ class WorkModalitySerializer(serializers.ModelSerializer):
 
 class WorkPopulationSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
-        return value.name
+        data = super(WorkPopulationSerializer, self).to_representation(value)
+
+        if "view" in self.context:
+            if self.context["view"] == "PaginatedPsychologists":
+                return value.name
+
+        return data
 
     class Meta:
         model = WorkPopulation
