@@ -16,6 +16,7 @@ from apps.psychologists.models import (
     WorkPopulation,
     Education,
     GenderPerspective,
+    Prepaid,
     GenderIdentity,
     WorkModality,
     Province,
@@ -249,6 +250,23 @@ with open(CSV_PATH, newline="") as csvfile:
         .apply(lambda row: unidecode.unidecode(row).lower())
         .apply(lambda row: row.replace(" ", "_"))
     )
+    
+    # Seed 'prepaid'
+    print("Seeding prepaid...")
+    prepaid_df = df[["id", "prepaid"]].copy(deep=True)
+
+    prepaid_df["prepaid"] = prepaid_df["prepaid"].apply(
+        lambda row: unidecode.unidecode(row).lower()
+    )
+
+    for row in prepaid_df.itertuples():
+        if not Prepaid.objects.filter(id=row[0]).exists():
+            Prepaid.objects.create(
+                id=row[0],
+                psychologists_id=row[1],
+                has_prepaid=row[2],
+            )
+    print("Prepaid seeded!")
 
     for row in gender_identity_df.itertuples():
         if not GenderIdentity.objects.filter(id=row[0]).exists():

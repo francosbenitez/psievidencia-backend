@@ -34,6 +34,7 @@ class PaginatedPsychologists(APIView):
         name = None
         education = None
         has_perspective = None
+        has_prepaid = None
         specialization = None
         work_population = None
         therapeutic_model = None
@@ -56,6 +57,9 @@ class PaginatedPsychologists(APIView):
 
         if "has_perspective" in request.GET:
             has_perspective = request.GET["has_perspective"]
+            
+        if "has_prepaid" in request.GET:
+            has_prepaid = request.GET["has_prepaid"]
 
         if "gender_identity" in request.GET:
             gender_identity = request.GET["gender_identity"]
@@ -81,6 +85,7 @@ class PaginatedPsychologists(APIView):
             name
             or education
             or has_perspective
+            or has_prepaid
             or gender_identity
             or specialization
             or work_population
@@ -111,6 +116,12 @@ class PaginatedPsychologists(APIView):
                 if has_perspective == "si" or has_perspective == "no":
                     psychologists = psychologists.filter(
                         gender_perspectives__has_perspective__icontains=has_perspective
+                    )
+            
+            if has_prepaid is not None:
+                if has_prepaid == "si" or has_prepaid == "no":
+                    psychologists = psychologists.filter(
+                        prepaids__has_prepaid__icontains=has_prepaid
                     )
 
             if gender_identity is not None:
