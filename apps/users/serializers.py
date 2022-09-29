@@ -3,13 +3,19 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from .models import User
+from .models import User, Authenticated
+from apps.psychologists.models import Psychologist
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "role")
+
+class AuthenticatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Authenticated
+        fields = ("id", "date", "name", "email", "gender_identity", "phone_number", "additional_data")
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -23,13 +29,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            validated_data["username"],
-            validated_data["email"],
-            validated_data["password"],
-            role=validated_data["role"],
-        )
-        return user
+        role = validated_data["role"]
+
+        def create_usr(Model):
+            created_user = Model.objects.create_user(
+                validated_data["username"],
+                validated_data["email"],
+                validated_data["password"],
+                role=role,
+            )
+            return created_user
+
+        if role == "AUTHENTICATED":
+            return create_usr(Authenticated)
+
+        return create_usr(Psychologist)
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):

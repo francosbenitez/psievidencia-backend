@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, AuthenticatedSerializer
 from apps.psychologists.serializers import PsychologistSerializer
-from apps.users.models import User
+from apps.users.models import User, Authenticated
 from apps.psychologists.models import Psychologist
 from django.contrib.auth import login
 from rest_framework.response import Response
@@ -34,12 +34,10 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
 from django.http import HttpResponsePermanentRedirect
 from apps.favorites.models import Favorite
-
-# from .tasks import activate_user, send_activation_email
+from django.http import Http404
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):
-    # allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
     allowed_schemes = ["", "http", "https"]
 
 
@@ -96,31 +94,39 @@ class ProfileView(APIView):
         user_id = request.user.id
         user_role = request.user.role
 
-        if user_id and user_role == "PSYCHOLOGIST":
-            try:
-                psychologist = Psychologist.objects.get(id=user_id)
-                favorites = Favorite.objects.filter(authenticated_id=user_id)
-                favorites_psychologists = []
+        if user_id:
+            if user_role == "PSYCHOLOGIST":
+                try:
+                    psychologist = Psychologist.objects.get(id=user_id)
+                    favorites = Favorite.objects.filter(authenticated_id=user_id)
+                    favorites_psychologists = []
 
-                for item in favorites.values():
-                    try:
-                        favorite = Psychologist.objects.filter(
-                            id=item["psychologist_id"]
-                        ).values()
-                        favorites_psychologists.append(favorite[0])
-                    except IndexError:
-                        pass
+                    for item in favorites.values():
+                        try:
+                            favorite = Psychologist.objects.filter(
+                                id=item["psychologist_id"]
+                            ).values()
+                            favorites_psychologists.append(favorite[0])
+                        except IndexError:
+                            pass
 
-                for item_fa in favorites_psychologists:
-                    if item_fa == psychologist:
-                        psychologist.liked = True
+                    for item_fa in favorites_psychologists:
+                        if item_fa == psychologist:
+                            psychologist.liked = True
 
-                serializer = PsychologistSerializer(
-                    psychologist, context={"liked": psychologist.liked}
-                )
-                return Response({"data": serializer.data})
-            except Psychologist.DoesNotExist:
-                raise Http404
+                    serializer = PsychologistSerializer(
+                        psychologist, context={"liked": psychologist.liked}
+                    )
+                    return Response({"data": serializer.data})
+                except Psychologist.DoesNotExist:
+                    raise Http404
+            else:
+                try:
+                    authenticated = Authenticated.objects.get(id=user_id)
+                    serializer = AuthenticatedSerializer(authenticated)
+                    return Response({"data": serializer.data})
+                except Authenticated.DoesNotExist:
+                    raise Http404
 
         return Response(
             {"message": "error"},
