@@ -1,6 +1,6 @@
 from django.http import Http404
-from django.db.models import Q
-import pandas as pd
+from apps.users.models import Authenticated
+from apps.users.serializers import AuthenticatedSerializer
 from .models import (
     Psychologist,
     Specialization,
@@ -21,7 +21,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
-from rest_framework import generics, routers, serializers, viewsets, status, filters
+from rest_framework import generics, status
 
 # from .paginations import CustomPagination
 
@@ -31,7 +31,6 @@ class PaginatedPsychologists(APIView):
 
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
-        specializations = Specialization.objects.all()
         name = None
         education = None
         has_perspective = None
@@ -42,13 +41,6 @@ class PaginatedPsychologists(APIView):
         gender_identity = None
         work_modality = None
         province = None
-
-        def dictfetchall(cursor):
-            "Returns all rows from a cursor as a dict"
-            desc = cursor.description
-            return [
-                dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()
-            ]
 
         if "name" in request.GET:
             name = request.GET["name"]
@@ -282,35 +274,47 @@ class UpdatePsychologist(generics.GenericAPIView):
         user_id = request.user.id
         user_role = request.user.role
 
-        if user_id and user_role == "PSYCHOLOGIST":
-            psychologist = Psychologist.objects.get(id=user_id)
+        if user_id:
+            if user_role == "PSYCHOLOGIST":
+                psychologist = Psychologist.objects.get(id=user_id)
 
-            test = request.data
+                test = request.data
 
-            if request.data.get("therapeutic_models") != None:
-                therapeutic_models = []
+                if request.data.get("therapeutic_models") != None:
+                    therapeutic_models = []
 
-                for therapeutic_model in request.data.get("therapeutic_models"):
-                    therapeutic_model = TherapeuticModel.objects.get(
-                        id=therapeutic_model["id"]
-                    )
-                    therapeutic_models.append(therapeutic_model)
+                    for therapeutic_model in request.data.get("therapeutic_models"):
+                        therapeutic_model = TherapeuticModel.objects.get(
+                            id=therapeutic_model["id"]
+                        )
+                        therapeutic_models.append(therapeutic_model)
 
-                psychologist.therapeutic_models.set(therapeutic_models)
-                del test["therapeutic_models"]
+                    psychologist.therapeutic_models.set(therapeutic_models)
+                    del test["therapeutic_models"]
 
-            Psychologist.objects.filter(id=user_id).update(**test)
+                Psychologist.objects.filter(id=user_id).update(**test)
 
-            psychologist = Psychologist.objects.get(id=user_id)
+                psychologist = Psychologist.objects.get(id=user_id)
 
-            serializer = PsychologistSerializer(
-                psychologist, context={"liked": psychologist.liked}
-            )
+                serializer = PsychologistSerializer(
+                    psychologist, context={"liked": psychologist.liked}
+                )
 
-            return Response(
-                {"message": "success", "data": serializer.data},
-                status=status.HTTP_200_OK,
-            )
+                return Response(
+                    {"message": "success", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                authenticated = Authenticated.objects.get(id=user_id)
+                test = request.data
+                Authenticated.objects.filter(id=user_id).update(**test)
+                authenticated = Authenticated.objects.get(id=user_id)
+                serializer = AuthenticatedSerializer(authenticated)
+
+                return Response(
+                    {"message": "success", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
 
         return Response(
             {"message": "error"},

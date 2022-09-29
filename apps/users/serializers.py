@@ -12,10 +12,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("id", "username", "email", "role")
 
+
 class AuthenticatedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Authenticated
-        fields = ("id", "date", "name", "email", "gender_identity", "phone_number", "additional_data")
+        fields = (
+            "id",
+            "date",
+            "name",
+            "email",
+            "gender_identity",
+            "phone_number",
+            "additional_data",
+        )
 
 
 class RegisterSerializer(serializers.ModelSerializer):
