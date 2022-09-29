@@ -95,6 +95,14 @@ class Education(models.Model):
     def __str__(self):
         return self.name
 
+class Prepaid(models.Model):
+    psychologists = models.ForeignKey(
+        Psychologist, related_name="prepaids", on_delete=models.CASCADE
+    )
+    has_prepaid = models.CharField(max_length=1000, default="")
+
+    def __str__(self):
+        return self.has_prepaid
 
 class GenderPerspective(models.Model):
     psychologists = models.ForeignKey(
