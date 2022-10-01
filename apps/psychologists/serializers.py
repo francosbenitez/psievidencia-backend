@@ -128,6 +128,7 @@ class PsychologistSerializer(PsychologistsSerializer):
             "phone_number",
             "additional_data",
             "name_2",
+            "username"
         )
 
     def get_liked(self, obj):
