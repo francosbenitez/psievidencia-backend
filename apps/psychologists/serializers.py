@@ -93,62 +93,31 @@ class PsychologistsSerializer(serializers.ModelSerializer):
         model = Psychologist
         fields = (
             "id",
-            "date",
             "name",
-            "gender_identity",
-            "registration_type",
-            "registration_number",
-            "institution",
-            "team",
+            "email",
             "province",
-            "city",
-            "education",
             "therapeutic_models",
-            "gender_perspective",
             "specializations",
             "work_populations",
             "work_modalities",
-            "online",
-            "prepaid",
-            "prepaid_type",
-            "invoice",
-            "sign_language",
-            "session_languages",
-            "social_networks",
-            "phone_number",
-            "additional_data",
-            "name_2",
             "liked",
         )
 
 
-class PsychologistSerializer(serializers.ModelSerializer):
-    therapeutic_models = TherapeuticModelSerializer(many=True)
-    specializations = SpecializationSerializer(many=True)
-    work_populations = WorkPopulationSerializer(many=True)
-    work_modalities = WorkModalitySerializer(many=True)
+class PsychologistSerializer(PsychologistsSerializer):
     liked = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Psychologist
-        fields = (
-            "id",
+    class Meta(PsychologistsSerializer.Meta):
+        fields = PsychologistsSerializer.Meta.fields + (
             "date",
-            "name",
-            "email",
             "gender_identity",
             "registration_type",
             "registration_number",
             "institution",
             "team",
-            "province",
             "city",
             "education",
-            "therapeutic_models",
             "gender_perspective",
-            "specializations",
-            "work_populations",
-            "work_modalities",
             "online",
             "prepaid",
             "prepaid_type",
@@ -159,7 +128,6 @@ class PsychologistSerializer(serializers.ModelSerializer):
             "phone_number",
             "additional_data",
             "name_2",
-            "liked",
         )
 
     def get_liked(self, obj):
