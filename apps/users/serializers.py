@@ -21,6 +21,7 @@ class AuthenticatedSerializer(serializers.ModelSerializer):
             "date",
             "name",
             "email",
+            "username",
             "gender_identity",
             "phone_number",
             "additional_data",
