@@ -319,6 +319,9 @@ class UpdatePsychologist(generics.GenericAPIView):
                 for dict in arr_of_dicts:
                     update_many_to_many(dict["string"], dict["model"], dict["relation"])
 
+                # Psychologist.objects.filter(id=user_id).update(**data_to_change)
+                
+                # psychologist = Psychologist.objects.get(id=user_id)
                 for key, value in data_to_change.items():
                   setattr(psychologist, key, value)
                   
@@ -335,7 +338,8 @@ class UpdatePsychologist(generics.GenericAPIView):
             else:
                 authenticated = Authenticated.objects.get(id=user_id)
                 data_to_change = request.data
-                
+                # Authenticated.objects.filter(id=user_id).update(**data_to_change)
+                # authenticated = Authenticated.objects.get(id=user_id)
                 for key, value in data_to_change.items():
                   setattr(authenticated, key, value)
                   
