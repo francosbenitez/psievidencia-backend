@@ -5,6 +5,7 @@ from .models import (
     Psychologist,
     Specialization,
     TherapeuticModel,
+    WorkModality,
     WorkPopulation,
     Province,
 )
@@ -31,6 +32,7 @@ class PaginatedPsychologists(APIView):
 
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
+        
         name = None
         education = None
         has_perspective = None
@@ -278,24 +280,53 @@ class UpdatePsychologist(generics.GenericAPIView):
             if user_role == "PSYCHOLOGIST":
                 psychologist = Psychologist.objects.get(id=user_id)
 
-                test = request.data
+                data_to_change = request.data
 
-                if request.data.get("therapeutic_models") != None:
-                    therapeutic_models = []
+                def update_many_to_many(string, model, relationship):
+                    if request.data.get(string) != None:
+                        array = []
 
-                    for therapeutic_model in request.data.get("therapeutic_models"):
-                        therapeutic_model = TherapeuticModel.objects.get(
-                            id=therapeutic_model["id"]
-                        )
-                        therapeutic_models.append(therapeutic_model)
+                        for item in request.data.get(string):
+                            model_object = model.objects.get(id=item["id"])
+                            array.append(model_object)
 
-                    psychologist.therapeutic_models.set(therapeutic_models)
-                    del test["therapeutic_models"]
+                        relationship.set(array)
+                        del data_to_change[string]
 
-                Psychologist.objects.filter(id=user_id).update(**test)
+                arr_of_dicts = [
+                    {
+                        "string": "therapeutic_models",
+                        "model": TherapeuticModel,
+                        "relation": psychologist.therapeutic_models,
+                    },
+                    {
+                        "string": "work_modalities",
+                        "model": WorkModality,
+                        "relation": psychologist.work_modalities,
+                    },
+                    {
+                        "string": "work_populations",
+                        "model": WorkPopulation,
+                        "relation": psychologist.work_populations,
+                    },
+                    {
+                        "string": "specializations",
+                        "model": Specialization,
+                        "relation": psychologist.specializations,
+                    }
+                ]
 
-                psychologist = Psychologist.objects.get(id=user_id)
+                for dict in arr_of_dicts:
+                    update_many_to_many(dict["string"], dict["model"], dict["relation"])
 
+                # Psychologist.objects.filter(id=user_id).update(**data_to_change)
+                
+                # psychologist = Psychologist.objects.get(id=user_id)
+                for key, value in data_to_change.items():
+                  setattr(psychologist, key, value)
+                  
+                psychologist.save()
+                
                 serializer = PsychologistSerializer(
                     psychologist, context={"liked": psychologist.liked}
                 )
@@ -306,9 +337,14 @@ class UpdatePsychologist(generics.GenericAPIView):
                 )
             else:
                 authenticated = Authenticated.objects.get(id=user_id)
-                test = request.data
-                Authenticated.objects.filter(id=user_id).update(**test)
-                authenticated = Authenticated.objects.get(id=user_id)
+                data_to_change = request.data
+                # Authenticated.objects.filter(id=user_id).update(**data_to_change)
+                # authenticated = Authenticated.objects.get(id=user_id)
+                for key, value in data_to_change.items():
+                  setattr(authenticated, key, value)
+                  
+                authenticated.save()
+                
                 serializer = AuthenticatedSerializer(authenticated)
 
                 return Response(
@@ -365,6 +401,16 @@ class ProvincesList(APIView):
     def get(self, request, format=None):
         provinces = Province.objects.all().order_by("id")
         provinces_values = Province.objects.values()
+        
+        name = None
+        
+        if "name" in request.GET:
+            name = request.GET["name"]
+
+        if name:
+            if name is not None:
+                provinces_values = provinces_values.filter(slug__icontains=name)
+                
         provinces_list = [entry for entry in provinces_values]
 
         # Removes provinces list duplicates
