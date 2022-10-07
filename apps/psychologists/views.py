@@ -32,7 +32,7 @@ class PaginatedPsychologists(APIView):
 
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
-        
+
         name = None
         education = None
         has_perspective = None
@@ -212,7 +212,7 @@ class PaginatedPsychologists(APIView):
         user_id = request.user.id
         if user_id:
 
-            favorites = Favorite.objects.filter(authenticated_id=user_id)
+            favorites = Favorite.objects.filter(user_id=user_id)
 
             favorites_psychologists = []
 
@@ -245,7 +245,7 @@ class PsychologistDetail(APIView):
 
         if user_id:
 
-            favorites = Favorite.objects.filter(authenticated_id=user_id)
+            favorites = Favorite.objects.filter(user_id=user_id)
             favorites_psychologists = []
 
             for item in favorites.values():
@@ -313,20 +313,20 @@ class UpdatePsychologist(generics.GenericAPIView):
                         "string": "specializations",
                         "model": Specialization,
                         "relation": psychologist.specializations,
-                    }
+                    },
                 ]
 
                 for dict in arr_of_dicts:
                     update_many_to_many(dict["string"], dict["model"], dict["relation"])
 
                 # Psychologist.objects.filter(id=user_id).update(**data_to_change)
-                
+
                 # psychologist = Psychologist.objects.get(id=user_id)
                 for key, value in data_to_change.items():
-                  setattr(psychologist, key, value)
-                  
+                    setattr(psychologist, key, value)
+
                 psychologist.save()
-                
+
                 serializer = PsychologistSerializer(
                     psychologist, context={"liked": psychologist.liked}
                 )
@@ -341,10 +341,10 @@ class UpdatePsychologist(generics.GenericAPIView):
                 # Authenticated.objects.filter(id=user_id).update(**data_to_change)
                 # authenticated = Authenticated.objects.get(id=user_id)
                 for key, value in data_to_change.items():
-                  setattr(authenticated, key, value)
-                  
+                    setattr(authenticated, key, value)
+
                 authenticated.save()
-                
+
                 serializer = AuthenticatedSerializer(authenticated)
 
                 return Response(
@@ -401,16 +401,16 @@ class ProvincesList(APIView):
     def get(self, request, format=None):
         provinces = Province.objects.all().order_by("id")
         provinces_values = Province.objects.values()
-        
+
         name = None
-        
+
         if "name" in request.GET:
             name = request.GET["name"]
 
         if name:
             if name is not None:
                 provinces_values = provinces_values.filter(slug__icontains=name)
-                
+
         provinces_list = [entry for entry in provinces_values]
 
         # Removes provinces list duplicates
