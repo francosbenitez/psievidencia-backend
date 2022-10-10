@@ -88,6 +88,7 @@ class PsychologistsSerializer(serializers.ModelSerializer):
     specializations = SpecializationSerializer(many=True)
     work_populations = WorkPopulationSerializer(many=True)
     work_modalities = WorkModalitySerializer(many=True)
+    province = serializers.SerializerMethodField()
 
     class Meta:
         model = Psychologist
@@ -102,6 +103,13 @@ class PsychologistsSerializer(serializers.ModelSerializer):
             "work_modalities",
             "liked",
         )
+        
+    def get_province(self, obj):
+        list = []
+        provinces = obj.province.all()
+        for province in provinces:
+            list.append(province.slug)
+        return " ".join(list)
 
 
 class PsychologistSerializer(PsychologistsSerializer):

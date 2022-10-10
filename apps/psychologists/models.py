@@ -12,7 +12,7 @@ class Psychologist(User):
     registration_number = models.CharField(max_length=1000, default="")
     institution = models.CharField(max_length=1000, default="")
     team = models.CharField(max_length=1000, default="")
-    province = models.CharField(max_length=1000, default="")
+    # province = models.CharField(max_length=1000, default="")
     city = models.CharField(max_length=1000, default="")
     education = models.CharField(max_length=1000, default="")
     # therapeutic_model = models.CharField(max_length=1000, default="")
@@ -75,7 +75,7 @@ class WorkModality(models.Model):
 
 class Province(models.Model):
     psychologists = models.ForeignKey(
-        Psychologist, related_name="provinces", on_delete=models.CASCADE
+        Psychologist, related_name="province", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=1000, default="")
     slug = models.CharField(max_length=1000, default="")

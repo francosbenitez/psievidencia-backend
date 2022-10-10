@@ -93,7 +93,7 @@ class PaginatedPsychologists(APIView):
 
             if province is not None:
                 psychologists = psychologists.filter(
-                    provinces__name__icontains=province
+                    province__name__icontains=province
                 )
 
             if education is not None:
@@ -281,16 +281,26 @@ class UpdatePsychologist(generics.GenericAPIView):
                 psychologist = Psychologist.objects.get(id=user_id)
 
                 data_to_change = request.data
+                
+                def update_one_to_many(string, model):
+                  if request.data.get(string) != None:
+                    new_data = request.data.get(string)
+                    
+                    model.objects.filter(psychologists_id=psychologist.id).update(name=new_data["name"], slug=new_data["slug"])
+                    
+                    del data_to_change[string]
+
+                update_one_to_many('province', Province)
 
                 def update_many_to_many(string, model, relationship):
                     if request.data.get(string) != None:
-                        array = []
+                        list = []
 
                         for item in request.data.get(string):
                             model_object = model.objects.get(id=item["id"])
-                            array.append(model_object)
+                            list.append(model_object)
 
-                        relationship.set(array)
+                        relationship.set(list)
                         del data_to_change[string]
 
                 arr_of_dicts = [

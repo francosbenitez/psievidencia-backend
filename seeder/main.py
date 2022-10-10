@@ -55,6 +55,7 @@ def main_seeder():
                 "specialization": [],
                 "work_population": [],
                 "work_population": [],
+                "province": []
             }
         )
 
@@ -92,6 +93,7 @@ def main_seeder():
                             "specialization": row[13],
                             "work_population": row[14],
                             "work_modality": row[15],
+                            "province": row[8],
                         },
                         ignore_index=True,
                     )
@@ -109,7 +111,7 @@ def main_seeder():
                         registration_number=row[5],
                         institution=row[6],
                         team=row[7],
-                        province=row[8],
+                        # province=row[8],
                         city=row[9],
                         education=row[10],
                         gender_perspective=row[12],
