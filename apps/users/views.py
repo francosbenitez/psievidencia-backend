@@ -98,7 +98,7 @@ class ProfileView(APIView):
             if user_role == "PSYCHOLOGIST":
                 try:
                     psychologist = Psychologist.objects.get(id=user_id)
-                    favorites = Favorite.objects.filter(authenticated_id=user_id)
+                    favorites = Favorite.objects.filter(user_id=user_id)
                     favorites_psychologists = []
 
                     for item in favorites.values():

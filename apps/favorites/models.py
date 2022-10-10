@@ -1,15 +1,15 @@
 from django.db import models
-from apps.users.models import Authenticated
+from apps.users.models import User
 from apps.psychologists.models import Psychologist
 
 
 class Favorite(models.Model):
 
-    authenticated = models.ForeignKey(
-        Authenticated, related_name="favorites", on_delete=models.CASCADE
+    user = models.ForeignKey(
+        User, related_name="favorites_user", on_delete=models.CASCADE, default=""
     )
     psychologist = models.ForeignKey(
-        Psychologist, related_name="favorites", on_delete=models.CASCADE
+        Psychologist, related_name="favorites_psychologist", on_delete=models.CASCADE
     )
 
     def __str__(self):
