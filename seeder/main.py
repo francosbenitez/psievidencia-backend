@@ -55,7 +55,11 @@ def main_seeder():
                 "specialization": [],
                 "work_population": [],
                 "work_population": [],
-                "province": []
+                "province": [],
+                "gender_identity": [],
+                "gender_perspective": [],
+                "prepaid": [],
+                "education": []
             }
         )
 
@@ -94,6 +98,10 @@ def main_seeder():
                             "work_population": row[14],
                             "work_modality": row[15],
                             "province": row[8],
+                            "gender_identity": row[3],
+                            "gender_perspective": row[12],
+                            "prepaid": row[17],
+                            "education": row[10]
                         },
                         ignore_index=True,
                     )
@@ -106,17 +114,17 @@ def main_seeder():
                         password=row[2].split("@")[0],
                         is_email_verified=True,
                         role="PSYCHOLOGIST",
-                        gender_identity=row[3],
+                        # gender_identity=row[3],
                         registration_type=row[4],
                         registration_number=row[5],
                         institution=row[6],
                         team=row[7],
                         # province=row[8],
                         city=row[9],
-                        education=row[10],
-                        gender_perspective=row[12],
+                        # education=row[10],
+                        # gender_perspective=row[12],
                         online=row[16],
-                        prepaid=row[17],
+                        # prepaid=row[17],
                         prepaid_type=row[18],
                         invoice=row[19],
                         sign_language=row[20],
