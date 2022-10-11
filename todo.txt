@@ -20,7 +20,7 @@
   - Linter, and
   - tests
 in a pipeline.
-- Allow the login/register only with email. NOT username.
+- Allow the login/register with EMAIL OR USERNAME (like Instagram, Twitter, etc.). NOT only with username.
 - Fix favorites issue. DONE
 - Fix UpdatePsychologist. DONE
 - Generate random passwords to the users, and send those to them via an email template.
