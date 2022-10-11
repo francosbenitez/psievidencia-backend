@@ -8,6 +8,10 @@ from .models import (
     WorkModality,
     WorkPopulation,
     Province,
+    Prepaid,
+    GenderPerspective,
+    GenderIdentity,
+    Education
 )
 from .serializers import (
     PsychologistSerializer,
@@ -93,7 +97,7 @@ class PaginatedPsychologists(APIView):
 
             if province is not None:
                 psychologists = psychologists.filter(
-                    provinces__name__icontains=province
+                    province__name__icontains=province
                 )
 
             if education is not None:
@@ -104,19 +108,19 @@ class PaginatedPsychologists(APIView):
                     or education == "especialidad"
                 ):
                     psychologists = psychologists.filter(
-                        educations__name__icontains=education
+                        education__name__icontains=education
                     )
 
             if has_perspective is not None:
                 if has_perspective == "si" or has_perspective == "no":
                     psychologists = psychologists.filter(
-                        gender_perspectives__has_perspective__icontains=has_perspective
+                        gender_perspective__has_perspective__icontains=has_perspective
                     )
 
             if has_prepaid is not None:
                 if has_prepaid == "si" or has_prepaid == "no":
                     psychologists = psychologists.filter(
-                        prepaids__has_prepaid__icontains=has_prepaid
+                        prepaid__has_prepaid__icontains=has_prepaid
                     )
 
             if gender_identity is not None:
@@ -126,7 +130,7 @@ class PaginatedPsychologists(APIView):
                     or gender_identity == "no_binarie"
                 ):
                     psychologists = psychologists.filter(
-                        gender_identities__gender_identity__icontains=gender_identity
+                        gender_identity__gender_identity__icontains=gender_identity
                     )
 
             if specialization is not None:
@@ -281,16 +285,43 @@ class UpdatePsychologist(generics.GenericAPIView):
                 psychologist = Psychologist.objects.get(id=user_id)
 
                 data_to_change = request.data
+                
+                def update_one_to_many(string, model):
+                  if request.data.get(string) != None:
+                    new_data = request.data.get(string)
+                    
+                    if string == 'gender_identity': 
+                      model.objects.filter(psychologists_id=psychologist.id).update(gender_identity=new_data["name"])
+                    
+                    elif string == 'province':
+                      model.objects.filter(psychologists_id=psychologist.id).update(name=new_data["name"], slug=new_data["slug"])
+                      
+                    elif string == 'prepaid':
+                      model.objects.filter(psychologists_id=psychologist.id).update(has_prepaid=new_data["name"])
+                      
+                    elif string == 'education': 
+                      model.objects.filter(psychologists_id=psychologist.id).update(name=new_data["name"])
+                      
+                    elif string == 'gender_perspective':
+                      model.objects.filter(psychologists_id=psychologist.id).update(has_perspective=new_data["name"])
+                    
+                    del data_to_change[string]
 
+                update_one_to_many('province', Province)
+                update_one_to_many('gender_identity', GenderIdentity)
+                update_one_to_many('prepaid', Prepaid)
+                update_one_to_many('education', Education)
+                update_one_to_many('gender_perspective', GenderPerspective)
+                
                 def update_many_to_many(string, model, relationship):
                     if request.data.get(string) != None:
-                        array = []
+                        list = []
 
                         for item in request.data.get(string):
                             model_object = model.objects.get(id=item["id"])
-                            array.append(model_object)
+                            list.append(model_object)
 
-                        relationship.set(array)
+                        relationship.set(list)
                         del data_to_change[string]
 
                 arr_of_dicts = [

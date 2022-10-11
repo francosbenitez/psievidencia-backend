@@ -7,21 +7,21 @@ class Psychologist(User):
 
     date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=1000, default="")
-    gender_identity = models.CharField(max_length=1000, default="")
+    # gender_identity = models.CharField(max_length=1000, default="")
     registration_type = models.CharField(max_length=1000, default="")
     registration_number = models.CharField(max_length=1000, default="")
     institution = models.CharField(max_length=1000, default="")
     team = models.CharField(max_length=1000, default="")
-    province = models.CharField(max_length=1000, default="")
+    # province = models.CharField(max_length=1000, default="")
     city = models.CharField(max_length=1000, default="")
-    education = models.CharField(max_length=1000, default="")
+    # education = models.CharField(max_length=1000, default="")
     # therapeutic_model = models.CharField(max_length=1000, default="")
-    gender_perspective = models.CharField(max_length=1000, default="")
+    # gender_perspective = models.CharField(max_length=1000, default="")
     # specialization = models.CharField(max_length=1000, default="")
     # work_population = models.CharField(max_length=1000, default="")
     # work_modality = models.CharField(max_length=1000, default="")
     online = models.CharField(max_length=1000, default="")
-    prepaid = models.CharField(max_length=1000, default="")
+    # prepaid = models.CharField(max_length=1000, default="")
     prepaid_type = models.CharField(max_length=1000, default="")
     invoice = models.CharField(max_length=1000, default="")
     sign_language = models.CharField(max_length=1000, default="")
@@ -75,7 +75,7 @@ class WorkModality(models.Model):
 
 class Province(models.Model):
     psychologists = models.ForeignKey(
-        Psychologist, related_name="provinces", on_delete=models.CASCADE
+        Psychologist, related_name="province", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=1000, default="")
     slug = models.CharField(max_length=1000, default="")
@@ -86,7 +86,7 @@ class Province(models.Model):
 
 class Education(models.Model):
     psychologists = models.ForeignKey(
-        Psychologist, related_name="educations", on_delete=models.CASCADE
+        Psychologist, related_name="education", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=1000, default="")
 
@@ -97,7 +97,7 @@ class Education(models.Model):
 class GenderPerspective(models.Model):
     psychologists = models.ForeignKey(
         Psychologist,
-        related_name="gender_perspectives",
+        related_name="gender_perspective",
         on_delete=models.CASCADE,
     )
     has_perspective = models.CharField(max_length=1000, default="")
@@ -108,7 +108,7 @@ class GenderPerspective(models.Model):
 
 class Prepaid(models.Model):
     psychologists = models.ForeignKey(
-        Psychologist, related_name="prepaids", on_delete=models.CASCADE
+        Psychologist, related_name="prepaid", on_delete=models.CASCADE
     )
     has_prepaid = models.CharField(max_length=1000, default="")
 
@@ -118,7 +118,7 @@ class Prepaid(models.Model):
 
 class GenderIdentity(models.Model):
     psychologists = models.ForeignKey(
-        Psychologist, related_name="gender_identities", on_delete=models.CASCADE
+        Psychologist, related_name="gender_identity", on_delete=models.CASCADE
     )
     gender_identity = models.CharField(max_length=1000, default="")
 
