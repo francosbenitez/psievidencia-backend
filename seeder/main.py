@@ -153,7 +153,7 @@ def main_seeder():
             new_df_options = new_df[column_name].value_counts().index.tolist()
 
             for i, item in enumerate(new_df_options, start=1):
-                if not model.objects.filter(id=i).exists():
+                if not model.objects.filter(id=i).exists() and item != '':
                     model.objects.create(
                         id=i,
                         name=item,
