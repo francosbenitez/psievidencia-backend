@@ -91,3 +91,12 @@ class SetNewPasswordSerializer(serializers.Serializer):
         except Exception as e:
             raise AuthenticationFailed("The reset link is invalid", 401)
         return super().validate(attrs)
+
+
+class ContactSerializer(serializers.Serializer):
+    name = serializers.CharField(min_length=1, write_only=True)
+    from_email = serializers.CharField(min_length=1, write_only=True)
+    message = serializers.CharField(min_length=1, write_only=True)
+
+    class Meta:
+        fields = ["name", "from_email", "message"]

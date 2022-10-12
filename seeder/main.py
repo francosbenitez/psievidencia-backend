@@ -59,7 +59,7 @@ def main_seeder():
                 "gender_identity": [],
                 "gender_perspective": [],
                 "prepaid": [],
-                "education": []
+                "education": [],
             }
         )
 
@@ -101,7 +101,7 @@ def main_seeder():
                             "gender_identity": row[3],
                             "gender_perspective": row[12],
                             "prepaid": row[17],
-                            "education": row[10]
+                            "education": row[10],
                         },
                         ignore_index=True,
                     )
@@ -153,7 +153,7 @@ def main_seeder():
             new_df_options = new_df[column_name].value_counts().index.tolist()
 
             for i, item in enumerate(new_df_options, start=1):
-                if not model.objects.filter(id=i).exists() and item != '':
+                if not model.objects.filter(id=i).exists() and item != "":
                     model.objects.create(
                         id=i,
                         name=item,

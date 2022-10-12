@@ -26,4 +26,5 @@ urlpatterns = [
         views.SetNewPasswordAPIView.as_view(),
         name="password-reset-complete",
     ),
+    path("contact", views.ContactView.as_view(), name="contact"),
 ]

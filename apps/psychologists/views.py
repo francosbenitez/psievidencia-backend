@@ -11,7 +11,7 @@ from .models import (
     Prepaid,
     GenderPerspective,
     GenderIdentity,
-    Education
+    Education,
 )
 from .serializers import (
     PsychologistSerializer,
@@ -96,9 +96,7 @@ class PaginatedPsychologists(APIView):
                 psychologists = psychologists.filter(name__icontains=name)
 
             if province is not None:
-                psychologists = psychologists.filter(
-                    province__name__icontains=province
-                )
+                psychologists = psychologists.filter(province__name__icontains=province)
 
             if education is not None:
                 if (
@@ -285,34 +283,44 @@ class UpdatePsychologist(generics.GenericAPIView):
                 psychologist = Psychologist.objects.get(id=user_id)
 
                 data_to_change = request.data
-                
-                def update_one_to_many(string, model):
-                  if request.data.get(string) != None:
-                    new_data = request.data.get(string)
-                    
-                    if string == 'gender_identity': 
-                      model.objects.filter(psychologists_id=psychologist.id).update(gender_identity=new_data["name"])
-                    
-                    elif string == 'province':
-                      model.objects.filter(psychologists_id=psychologist.id).update(name=new_data["name"], slug=new_data["slug"])
-                      
-                    elif string == 'prepaid':
-                      model.objects.filter(psychologists_id=psychologist.id).update(has_prepaid=new_data["name"])
-                      
-                    elif string == 'education': 
-                      model.objects.filter(psychologists_id=psychologist.id).update(name=new_data["name"])
-                      
-                    elif string == 'gender_perspective':
-                      model.objects.filter(psychologists_id=psychologist.id).update(has_perspective=new_data["name"])
-                    
-                    del data_to_change[string]
 
-                update_one_to_many('province', Province)
-                update_one_to_many('gender_identity', GenderIdentity)
-                update_one_to_many('prepaid', Prepaid)
-                update_one_to_many('education', Education)
-                update_one_to_many('gender_perspective', GenderPerspective)
-                
+                def update_one_to_many(string, model):
+                    if request.data.get(string) != None:
+                        new_data = request.data.get(string)
+
+                        if string == "gender_identity":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(gender_identity=new_data["name"])
+
+                        elif string == "province":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(name=new_data["name"], slug=new_data["slug"])
+
+                        elif string == "prepaid":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(has_prepaid=new_data["name"])
+
+                        elif string == "education":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(name=new_data["name"])
+
+                        elif string == "gender_perspective":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(has_perspective=new_data["name"])
+
+                        del data_to_change[string]
+
+                update_one_to_many("province", Province)
+                update_one_to_many("gender_identity", GenderIdentity)
+                update_one_to_many("prepaid", Prepaid)
+                update_one_to_many("education", Education)
+                update_one_to_many("gender_perspective", GenderPerspective)
+
                 def update_many_to_many(string, model, relationship):
                     if request.data.get(string) != None:
                         list = []

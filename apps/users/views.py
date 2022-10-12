@@ -1,5 +1,10 @@
 from rest_framework.views import APIView
-from .serializers import UserSerializer, RegisterSerializer, AuthenticatedSerializer
+from .serializers import (
+    UserSerializer,
+    RegisterSerializer,
+    AuthenticatedSerializer,
+    ContactSerializer,
+)
 from apps.psychologists.serializers import PsychologistSerializer
 from apps.users.models import User, Authenticated
 from apps.psychologists.models import Psychologist
@@ -35,6 +40,34 @@ from django.urls import reverse
 from django.http import HttpResponsePermanentRedirect
 from apps.favorites.models import Favorite
 from django.http import Http404
+
+
+class ContactView(APIView):
+    def post(self, request, format=None):
+        serializer = ContactSerializer(data=request.data)
+
+        if serializer.is_valid():
+            name = serializer.validated_data["name"]
+            from_email = serializer.validated_data["from_email"]
+            message = serializer.validated_data["message"]
+
+            msg_html = render_to_string(
+                "contact.html",
+                {"message": message, "from_email": from_email, "name": name},
+            )
+
+            send_mail(
+                f"¡{name} quiere contactarnos!",
+                "",
+                settings.EMAIL_HOST_USER,
+                [settings.RECIPIENT_ADDRESS],
+                html_message=msg_html,
+                fail_silently=False,
+            )
+
+            return Response({"status": "success"})
+
+        return Response({"status": "failed"})
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):

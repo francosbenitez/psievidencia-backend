@@ -9,23 +9,32 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('psychologists', '0024_remove_psychologist_specialization_and_more'),
-        ('favorites', '0006_alter_favorite_psychologist'),
+        ("psychologists", "0024_remove_psychologist_specialization_and_more"),
+        ("favorites", "0006_alter_favorite_psychologist"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='favorite',
-            name='authenticated',
+            model_name="favorite",
+            name="authenticated",
         ),
         migrations.AddField(
-            model_name='favorite',
-            name='user',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, related_name='favorites_user', to=settings.AUTH_USER_MODEL),
+            model_name="favorite",
+            name="user",
+            field=models.ForeignKey(
+                default="",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="favorites_user",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='favorite',
-            name='psychologist',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favorites_psychologist', to='psychologists.psychologist'),
+            model_name="favorite",
+            name="psychologist",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="favorites_psychologist",
+                to="psychologists.psychologist",
+            ),
         ),
     ]
