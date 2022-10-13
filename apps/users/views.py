@@ -222,7 +222,7 @@ class VerifyToken(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        content = {"valid": True}
+        content = {"success": True}
         return Response(content)
 
 
