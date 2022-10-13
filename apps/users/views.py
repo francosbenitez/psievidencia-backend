@@ -65,9 +65,11 @@ class ContactView(APIView):
                 fail_silently=False,
             )
 
-            return Response({"status": "success"})
+            return Response({"status": "success"},
+                    status=status.HTTP_200_OK)
 
-        return Response({"status": "failed"})
+        return Response({"status": "failed"},
+                    status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):
