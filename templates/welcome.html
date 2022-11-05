@@ -60,7 +60,6 @@
                               text-decoration: none;
                             "
                             target="_blank"
-                            data-saferedirecturl="https://www.google.com/url?q=http://{{domain}}{% url 'activate' uidb64=uid token=token %}"
                           >
                             <span class="il">Psievidencia</span>
                           </a>
@@ -168,7 +167,7 @@
                                                 color: #51545e;
                                               "
                                             >
-                                              Usuario: francosbenitez
+                                              Usuario: {{username}}
                                             </p>
                                             <p
                                               style="
@@ -178,7 +177,7 @@
                                                 color: #51545e;
                                               "
                                             >
-                                              Contraseña: 1!k8tp1Oj8Wo
+                                              Contraseña: {{password}}
                                             </p>
                                           </td>
                                         </tr>
