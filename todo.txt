@@ -24,3 +24,10 @@ in a pipeline.
 - Fix favorites issue. DONE
 - Fix UpdatePsychologist. DONE
 - Generate random passwords to the users, and send those to them via an email template.
+- STEPS TO MOVE THE DATABASE TO PRODUCTION:
+  1) Migrate.
+  2) Seeder.
+  3) Move the important tables from the 'production' database to the 'localhost' one.
+  4) Check if eveything works as expected.
+  5) Move the tables from the database 'localhost' to the 'production' database.
+  6) Enjoy!
