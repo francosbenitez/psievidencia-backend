@@ -1,4 +1,35 @@
-- Allow user editing their own data. That is, 
+- Allow users to edit their own data. That is, 
   - their username, and
   - their password
-- Allow user recovering their passwordw with email.
+- Allow users to recover their password with their email.
+- Create a "psychologist" role and an account to all the current psychologists who are on the web.
+    - Allow psychologists to be logged in with a "psychologist" role, and show them a view to EDIT and DELETE their current data. 
+- Generate an USER for each psychologist.
+  - USER -> ROLE "psychologist"
+- Generate ROLE model.
+  - We're going to have two roles: i) authenticated, and ii) psychologist.
+- Generate better docs for the procedure to run the project (backend part).
+  - See how to dockerize it.
+- Delete the /suggestions page. DONE
+- Add a link redirecting to Postman APIs. 
+- Develop:
+  - 'Confirm password' option when creating the user.
+  - Recover your password via email.
+- Add:
+  - "python3 -m black",
+  - Linter, and
+  - tests
+in a pipeline.
+- Allow the login/register with EMAIL OR USERNAME (like Instagram, Twitter, etc.). NOT only with username.
+- Fix favorites issue. DONE
+- Fix UpdatePsychologist. DONE
+- Generate random passwords to the users, and send those to them via an email template.
+- STEPS TO MOVE THE DATABASE TO PRODUCTION:
+  1) Migrate.
+  2) Seeder.
+  3) Move the important tables from the 'production' database to the 'localhost' one.
+  4) Check if eveything works as expected.
+  5) Move the tables from the 'localhost' database to the 'develop' database.
+  6) Check if eveything works as expected.
+  7) Move the tables from the 'develop' database to the 'production' database.
+  8) Enjoy!

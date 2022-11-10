@@ -6,15 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0002_psychologist_additional_data_psychologist_city_and_more'),
+        (
+            "psychologists",
+            "0002_psychologist_additional_data_psychologist_city_and_more",
+        ),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Specialization',
+            name="Specialization",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('specialization', models.CharField(default='', max_length=1000)),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("specialization", models.CharField(default="", max_length=1000)),
             ],
         ),
     ]

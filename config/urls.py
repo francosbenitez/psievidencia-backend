@@ -17,6 +17,7 @@ from django.contrib import admin
 
 from apps.psychologists import views
 from apps.users import views
+from apps.favorites import views
 
 from django.urls import path, include
 
@@ -24,4 +25,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.psychologists.urls")),
     path("api/", include("apps.users.urls")),
+    path("api/", include("apps.favorites.urls")),
 ]

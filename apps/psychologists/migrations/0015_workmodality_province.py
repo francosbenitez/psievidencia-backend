@@ -7,24 +7,44 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0014_rename_gender_psychologist_gender_identity_and_more'),
+        ("psychologists", "0014_rename_gender_psychologist_gender_identity_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WorkModality',
+            name="WorkModality",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(default='', max_length=1000)),
-                ('psychologists', models.ManyToManyField(related_name='work_modalities', to='psychologists.psychologist')),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(default="", max_length=1000)),
+                (
+                    "psychologists",
+                    models.ManyToManyField(
+                        related_name="work_modalities", to="psychologists.psychologist"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Province',
+            name="Province",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='', max_length=1000)),
-                ('psychologists', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='provinces', to='psychologists.psychologist')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(default="", max_length=1000)),
+                (
+                    "psychologists",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="provinces",
+                        to="psychologists.psychologist",
+                    ),
+                ),
             ],
         ),
     ]

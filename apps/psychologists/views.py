@@ -1,36 +1,42 @@
-from django.shortcuts import render
-from django.core.paginator import Paginator
 from django.http import Http404
-from django.db.models import Q
-import pandas as pd
+from apps.users.models import Authenticated
+from apps.users.serializers import AuthenticatedSerializer
 from .models import (
     Psychologist,
     Specialization,
     TherapeuticModel,
-    WorkPopulation,
-    Education,
     WorkModality,
+    WorkPopulation,
     Province,
+    Prepaid,
+    GenderPerspective,
+    GenderIdentity,
+    Education,
 )
 from .serializers import (
     PsychologistSerializer,
+    PsychologistsSerializer,
     SpecializationSerializer,
     TherapeuticModelSerializer,
     WorkPopulationSerializer,
     ProvinceSerializer,
 )
-from apps.users.models import Favorite
+from apps.favorites.models import Favorite
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view
 from django.db import connection
+from rest_framework import generics, status
+
+# from .paginations import CustomPagination
 
 
 class PaginatedPsychologists(APIView):
+    # pagination_class = CustomPagination
+
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
-        specializations = Specialization.objects.all()
+
         name = None
         education = None
         has_perspective = None
@@ -42,13 +48,6 @@ class PaginatedPsychologists(APIView):
         work_modality = None
         province = None
 
-        def dictfetchall(cursor):
-            "Returns all rows from a cursor as a dict"
-            desc = cursor.description
-            return [
-                dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()
-            ]
-
         if "name" in request.GET:
             name = request.GET["name"]
 
@@ -57,7 +56,7 @@ class PaginatedPsychologists(APIView):
 
         if "has_perspective" in request.GET:
             has_perspective = request.GET["has_perspective"]
-            
+
         if "has_prepaid" in request.GET:
             has_prepaid = request.GET["has_prepaid"]
 
@@ -97,9 +96,7 @@ class PaginatedPsychologists(APIView):
                 psychologists = psychologists.filter(name__icontains=name)
 
             if province is not None:
-                psychologists = psychologists.filter(
-                    provinces__name__icontains=province
-                )
+                psychologists = psychologists.filter(province__name__icontains=province)
 
             if education is not None:
                 if (
@@ -109,19 +106,19 @@ class PaginatedPsychologists(APIView):
                     or education == "especialidad"
                 ):
                     psychologists = psychologists.filter(
-                        educations__name__icontains=education
+                        education__name__icontains=education
                     )
 
             if has_perspective is not None:
                 if has_perspective == "si" or has_perspective == "no":
                     psychologists = psychologists.filter(
-                        gender_perspectives__has_perspective__icontains=has_perspective
+                        gender_perspective__has_perspective__icontains=has_perspective
                     )
-            
+
             if has_prepaid is not None:
                 if has_prepaid == "si" or has_prepaid == "no":
                     psychologists = psychologists.filter(
-                        prepaids__has_prepaid__icontains=has_prepaid
+                        prepaid__has_prepaid__icontains=has_prepaid
                     )
 
             if gender_identity is not None:
@@ -131,12 +128,12 @@ class PaginatedPsychologists(APIView):
                     or gender_identity == "no_binarie"
                 ):
                     psychologists = psychologists.filter(
-                        gender_identities__gender_identity__icontains=gender_identity
+                        gender_identity__gender_identity__icontains=gender_identity
                     )
 
             if specialization is not None:
                 cursor = connection.cursor()
-                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."therapeutic_model",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population" FROM "psychologists_psychologist" INNER JOIN "psychologists_specialization_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_specialization_psychologists"."psychologist_id") WHERE "psychologists_specialization_psychologists"."specialization_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."user_ptr_id") "psychologists_psychologist"."user_ptr_id" FROM "psychologists_psychologist" INNER JOIN "psychologists_specialization_psychologists" ON ("psychologists_psychologist"."user_ptr_id" = "psychologists_specialization_psychologists"."psychologist_id") WHERE "psychologists_specialization_psychologists"."specialization_id" IN {} GROUP BY "psychologists_psychologist"."user_ptr_id" HAVING COUNT(*) = {}'
 
                 specialization_len = len(specialization)
                 specialization_tuple = tuple(specialization)
@@ -153,7 +150,7 @@ class PaginatedPsychologists(APIView):
 
             if therapeutic_model is not None:
                 cursor = connection.cursor()
-                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."therapeutic_model",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population" FROM "psychologists_psychologist" INNER JOIN "psychologists_therapeuticmodel_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_therapeuticmodel_psychologists"."psychologist_id") WHERE "psychologists_therapeuticmodel_psychologists"."therapeuticmodel_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."user_ptr_id") "psychologists_psychologist"."user_ptr_id" FROM "psychologists_psychologist" INNER JOIN "psychologists_therapeuticmodel_psychologists" ON ("psychologists_psychologist"."user_ptr_id" = "psychologists_therapeuticmodel_psychologists"."psychologist_id") WHERE "psychologists_therapeuticmodel_psychologists"."therapeuticmodel_id" IN {} GROUP BY "psychologists_psychologist"."user_ptr_id" HAVING COUNT(*) = {}'
 
                 therapeutic_model_len = len(therapeutic_model)
                 therapeutic_model_tuple = tuple(therapeutic_model)
@@ -170,7 +167,7 @@ class PaginatedPsychologists(APIView):
 
             if work_population is not None:
                 cursor = connection.cursor()
-                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_population",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_population" FROM "psychologists_psychologist" INNER JOIN "psychologists_workpopulation_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workpopulation_psychologists"."psychologist_id") WHERE "psychologists_workpopulation_psychologists"."workpopulation_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."user_ptr_id") "psychologists_psychologist"."user_ptr_id" FROM "psychologists_psychologist" INNER JOIN "psychologists_workpopulation_psychologists" ON ("psychologists_psychologist"."user_ptr_id" = "psychologists_workpopulation_psychologists"."psychologist_id") WHERE "psychologists_workpopulation_psychologists"."workpopulation_id" IN {} GROUP BY "psychologists_psychologist"."user_ptr_id" HAVING COUNT(*) = {}'
 
                 work_population_len = len(work_population)
                 work_population_tuple = tuple(work_population)
@@ -187,7 +184,7 @@ class PaginatedPsychologists(APIView):
 
             if work_modality is not None:
                 cursor = connection.cursor()
-                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."id") "psychologists_psychologist"."id", "psychologists_psychologist"."name", "psychologists_psychologist"."work_modality",  "psychologists_psychologist"."specialization", "psychologists_psychologist"."work_modality" FROM "psychologists_psychologist" INNER JOIN "psychologists_workmodality_psychologists" ON ("psychologists_psychologist"."id" = "psychologists_workmodality_psychologists"."psychologist_id") WHERE "psychologists_workmodality_psychologists"."workmodality_id" IN {} GROUP BY "psychologists_psychologist"."id" HAVING COUNT(*) = {}'
+                query = 'SELECT DISTINCT ON ("psychologists_psychologist"."user_ptr_id") "psychologists_psychologist"."user_ptr_id" FROM "psychologists_psychologist" INNER JOIN "psychologists_workmodality_psychologists" ON ("psychologists_psychologist"."user_ptr_id" = "psychologists_workmodality_psychologists"."psychologist_id") WHERE "psychologists_workmodality_psychologists"."workmodality_id" IN {} GROUP BY "psychologists_psychologist"."user_ptr_id" HAVING COUNT(*) = {}'
 
                 work_modality_len = len(work_modality)
                 work_modality_tuple = tuple(work_modality)
@@ -204,10 +201,21 @@ class PaginatedPsychologists(APIView):
 
         list_psychologists = list(psychologists.values())
 
+        custom_list = [item["id"] for item in list_psychologists]
+        queryset = Psychologist.objects.filter(id__in=custom_list).order_by("-id")
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 12
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = PsychologistsSerializer(
+            result_page, context={"view": "PaginatedPsychologists"}, many=True
+        )
+
         user_id = request.user.id
         if user_id:
 
             favorites = Favorite.objects.filter(user_id=user_id)
+
             favorites_psychologists = []
 
             for item in favorites.values():
@@ -218,36 +226,30 @@ class PaginatedPsychologists(APIView):
                     pass
 
             for item_fa in favorites_psychologists:
-                for item_ps in list_psychologists:
-                    if item_fa == item_ps:
+                for item_ps in serializer.data:
+                    if item_fa["id"] == item_ps["id"]:
                         item_ps["liked"] = True
 
-        paginator = PageNumberPagination()
-        paginator.page_size = 12
-        result_page = paginator.paginate_queryset(list_psychologists, request)
-        serializer = PsychologistSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
 
 class PsychologistDetail(APIView):
     def get_object(self, psychologist_id):
         try:
-            # Create an object taking the 'psychologist_id' parameter from the URL
             return Psychologist.objects.filter(id=psychologist_id).values()[0]
         except Psychologist.DoesNotExist:
             raise Http404
 
     def get(self, request, psychologist_id, format=None):
-        # Check if this psychologist is in the 'favorites_psychologists' list
         psychologist = self.get_object(psychologist_id)
 
         user_id = request.user.id
+
         if user_id:
 
             favorites = Favorite.objects.filter(user_id=user_id)
             favorites_psychologists = []
 
-            # Add items to the 'favorites_psychologists' list
             for item in favorites.values():
                 try:
                     favorite = Psychologist.objects.filter(
@@ -257,13 +259,142 @@ class PsychologistDetail(APIView):
                 except IndexError:
                     pass
 
-            # Check if any item in the 'favorites_psychologists' list matches to the 'psychologist' variable
             for item_fa in favorites_psychologists:
                 if item_fa == psychologist:
                     psychologist["liked"] = True
 
-        serializer = PsychologistSerializer(psychologist)
+        queryset = Psychologist.objects.get(id=psychologist["id"])
+
+        serializer = PsychologistSerializer(
+            queryset,
+            context={"liked": psychologist["liked"], "view": "PsychologistDetail"},
+        )
+
         return Response(serializer.data)
+
+
+class UpdatePsychologist(generics.GenericAPIView):
+    def patch(self, request, format=None):
+        user_id = request.user.id
+        user_role = request.user.role
+
+        if user_id:
+            if user_role == "PSYCHOLOGIST":
+                psychologist = Psychologist.objects.get(id=user_id)
+
+                data_to_change = request.data
+
+                def update_one_to_many(string, model):
+                    if request.data.get(string) != None:
+                        new_data = request.data.get(string)
+
+                        if string == "gender_identity":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(gender_identity=new_data["name"])
+
+                        elif string == "province":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(name=new_data["name"], slug=new_data["slug"])
+
+                        elif string == "prepaid":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(has_prepaid=new_data["name"])
+
+                        elif string == "education":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(name=new_data["name"])
+
+                        elif string == "gender_perspective":
+                            model.objects.filter(
+                                psychologists_id=psychologist.id
+                            ).update(has_perspective=new_data["name"])
+
+                        del data_to_change[string]
+
+                update_one_to_many("province", Province)
+                update_one_to_many("gender_identity", GenderIdentity)
+                update_one_to_many("prepaid", Prepaid)
+                update_one_to_many("education", Education)
+                update_one_to_many("gender_perspective", GenderPerspective)
+
+                def update_many_to_many(string, model, relationship):
+                    if request.data.get(string) != None:
+                        list = []
+
+                        for item in request.data.get(string):
+                            model_object = model.objects.get(id=item["id"])
+                            list.append(model_object)
+
+                        relationship.set(list)
+                        del data_to_change[string]
+
+                arr_of_dicts = [
+                    {
+                        "string": "therapeutic_models",
+                        "model": TherapeuticModel,
+                        "relation": psychologist.therapeutic_models,
+                    },
+                    {
+                        "string": "work_modalities",
+                        "model": WorkModality,
+                        "relation": psychologist.work_modalities,
+                    },
+                    {
+                        "string": "work_populations",
+                        "model": WorkPopulation,
+                        "relation": psychologist.work_populations,
+                    },
+                    {
+                        "string": "specializations",
+                        "model": Specialization,
+                        "relation": psychologist.specializations,
+                    },
+                ]
+
+                for dict in arr_of_dicts:
+                    update_many_to_many(dict["string"], dict["model"], dict["relation"])
+
+                # Psychologist.objects.filter(id=user_id).update(**data_to_change)
+
+                # psychologist = Psychologist.objects.get(id=user_id)
+                for key, value in data_to_change.items():
+                    setattr(psychologist, key, value)
+
+                psychologist.save()
+
+                serializer = PsychologistSerializer(
+                    psychologist, context={"liked": psychologist.liked}
+                )
+
+                return Response(
+                    {"message": "success", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                authenticated = Authenticated.objects.get(id=user_id)
+                data_to_change = request.data
+                # Authenticated.objects.filter(id=user_id).update(**data_to_change)
+                # authenticated = Authenticated.objects.get(id=user_id)
+                for key, value in data_to_change.items():
+                    setattr(authenticated, key, value)
+
+                authenticated.save()
+
+                serializer = AuthenticatedSerializer(authenticated)
+
+                return Response(
+                    {"message": "success", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+
+        return Response(
+            {"message": "error"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class SpecializationsList(APIView):
@@ -309,6 +440,16 @@ class ProvincesList(APIView):
     def get(self, request, format=None):
         provinces = Province.objects.all().order_by("id")
         provinces_values = Province.objects.values()
+
+        name = None
+
+        if "name" in request.GET:
+            name = request.GET["name"]
+
+        if name:
+            if name is not None:
+                provinces_values = provinces_values.filter(slug__icontains=name)
+
         provinces_list = [entry for entry in provinces_values]
 
         # Removes provinces list duplicates

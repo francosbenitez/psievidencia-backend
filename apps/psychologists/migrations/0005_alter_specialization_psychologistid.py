@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0004_specialization_psychologistid'),
+        ("psychologists", "0004_specialization_psychologistid"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='specialization',
-            name='psychologistId',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='specializations', to='psychologists.psychologist'),
+            model_name="specialization",
+            name="psychologistId",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="specializations",
+                to="psychologists.psychologist",
+            ),
         ),
     ]

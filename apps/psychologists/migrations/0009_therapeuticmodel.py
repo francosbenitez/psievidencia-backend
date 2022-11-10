@@ -6,16 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('psychologists', '0008_remove_specialization_psychologist_and_more'),
+        ("psychologists", "0008_remove_specialization_psychologist_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TherapeuticModel',
+            name="TherapeuticModel",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('therapeutic_model', models.CharField(default='', max_length=1000)),
-                ('psychologists', models.ManyToManyField(related_name='therapeutic_models', to='psychologists.psychologist')),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("therapeutic_model", models.CharField(default="", max_length=1000)),
+                (
+                    "psychologists",
+                    models.ManyToManyField(
+                        related_name="therapeutic_models",
+                        to="psychologists.psychologist",
+                    ),
+                ),
             ],
         ),
     ]

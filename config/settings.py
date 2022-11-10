@@ -49,8 +49,9 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "knox",
-    "apps.psychologists",
     "apps.users",
+    "apps.psychologists",
+    "apps.favorites",
     "whitenoise.runserver_nostatic",
 ]
 
@@ -102,8 +103,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "psievidencia-db",
-        "USER": "root",
-        "PASSWORD": "",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
         "HOST": "localhost",
         "PORT": 5432,
     }
@@ -163,9 +164,11 @@ MEDIA_URL = "/media/"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 RECIPIENT_ADDRESS = env("RECIPIENT_ADDRESS")
+FRONTEND_URL = env("FRONTEND_URL")
 
 AUTH_USER_MODEL = "users.User"

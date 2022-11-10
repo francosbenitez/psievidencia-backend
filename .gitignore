@@ -5,3 +5,5 @@ __pycache__/
 config/.env
 gcp_key.json
 **/.DS_Store
+script.sh
+backup

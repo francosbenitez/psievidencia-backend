@@ -1,30 +1,37 @@
 from django.db import models
-
-from django.contrib.auth.models import AbstractUser
-from apps.psychologists.models import Psychologist
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.timezone import now
 
 
 class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
 
+    class Role(models.TextChoices):
+        ADMIN = "ADMIN", "Admin"
+        AUTHENTICATED = "AUTHENTICATED", "Authenticated"
+        PSYCHOLOGIST = "PSYCHOLOGIST", "Psychologist"
+
+    base_role = Role.AUTHENTICATED
+
+    role = models.CharField(max_length=50, choices=Role.choices, default="")
+
+    # def save(self, *args, **kwargs):
+    # if not self.pk:
+    #     self.role = self.base_role
+    #     return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.email
 
 
-class Suggestion(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=1000, default="")
-    description = models.CharField(max_length=1000, default="")
-    users = models.ManyToManyField(User, related_name="suggestions")
+class Authenticated(User):
+    base_role = User.Role.AUTHENTICATED
 
-    def __str__(self):
-        return self.name
-
-
-class Favorite(models.Model):
-
-    user = models.ForeignKey(User, related_name="favorites", on_delete=models.CASCADE)
-    psychologist = models.ForeignKey(
-        Psychologist, related_name="favorites", on_delete=models.CASCADE
-    )
+    date = models.DateTimeField(default=now, editable=False)
+    name = models.CharField(max_length=1000, default="")
+    gender_identity = models.CharField(max_length=1000, default="")
+    phone_number = models.CharField(max_length=1000, default="")
+    additional_data = models.CharField(max_length=1000, default="")
