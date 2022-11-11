@@ -8,10 +8,8 @@
 
 ## Live Demo
 
-- **main**
-  - [Link](https://secret-hamlet-81810.herokuapp.com/)
-- **develop**
-  - [Link](https://web-production-979a.up.railway.app/)
+- Branch <a href="https://web-main.up.railway.app/" target="_blank">main</a>
+- Branch <a href="https://web-develop-ecb4.up.railway.app/" target="_blank">develop</a>
 
 ## Running Locally
 
