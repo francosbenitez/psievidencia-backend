@@ -61,6 +61,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+REST_KNOX = {
+    "TOKEN_TTL": None,  # will create tokens that never expire
+}
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
