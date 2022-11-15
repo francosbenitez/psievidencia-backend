@@ -65,11 +65,9 @@ class ContactView(APIView):
                 fail_silently=False,
             )
 
-            return Response({"status": "success"},
-                    status=status.HTTP_200_OK)
+            return Response({"status": "success"}, status=status.HTTP_200_OK)
 
-        return Response({"status": "failed"},
-                    status=status.HTTP_400_BAD_REQUEST)
+        return Response({"status": "failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomRedirect(HttpResponsePermanentRedirect):
@@ -252,7 +250,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
             msg_html = render_to_string(
                 "reset_password.html",
-                {"url": url},
+                {"url": url, "username": user.username},
             )
 
             send_mail(
