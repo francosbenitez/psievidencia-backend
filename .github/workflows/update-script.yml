@@ -25,16 +25,14 @@ jobs:
         run: |
           echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
 
-      - if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - name: Use Node 12
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: actions/setup-node@v1
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          justlogin: true
+          node-version: 12.x
 
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: heroku auth:whoami
+        run: npm i -g @railway/cli
 
       - name: Setup Python
         if: steps.verify-changed-files.outputs.files_changed == 'true'
@@ -45,7 +43,9 @@ jobs:
 
       - name: Run Script and Update
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: heroku run --app ${{ secrets.HEROKU_APP_NAME }} PYTHONPATH=./ python3 seeder/main.py
+        run: PYTHONPATH=./ python3 seeder/main.py
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Commit and Push Changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
