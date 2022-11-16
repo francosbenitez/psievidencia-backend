@@ -2,8 +2,13 @@ import os
 import django
 import pandas as pd
 import unidecode
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from utils import update_csv
+import secrets
+
+# from django.template.loader import render_to_string
+# from django.core.mail import send_mail
+# from django.conf import settings
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -106,12 +111,32 @@ def main_seeder():
                         ignore_index=True,
                     )
 
+                    password_length = 8
+                    random_password = secrets.token_urlsafe(password_length)
+
+                    # if row[2] == "francosbenitez@gmail.com":
+                    #     email = row[2]
+                    #     username = row[2].split("@")[0]
+                    #     email_subject = "Tu cuenta para Psievidencia"
+                    #     msg_html = render_to_string(
+                    #         "welcome.html",
+                    #         {"username": username, "password": random_password},
+                    #     )
+                    #     send_mail(
+                    #         email_subject,
+                    #         "",
+                    #         settings.EMAIL_HOST_USER,
+                    #         [email],
+                    #         html_message=msg_html,
+                    #         fail_silently=False,
+                    #     )
+
                     Psychologist.objects.create_user(
                         date=row[0],
                         name=row[1],
                         email=row[2],
                         username=row[2].split("@")[0],
-                        password=row[2].split("@")[0],
+                        password=random_password,
                         is_email_verified=True,
                         role="PSYCHOLOGIST",
                         # gender_identity=row[3],
