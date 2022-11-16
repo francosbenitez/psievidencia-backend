@@ -8,7 +8,8 @@ jobs:
     name: Update script with GitHub Actions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Update CSV
         run: python3 -c 'from seeder.utils import update_csv; update_csv()'
@@ -34,19 +35,15 @@ jobs:
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: npm i -g @railway/cli
 
-      - if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: RAILWAY_TOKEN_2=${{ secrets.RAILWAY_TOKEN_2 }} railway whoami
-
-      - name: Setup Python
+      - name: Install Dependencies
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-          cache: "pip"
+        run: pip3 install -r requirements.txt
 
       - name: Run Script and Update
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: RAILWAY_TOKEN_2=${{ secrets.RAILWAY_TOKEN_2 }} railway run python3 seeder/main.py
+        run: railway run python3 seeder/main.py
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Commit and Push Changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
