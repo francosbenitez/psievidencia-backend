@@ -36,6 +36,8 @@ jobs:
 
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: railway whoami
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Setup Python
         if: steps.verify-changed-files.outputs.files_changed == 'true'
