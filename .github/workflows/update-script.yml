@@ -25,11 +25,11 @@ jobs:
         run: |
           echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
 
-      - name: Use Node 12
+      - name: Use Node 16
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
 
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: npm i -g @railway/cli
