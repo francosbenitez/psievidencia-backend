@@ -34,6 +34,9 @@ jobs:
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: npm i -g @railway/cli
 
+      - if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: railway whoami
+
       - name: Setup Python
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         uses: actions/setup-python@v2
