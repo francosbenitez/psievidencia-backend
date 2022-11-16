@@ -26,9 +26,17 @@ jobs:
       - name: Install Railway
         run: npm i -g @railway/cli
 
-      - name: Whoami
+      - name: Install Dependencies
+        run: pip3 install -r requirements.txt
+
+      - name: seeder/test.py
         run: railway run python3 seeder/test.py
         env:
+          # POSTGRES_DB_NAME: ${{ secrets.POSTGRES_DB_NAME }}
+          # POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          # POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          # POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          # POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy
