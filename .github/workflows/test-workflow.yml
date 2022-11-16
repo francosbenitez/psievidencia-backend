@@ -39,6 +39,11 @@ jobs:
           # POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
+      - name: seeder/main.py
+        run: railway run python3 seeder/main.py
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: Deploy
         run: railway up
         env:
