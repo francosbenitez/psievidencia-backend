@@ -35,9 +35,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: railway whoami
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }} railway whoami
 
       - name: Setup Python
         if: steps.verify-changed-files.outputs.files_changed == 'true'
