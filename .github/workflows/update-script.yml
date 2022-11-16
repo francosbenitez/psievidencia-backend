@@ -35,7 +35,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN_2 }} railway whoami
+        run: RAILWAY_TOKEN_2=${{ secrets.RAILWAY_TOKEN_2 }} railway whoami
 
       - name: Setup Python
         if: steps.verify-changed-files.outputs.files_changed == 'true'
@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Script and Update
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN_2 }} railway run python3 seeder/main.py
+        run: RAILWAY_TOKEN_2=${{ secrets.RAILWAY_TOKEN_2 }} railway run python3 seeder/main.py
 
       - name: Commit and Push Changes
         if: steps.verify-changed-files.outputs.files_changed == 'true'
