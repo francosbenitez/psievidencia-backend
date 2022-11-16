@@ -12,7 +12,7 @@ from setup import setup_django
 # from django.conf import settings
 
 
-PROJECT_PATH = "../"
+PROJECT_PATH = "./"
 PROJECT_SETTING = "config.settings"
 
 setup_django(PROJECT_PATH, PROJECT_SETTING)
