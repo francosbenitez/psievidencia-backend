@@ -27,7 +27,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - name: Whoami
-        run: railway whoami
+        run: railway run python3 seeder/test.py
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
