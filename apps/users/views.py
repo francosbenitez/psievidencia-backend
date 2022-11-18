@@ -228,7 +228,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        self.serializer_class(data=request.data)
 
         email = request.data.get("email", "")
 
@@ -295,9 +295,8 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
             else:
                 return CustomRedirect(settings.FRONTEND_URL + "?token_valid=False")
 
-        except DjangoUnicodeDecodeError as identifier:
+        except DjangoUnicodeDecodeError:
             try:
-                print("user", user)
                 if not PasswordResetTokenGenerator().check_token(user):
                     return CustomRedirect(redirect_url + "?token_valid=False")
 
@@ -314,10 +313,6 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        context = self.get_serializer_context()
-        print("context", context)
-
         token = request.data["token"]
         id = force_str(urlsafe_base64_decode(request.data["uidb64"]))
         user = User.objects.get(id=id)
@@ -328,11 +323,3 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
             response,
             status=status.HTTP_200_OK,
         )
-
-    def get_serializer_context(self):
-        """
-        pass request attribute to serializer
-        """
-        context = super(SetNewPasswordAPIView, self).get_serializer_context()
-        print("context", context)
-        return context

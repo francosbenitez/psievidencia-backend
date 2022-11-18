@@ -15,13 +15,7 @@ class User(AbstractUser):
         PSYCHOLOGIST = "PSYCHOLOGIST", "Psychologist"
 
     base_role = Role.AUTHENTICATED
-
     role = models.CharField(max_length=50, choices=Role.choices, default="")
-
-    # def save(self, *args, **kwargs):
-    # if not self.pk:
-    #     self.role = self.base_role
-    #     return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
@@ -29,7 +23,6 @@ class User(AbstractUser):
 
 class Authenticated(User):
     base_role = User.Role.AUTHENTICATED
-
     date = models.DateTimeField(default=now, editable=False)
     name = models.CharField(max_length=1000, default="")
     gender_identity = models.CharField(max_length=1000, default="")

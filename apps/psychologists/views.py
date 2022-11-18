@@ -28,12 +28,8 @@ from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from rest_framework import generics, status
 
-# from .paginations import CustomPagination
-
 
 class PaginatedPsychologists(APIView):
-    # pagination_class = CustomPagination
-
     def get(self, request, format=None):
         psychologists = Psychologist.objects.all().order_by("-id")
 
@@ -358,9 +354,6 @@ class UpdatePsychologist(generics.GenericAPIView):
                 for dict in arr_of_dicts:
                     update_many_to_many(dict["string"], dict["model"], dict["relation"])
 
-                # Psychologist.objects.filter(id=user_id).update(**data_to_change)
-
-                # psychologist = Psychologist.objects.get(id=user_id)
                 for key, value in data_to_change.items():
                     setattr(psychologist, key, value)
 
@@ -377,8 +370,6 @@ class UpdatePsychologist(generics.GenericAPIView):
             else:
                 authenticated = Authenticated.objects.get(id=user_id)
                 data_to_change = request.data
-                # Authenticated.objects.filter(id=user_id).update(**data_to_change)
-                # authenticated = Authenticated.objects.get(id=user_id)
                 for key, value in data_to_change.items():
                     setattr(authenticated, key, value)
 
@@ -452,7 +443,6 @@ class ProvincesList(APIView):
 
         provinces_list = [entry for entry in provinces_values]
 
-        # Removes provinces list duplicates
         found = set()
         remove_provinces_list_duplicates = []
         for dct in provinces_list:
@@ -460,7 +450,6 @@ class ProvincesList(APIView):
                 remove_provinces_list_duplicates.append(dct)
                 found.add(dct["name"])
 
-        # Creates a list of dictionaries to be sent as a JSON
         json = []
         for i, item in enumerate(remove_provinces_list_duplicates):
             dic = {}

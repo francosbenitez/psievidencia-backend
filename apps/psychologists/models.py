@@ -4,24 +4,14 @@ from apps.users.models import User
 
 class Psychologist(User):
     base_role = User.Role.PSYCHOLOGIST
-
     date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=1000, default="")
-    # gender_identity = models.CharField(max_length=1000, default="")
     registration_type = models.CharField(max_length=1000, default="")
     registration_number = models.CharField(max_length=1000, default="")
     institution = models.CharField(max_length=1000, default="")
     team = models.CharField(max_length=1000, default="")
-    # province = models.CharField(max_length=1000, default="")
     city = models.CharField(max_length=1000, default="")
-    # education = models.CharField(max_length=1000, default="")
-    # therapeutic_model = models.CharField(max_length=1000, default="")
-    # gender_perspective = models.CharField(max_length=1000, default="")
-    # specialization = models.CharField(max_length=1000, default="")
-    # work_population = models.CharField(max_length=1000, default="")
-    # work_modality = models.CharField(max_length=1000, default="")
     online = models.CharField(max_length=1000, default="")
-    # prepaid = models.CharField(max_length=1000, default="")
     prepaid_type = models.CharField(max_length=1000, default="")
     invoice = models.CharField(max_length=1000, default="")
     sign_language = models.CharField(max_length=1000, default="")

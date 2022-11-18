@@ -1,5 +1,3 @@
-import os
-import django
 import pandas as pd
 import unidecode
 from datetime import datetime, date
@@ -32,7 +30,7 @@ from apps.users.models import Authenticated
 def main_seeder():
     CSV_PATH = "./seeder/psychologists.csv"
 
-    # Psychologist.objects.all().delete()
+    Psychologist.objects.all().delete()
 
     # Seed user
     print("Seeding authenticated user...")
@@ -113,23 +111,6 @@ def main_seeder():
                     password_length = 8
                     random_password = secrets.token_urlsafe(password_length)
 
-                    # if row[2] == "francosbenitez@gmail.com":
-                    #     email = row[2]
-                    #     username = row[2].split("@")[0]
-                    #     email_subject = "Tu cuenta para Psievidencia"
-                    #     msg_html = render_to_string(
-                    #         "welcome.html",
-                    #         {"username": username, "password": random_password},
-                    #     )
-                    #     send_mail(
-                    #         email_subject,
-                    #         "",
-                    #         settings.EMAIL_HOST_USER,
-                    #         [email],
-                    #         html_message=msg_html,
-                    #         fail_silently=False,
-                    #     )
-
                     Psychologist.objects.create_user(
                         date=row[0],
                         name=row[1],
@@ -138,17 +119,12 @@ def main_seeder():
                         password=random_password,
                         is_email_verified=True,
                         role="PSYCHOLOGIST",
-                        # gender_identity=row[3],
                         registration_type=row[4],
                         registration_number=row[5],
                         institution=row[6],
                         team=row[7],
-                        # province=row[8],
                         city=row[9],
-                        # education=row[10],
-                        # gender_perspective=row[12],
                         online=row[16],
-                        # prepaid=row[17],
                         prepaid_type=row[18],
                         invoice=row[19],
                         sign_language=row[20],
