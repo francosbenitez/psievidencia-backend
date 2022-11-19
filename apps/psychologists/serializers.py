@@ -172,8 +172,10 @@ class PsychologistSerializer(PsychologistsSerializer):
         )
 
     def get_liked(self, obj):
-        liked = self.context["liked"]
-        return liked
+        if "liked" in self.context:
+            liked = self.context["liked"]
+            return liked
+        return
 
     def get_gender_identity(self, obj):
 
@@ -227,3 +229,43 @@ class PsychologistSerializer(PsychologistsSerializer):
             list.append(d[prepaid.has_prepaid])
 
         return " ".join(list)
+
+
+class RegisterPsychologistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Psychologist
+        fields = (
+            "id",
+            "email",
+            "username",
+            "password",
+            "name",
+            "province",
+            "gender_identity",
+            "registration_type",
+            "registration_number",
+            "institution",
+            "team",
+            "city",
+            "education",
+            "gender_perspective",
+            "online",
+            "prepaid",
+            "prepaid_type",
+            "invoice",
+            "sign_language",
+            "session_languages",
+            "social_networks",
+            "phone_number",
+            "additional_data",
+        )
+
+    def get_fields(self):
+        fields = super(RegisterPsychologistSerializer, self).get_fields()
+        for field in fields.values():
+            field.required = True
+            field.allow_blank = False
+        return fields
+
+    def create(self, validated_data):
+        return Psychologist.objects.create_user(**validated_data)

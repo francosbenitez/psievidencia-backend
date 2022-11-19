@@ -14,6 +14,7 @@ from .models import (
     Education,
 )
 from .serializers import (
+    RegisterPsychologistSerializer,
     PsychologistSerializer,
     PsychologistsSerializer,
     SpecializationSerializer,
@@ -27,6 +28,20 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from rest_framework import generics, status
+
+
+class RegisterPsychologist(generics.GenericAPIView):
+    serializer_class = RegisterPsychologistSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # send_activation_email(user, request)
+
+        return Response(
+            PsychologistSerializer(user, context=self.get_serializer_context()).data
+        )
 
 
 class PaginatedPsychologists(APIView):

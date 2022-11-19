@@ -30,30 +30,19 @@ class AuthenticatedSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ("id", "username", "email", "password", "role")
+        model = Authenticated
+        fields = ("id", "username", "email", "password")
         extra_kwargs = {
             "password": {"write_only": True},
-            "role": {"required": True, "allow_blank": False},
             "email": {"required": True, "allow_blank": False},
         }
 
     def create(self, validated_data):
-        role = validated_data["role"]
-
-        def create_usr(Model):
-            created_user = Model.objects.create_user(
-                validated_data["username"],
-                validated_data["email"],
-                validated_data["password"],
-                role=role,
-            )
-            return created_user
-
-        if role == "AUTHENTICATED":
-            return create_usr(Authenticated)
-
-        return create_usr(Psychologist)
+        return Authenticated.objects.create_user(
+            validated_data["username"],
+            validated_data["email"],
+            validated_data["password"],
+        )
 
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
