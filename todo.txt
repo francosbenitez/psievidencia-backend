@@ -7,7 +7,7 @@
 - Generate an USER for each psychologist.
   - USER -> ROLE "psychologist"
 - Generate ROLE model.
-  - We're going to have two roles: i) authenticated, and ii) psychologist.
+  - We're going to have two roles: i) patient, and ii) psychologist.
 - Generate better docs for the procedure to run the project (backend part).
   - See how to dockerize it.
 - Delete the /suggestions page. DONE
