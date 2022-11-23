@@ -1,0 +1,7 @@
+PATIENT = "PATIENT"
+PSYCHOLOGIST = "PSYCHOLOGIST"
+
+ROLE_CHOICES = (
+    (PATIENT, "Patient"),
+    (PSYCHOLOGIST, "Psychologist"),
+)
