@@ -1,6 +1,6 @@
 import inspect
-import apps.psychologists.models as models
 from django.contrib import admin
+import apps.psychologists.models as models
 
 for name, obj in inspect.getmembers(models):
     if inspect.isclass(obj):

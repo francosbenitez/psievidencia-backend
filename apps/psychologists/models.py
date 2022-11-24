@@ -1,6 +1,6 @@
 from django.db import models
-from apps.accounts.models import User
 import apps.psychologists.constants as constants
+from apps.accounts.models import User
 
 
 class SocialNetworks(models.Model):
@@ -30,7 +30,6 @@ class Registration(models.Model):
 
 class Psychologist(User):
     description = models.CharField(max_length=255)
-
     gender_identity = models.CharField(
         max_length=10,
         choices=constants.GENDER_IDENTITIES,
@@ -39,24 +38,20 @@ class Psychologist(User):
     education = models.CharField(
         choices=constants.EDUCATIONS, max_length=255, default=constants.LICENSURE
     )
-
     social_networks = models.ForeignKey(
         SocialNetworks, on_delete=models.CASCADE, null=True
     )
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True)
     prepaid = models.ForeignKey(Prepaid, on_delete=models.CASCADE, null=True)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE, null=True)
-
     has_perspective = models.BooleanField(default=False)
     has_team = models.BooleanField(default=False)
     offers_invoice = models.BooleanField(default=False)
     offers_online = models.BooleanField(default=False)
     knows_sign_language = models.BooleanField(default=False)
-
     price_hour = models.DecimalField(
         decimal_places=2, max_digits=20, blank=True, null=True
     )
-
     liked = models.BooleanField(default=False)
 
 
