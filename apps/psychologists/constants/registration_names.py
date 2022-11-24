@@ -1,6 +1,6 @@
-NP = "national_and_provincial"
-N = "national"
-P = "provincial"
+NP = "NP"
+N = "N"
+P = "P"
 
 REGISTRATION_NAMES = [
     (NP, "Nacional y Provincial"),
