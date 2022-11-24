@@ -51,3 +51,9 @@ class User(AbstractBaseUser):
     lng = models.CharField(max_length=30, blank=True, null=True)
     avatar = models.ImageField(upload_to="avatars")
     is_email_verified = models.BooleanField(default=False)
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
