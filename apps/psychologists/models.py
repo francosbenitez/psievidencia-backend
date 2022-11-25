@@ -29,7 +29,7 @@ class Registration(models.Model):
 
 
 class Psychologist(User):
-    description = models.CharField(max_length=255)
+    description = models.TextField(max_length=255)
     gender_identity = models.CharField(
         max_length=10,
         choices=constants.GENDER_IDENTITIES,
