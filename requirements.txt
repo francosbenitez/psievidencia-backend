@@ -10,6 +10,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 distlib==0.3.6
 Django==4.1.3
+django-cors-headers==3.13.0
 django-storages==1.13.1
 djangorestframework==3.14.0
 drf-yasg==1.21.4
@@ -49,3 +50,4 @@ tomli==2.0.1
 uritemplate==4.1.1
 urllib3==1.26.13
 virtualenv==20.16.7
+whitenoise==6.2.0
