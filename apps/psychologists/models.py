@@ -3,14 +3,18 @@ import apps.psychologists.constants as constants
 from apps.accounts.models import User
 
 
-class SocialNetworks(models.Model):
-    facebook = models.CharField(max_length=255, blank=True)
-    twitter = models.CharField(max_length=255, blank=True)
-    instagram = models.CharField(max_length=255, blank=True)
-    whatsapp = models.CharField(max_length=255, blank=True)
+class SocialNetwork(models.Model):
+    facebook = models.CharField(max_length=255, blank=True, null=True)
+    twitter = models.CharField(max_length=255, blank=True, null=True)
+    instagram = models.CharField(max_length=255, blank=True, null=True)
+    whatsapp = models.CharField(max_length=255, blank=True, null=True)
 
 
 class Prepaid(models.Model):
+    """
+    Represents if the psychologist works affiliated to a prepaid and/or social work.
+    """
+
     has = models.BooleanField(default=False)
     name = models.CharField(max_length=255, blank=True)
 
@@ -39,7 +43,7 @@ class Psychologist(User):
         choices=constants.EDUCATIONS, max_length=255, default=constants.LICENSURE
     )
     social_networks = models.ForeignKey(
-        SocialNetworks, on_delete=models.CASCADE, null=True
+        SocialNetwork, on_delete=models.CASCADE, null=True
     )
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True)
     prepaid = models.ForeignKey(Prepaid, on_delete=models.CASCADE, null=True)

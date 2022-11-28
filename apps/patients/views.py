@@ -1,3 +1,18 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .serializers import PatientSerializer, RegisterPatientSerializer
+from rest_framework.response import Response
 
-# Create your views here.
+
+class Register(generics.GenericAPIView):
+    serializer_class = RegisterPatientSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # send_activation_email(user, request)
+
+        return Response(
+            PatientSerializer(user, context=self.get_serializer_context()).data
+        )

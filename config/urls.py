@@ -32,7 +32,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/accounts/", include("apps.accounts.urls")),
+    path("api/psychologists/", include("apps.psychologists.urls")),
+    path("api/patients/", include("apps.patients.urls")),
     path(
         "",
         schema_view.with_ui("swagger", cache_timeout=0),
