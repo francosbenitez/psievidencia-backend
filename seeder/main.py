@@ -26,7 +26,7 @@ from apps.psychologists.models import (
     Province,
 )
 
-from apps.users.models import Authenticated
+from apps.users.models import Authenticated, User
 
 
 def main_seeder():
@@ -93,7 +93,7 @@ def main_seeder():
 
                 if (
                     not Psychologist.objects.filter(id=i).exists()
-                    and not Psychologist.objects.filter(email=row[2]).exists()
+                    and not User.objects.filter(email=row[2]).exists()
                 ):
                     df_test = df_test.append(
                         {
