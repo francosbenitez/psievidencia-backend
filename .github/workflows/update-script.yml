@@ -1,0 +1,53 @@
+name: Update Script
+on:
+  schedule:
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+jobs:
+  update_script:
+    name: Update script with GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Update CSV
+        run: python3 -c 'from seeder.utils import update_csv; update_csv()'
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v11
+        id: verify-changed-files
+        with:
+          files: |
+            seeder/psychologists.csv
+      - name: Run step only when files change.
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+      - name: Use Node 16
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: npm i -g @railway/cli
+
+      - name: Install Dependencies
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: pip3 install -r requirements.txt
+
+      - name: Run Script and Update
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: railway run python3 seeder/main.py
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Commit and Push Changes
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Updated script on `date` with GitHub Actions"
+          git push origin main

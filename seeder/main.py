@@ -32,7 +32,7 @@ from apps.users.models import Authenticated
 def main_seeder():
     CSV_PATH = "./seeder/psychologists.csv"
 
-    # Psychologist.objects.all().delete()
+    Psychologist.objects.all().delete()
 
     # Seed user
     print("Seeding authenticated user...")
