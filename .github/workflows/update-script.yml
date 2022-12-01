@@ -1,8 +1,5 @@
 name: Update Script
-on:
-  schedule:
-    - cron: "0 15 * * *"
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   update_script:
     name: Update script with GitHub Actions
