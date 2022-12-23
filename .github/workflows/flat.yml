@@ -1,0 +1,21 @@
+name: flat
+
+on:
+  schedule:
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: v1.x
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - name: Fetch data
+        uses: githubocto/flat@v3
+        with:
+          http_url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS95wGgZlEivufodGteKLOxDzeC1dCCae38NCYiQZ7xIWSKnXMUc0-kionSL_BBRNO4xdrqAe1VDQ-P/pub?output=csv"
+          downloaded_filename: ./seeder/psychologists.csv
