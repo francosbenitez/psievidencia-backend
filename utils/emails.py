@@ -22,7 +22,9 @@ def send_bulk():
     emails_successful = []
     emails_failed = []
     for (i, psychologist) in enumerate(psychologists):
-        if i < 100:
+        print("i", i)
+        print("psychologist.email", psychologist.email)
+        if i < 100 and psychologist.email != "melisa.gaggino@gmail.com":
             try:
                 msg_html = render_to_string(
                     "hello.html",
@@ -41,11 +43,17 @@ def send_bulk():
                 print(f"The message has been sent successfully.")
                 print(f"Email succesful: {email_successful}")
                 emails_successful.append(email_successful)
+
+                emails_failed.append(None)
+
             except:
                 email_failed = psychologist.email
                 print(f"It has been an error.")
                 print(f"Psychologist email: {email_failed}")
                 emails_failed.append(email_failed)
+
+                emails_successful.append(None)
+
         return emails_successful, emails_failed
     return None
 
