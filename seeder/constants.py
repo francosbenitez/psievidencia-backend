@@ -1,6 +1,6 @@
 PROJECT_PATH = "./"
 PROJECT_SETTING = "config.settings"
-CSV_PATH = "./seeder/psychologists.csv"
+CSV_PATH = "./seeder/data/psychologists.csv"
 DATA_DICT = {
     "therapeutic_model": [],
     "specialization": [],
