@@ -22,40 +22,36 @@ def send_bulk():
     emails_successful = []
     emails_failed = []
     for (i, psychologist) in enumerate(psychologists):
-        print("i", i)
-        print("psychologist.email", psychologist.email)
-        if i < 100 and psychologist.email != "melisa.gaggino@gmail.com":
-            try:
-                msg_html = render_to_string(
-                    "hello.html",
-                    {"name": psychologist.name},
-                )
+        try:
+            msg_html = render_to_string(
+                "hello.html",
+                {"name": psychologist.name},
+            )
 
-                send_mail(
-                    f"¡Hola, {psychologist.name}! Nos encantaría tu feedback",
-                    "",
-                    settings.EMAIL_HOST_USER,
-                    [psychologist.email],
-                    html_message=msg_html,
-                    fail_silently=False,
-                )
-                email_successful = psychologist.email
-                print(f"The message has been sent successfully.")
-                print(f"Email succesful: {email_successful}")
-                emails_successful.append(email_successful)
+            send_mail(
+                f"¡Hola, {psychologist.name}! Nos encantaría tu feedback",
+                "",
+                settings.EMAIL_HOST_USER,
+                [psychologist.email],
+                html_message=msg_html,
+                fail_silently=False,
+            )
+            email_successful = psychologist.email
+            print(f"The message has been sent successfully.")
+            print(f"Email succesful: {email_successful}")
+            emails_successful.append(email_successful)
 
-                emails_failed.append(None)
+            emails_failed.append(None)
 
-            except:
-                email_failed = psychologist.email
-                print(f"It has been an error.")
-                print(f"Psychologist email: {email_failed}")
-                emails_failed.append(email_failed)
+        except:
+            email_failed = psychologist.email
+            print(f"It has been an error.")
+            print(f"Psychologist email: {email_failed}")
+            emails_failed.append(email_failed)
 
-                emails_successful.append(None)
+            emails_successful.append(None)
 
-        return emails_successful, emails_failed
-    return None
+    return emails_successful, emails_failed
 
 
 def write_file(se, fe):
