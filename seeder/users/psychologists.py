@@ -38,20 +38,24 @@ def seed_psychologists(reader):
                 not Psychologist.objects.filter(id=i).exists()
                 and not User.objects.filter(email=row[2]).exists()
             ):
-                data_to_join = data_to_join.append(
-                    {
-                        "therapeutic_model": row[11],
-                        "specialization": row[13],
-                        "work_population": row[14],
-                        "work_modality": row[15],
-                        "province": row[8],
-                        "gender_identity": row[3],
-                        "gender_perspective": row[12],
-                        "prepaid": row[17],
-                        "education": row[10],
-                    },
-                    ignore_index=True,
+
+                df = pd.DataFrame.from_records(
+                    [
+                        {
+                            "therapeutic_model": row[11],
+                            "specialization": row[13],
+                            "work_population": row[14],
+                            "work_modality": row[15],
+                            "province": row[8],
+                            "gender_identity": row[3],
+                            "gender_perspective": row[12],
+                            "prepaid": row[17],
+                            "education": row[10],
+                        }
+                    ]
                 )
+
+                data_to_join = pd.concat([data_to_join, df], ignore_index=True)
 
                 password_length = 8
                 random_password = secrets.token_urlsafe(password_length)
