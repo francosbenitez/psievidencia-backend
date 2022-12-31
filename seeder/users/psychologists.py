@@ -34,11 +34,7 @@ def seed_psychologists(reader):
                 time.strftime("%Y/%m/%d %H:%M:%S")
                 row[0] = time
 
-            if (
-                not Psychologist.objects.filter(id=i).exists()
-                and not User.objects.filter(email=row[2]).exists()
-            ):
-
+            if not User.objects.filter(email__iexact=row[2]).exists():
                 df = pd.DataFrame(
                     [
                         {
