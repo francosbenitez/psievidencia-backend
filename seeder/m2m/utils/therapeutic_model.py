@@ -1,4 +1,4 @@
-from m2m.functions.main import seed
+from m2m.helpers.main import seed
 from apps.psychologists.models import TherapeuticModel
 
 
