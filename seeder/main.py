@@ -24,7 +24,8 @@ from apps.psychologists.models import (
     Province,
 )
 
-from apps.users.models import Authenticated, User
+from apps.users.models import User
+from authenticated import seed_authenticated
 
 
 def main_seeder():
@@ -32,26 +33,13 @@ def main_seeder():
 
     Psychologist.objects.all().delete()
 
-    # Seed user
-    print("Seeding authenticated user...")
-    if Authenticated.objects.filter(username="username").exists():
-        pass
-    else:
-        user = Authenticated.objects.create_user(
-            username="username",
-            email="username@email.com",
-            password="password",
-            is_email_verified=True,
-            role="AUTHENTICATED",
-        )
-        user.save()
-    print("User seeded!")
+    seed_authenticated()
 
     with open(CSV_PATH, newline="") as csvfile:
         reader = csv.reader(csvfile, quotechar='"')
         next(reader)
 
-        df_test = pd.DataFrame.from_dict(
+        data = pd.DataFrame.from_dict(
             {
                 "therapeutic_model": [],
                 "specialization": [],
@@ -93,7 +81,7 @@ def main_seeder():
                     not Psychologist.objects.filter(id=i).exists()
                     and not User.objects.filter(email=row[2]).exists()
                 ):
-                    df_test = df_test.append(
+                    data = data.append(
                         {
                             "therapeutic_model": row[11],
                             "specialization": row[13],
@@ -138,7 +126,7 @@ def main_seeder():
 
         # Build df
         df = pd.DataFrame(list(Psychologist.objects.all().values()))
-        df = df.join(df_test)
+        df = df.join(data)
 
         # Create seed function to seed 'specialization', 'therapeutic_model', 'work_population' & 'work_modality'
         def seed(new_df, column_name, model):
