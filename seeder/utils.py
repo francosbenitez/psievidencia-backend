@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 def update_csv():
     import requests
 
@@ -9,3 +12,7 @@ def update_csv():
 
     csv_file.write(url_content)
     csv_file.close()
+
+
+def get_project_root() -> Path:
+    return Path(__file__).parent.parent
