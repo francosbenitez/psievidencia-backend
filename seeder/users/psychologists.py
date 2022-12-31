@@ -4,7 +4,7 @@ import secrets
 import pandas as pd
 from apps.psychologists.models import Psychologist
 from apps.users.models import User
-from constants import DATA_DICT
+from utils.constants import DATA_DICT
 
 
 def seed_psychologists(reader):

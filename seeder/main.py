@@ -1,8 +1,8 @@
 import pandas as pd
 import csv
-from utils import update_csv
-from setup import setup_django
-from constants import PROJECT_PATH, PROJECT_SETTING, CSV_PATH
+from utils.utils import update_csv
+from utils.setup import setup_django
+from utils.constants import PROJECT_PATH, PROJECT_SETTING, CSV_PATH
 
 setup_django(PROJECT_PATH, PROJECT_SETTING)
 
