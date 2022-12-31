@@ -39,7 +39,7 @@ def seed_psychologists(reader):
                 and not User.objects.filter(email=row[2]).exists()
             ):
 
-                df = pd.DataFrame.from_records(
+                df = pd.DataFrame(
                     [
                         {
                             "therapeutic_model": row[11],
