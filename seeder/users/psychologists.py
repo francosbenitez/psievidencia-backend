@@ -80,6 +80,6 @@ def seed_psychologists(reader):
                     name_2=row[25],
                 )
 
-    return data_to_join
-
     print("Psychologists seeded!")
+
+    return data_to_join
