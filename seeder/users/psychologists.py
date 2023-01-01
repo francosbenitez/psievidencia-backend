@@ -13,71 +13,101 @@ def seed_psychologists(reader):
     data_to_join = pd.DataFrame.from_dict(DATA_DICT)
 
     for i, row in enumerate(reader):
+        password_length = 8
+        random_password = secrets.token_urlsafe(password_length)
+        username = email.split("@")[0]
+        password = random_password
+        is_email_verified = True
+        role = "PSYCHOLOGIST"
 
-        if row[2] != "":
-            if row[25] != "":
-                if row[1] == "":
-                    row[1] = row[25]
-                row[1] = unidecode.unidecode(row[1]).lower().title()
+        date_csv = row[0]
+        name = row[1]
+        email = row[2]
+        gender_identity = row[3]
+        registration_type = row[4]
+        registration_number = row[5]
+        institution = row[6]
+        team = row[7]
+        province = row[8]
+        city = row[9]
+        education = row[10]
+        therapeutic_model = row[11]
+        gender_perspective = row[12]
+        specialization = row[13]
+        work_population = row[14]
+        work_modality = row[15]
+        online = row[16]
+        prepaid = row[17]
+        prepaid_type = row[18]
+        invoice = row[19]
+        sign_language = row[20]
+        session_languages = row[21]
+        social_networks = row[22]
+        phone_number = row[23]
+        additional_data = row[24]
+        name_2 = row[25]
 
-            if row[0] == "":
+        if email != "":
+            if name_2 != "":
+                if name == "":
+                    name = name_2
+                name = unidecode.unidecode(name).lower().title()
+
+            if date_csv == "":
                 format = "%d/%m/%Y %H:%M:%S"
                 today = date.today()
                 inctime = today.strftime("%d/%m/%Y %H:%M:%S")
                 time = datetime.strptime(inctime, format)
                 time.strftime("%Y/%m/%d %H:%M:%S")
-                row[0] = time
+                date_csv = time
             else:
                 format = "%d/%m/%Y %H:%M:%S"
-                inctime = row[0]
+                inctime = date_csv
                 time = datetime.strptime(inctime, format)
                 time.strftime("%Y/%m/%d %H:%M:%S")
-                row[0] = time
+                date_csv = time
 
-            if not User.objects.filter(email__iexact=row[2]).exists():
-                df = pd.DataFrame(
+            if not User.objects.filter(email__iexact=email).exists():
+                new_df = pd.DataFrame(
                     [
                         {
-                            "therapeutic_model": row[11],
-                            "specialization": row[13],
-                            "work_population": row[14],
-                            "work_modality": row[15],
-                            "province": row[8],
-                            "gender_identity": row[3],
-                            "gender_perspective": row[12],
-                            "prepaid": row[17],
-                            "education": row[10],
+                            "therapeutic_model": therapeutic_model,
+                            "specialization": specialization,
+                            "work_population": work_population,
+                            "work_modality": work_modality,
+                            "province": province,
+                            "gender_identity": gender_identity,
+                            "gender_perspective": gender_perspective,
+                            "prepaid": prepaid,
+                            "education": education,
                         }
                     ]
                 )
 
-                data_to_join = pd.concat([data_to_join, df], ignore_index=True)
-
-                password_length = 8
-                random_password = secrets.token_urlsafe(password_length)
+                data_to_join = pd.concat([data_to_join, new_df], ignore_index=True)
 
                 Psychologist.objects.create_user(
-                    date=row[0],
-                    name=row[1],
-                    email=row[2],
-                    username=row[2].split("@")[0],
-                    password=random_password,
-                    is_email_verified=True,
-                    role="PSYCHOLOGIST",
-                    registration_type=row[4],
-                    registration_number=row[5],
-                    institution=row[6],
-                    team=row[7],
-                    city=row[9],
-                    online=row[16],
-                    prepaid_type=row[18],
-                    invoice=row[19],
-                    sign_language=row[20],
-                    session_languages=row[21],
-                    social_networks=row[22],
-                    phone_number=row[23],
-                    additional_data=row[24],
-                    name_2=row[25],
+                    date=date_csv,
+                    name=name,
+                    email=email,
+                    username=username,
+                    password=password,
+                    is_email_verified=is_email_verified,
+                    role=role,
+                    registration_type=registration_type,
+                    registration_number=registration_number,
+                    institution=institution,
+                    team=team,
+                    city=city,
+                    online=online,
+                    prepaid_type=prepaid_type,
+                    invoice=invoice,
+                    sign_language=sign_language,
+                    session_languages=session_languages,
+                    social_networks=social_networks,
+                    phone_number=phone_number,
+                    additional_data=additional_data,
+                    name_2=name_2,
                 )
 
     print("Psychologists seeded!")
