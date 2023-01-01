@@ -67,7 +67,7 @@ def seed_psychologists(reader):
                 time.strftime("%Y/%m/%d %H:%M:%S")
                 date_csv = time
 
-            psychologist_relationships = pd.DataFrame(
+            psy_rel = pd.DataFrame(
                 [
                     {
                         "therapeutic_model": therapeutic_model,
@@ -83,9 +83,7 @@ def seed_psychologists(reader):
                 ]
             )
 
-            relationships = pd.concat(
-                [relationships, psychologist_relationships], ignore_index=True
-            )
+            relationships = pd.concat([relationships, psy_rel], ignore_index=True)
 
             if not User.objects.filter(email__iexact=email).exists():
                 Psychologist.objects.create_user(
