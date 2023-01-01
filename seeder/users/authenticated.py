@@ -1,10 +1,10 @@
-from apps.users.models import Authenticated
+from apps.users.models import User, Authenticated
 
 
 def seed_authenticated():
     print("Seeding authenticated user...")
 
-    if not Authenticated.objects.filter(username="username").exists():
+    if not User.objects.filter(email__iexact="username@email.com").exists():
         user = Authenticated.objects.create_user(
             username="username",
             email="username@email.com",

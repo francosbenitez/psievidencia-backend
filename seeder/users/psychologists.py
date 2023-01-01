@@ -10,16 +10,9 @@ from utils.constants import DATA_DICT
 def seed_psychologists(reader):
     print("Seeding psychologists...")
 
-    data_to_join = pd.DataFrame.from_dict(DATA_DICT)
+    relationships = pd.DataFrame.from_dict(DATA_DICT)
 
     for i, row in enumerate(reader):
-        password_length = 8
-        random_password = secrets.token_urlsafe(password_length)
-        username = email.split("@")[0]
-        password = random_password
-        is_email_verified = True
-        role = "PSYCHOLOGIST"
-
         date_csv = row[0]
         name = row[1]
         email = row[2]
@@ -47,6 +40,13 @@ def seed_psychologists(reader):
         additional_data = row[24]
         name_2 = row[25]
 
+        password_length = 8
+        random_password = secrets.token_urlsafe(password_length)
+        username = email.split("@")[0]
+        password = random_password
+        is_email_verified = True
+        role = "PSYCHOLOGIST"
+
         if email != "":
             if name_2 != "":
                 if name == "":
@@ -67,25 +67,27 @@ def seed_psychologists(reader):
                 time.strftime("%Y/%m/%d %H:%M:%S")
                 date_csv = time
 
+            psychologist_relationships = pd.DataFrame(
+                [
+                    {
+                        "therapeutic_model": therapeutic_model,
+                        "specialization": specialization,
+                        "work_population": work_population,
+                        "work_modality": work_modality,
+                        "province": province,
+                        "gender_identity": gender_identity,
+                        "gender_perspective": gender_perspective,
+                        "prepaid": prepaid,
+                        "education": education,
+                    }
+                ]
+            )
+
+            relationships = pd.concat(
+                [relationships, psychologist_relationships], ignore_index=True
+            )
+
             if not User.objects.filter(email__iexact=email).exists():
-                new_df = pd.DataFrame(
-                    [
-                        {
-                            "therapeutic_model": therapeutic_model,
-                            "specialization": specialization,
-                            "work_population": work_population,
-                            "work_modality": work_modality,
-                            "province": province,
-                            "gender_identity": gender_identity,
-                            "gender_perspective": gender_perspective,
-                            "prepaid": prepaid,
-                            "education": education,
-                        }
-                    ]
-                )
-
-                data_to_join = pd.concat([data_to_join, new_df], ignore_index=True)
-
                 Psychologist.objects.create_user(
                     date=date_csv,
                     name=name,
@@ -112,4 +114,4 @@ def seed_psychologists(reader):
 
     print("Psychologists seeded!")
 
-    return data_to_join
+    return relationships

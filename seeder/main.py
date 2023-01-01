@@ -17,20 +17,25 @@ from m2o.main import seed_m2o
 
 
 def seed_all():
-    Psychologist.objects.all().delete()
-
     seed_authenticated()
 
     with open(CSV_PATH, newline="") as csvfile:
         reader = csv.reader(csvfile, quotechar='"')
+
         next(reader)
 
-        data_to_join = seed_psychologists(reader)
-        df = pd.DataFrame(list(Psychologist.objects.all().values()))
-        df = df.join(data_to_join)
+        relationships = seed_psychologists(reader)
+        relationships.to_excel("seeder/data/relationships.xlsx")
 
-        seed_m2m(df)
-        seed_m2o(df)
+        psychologists = pd.DataFrame(list(Psychologist.objects.all().values()))
+
+        psy_rel = psychologists.join(relationships)
+        psy_rel["date"] = psy_rel["date"].dt.tz_localize(None)
+        psy_rel["date_joined"] = psy_rel["date_joined"].dt.tz_localize(None)
+        psy_rel.to_excel("seeder/data/psy_rel.xlsx")
+
+        seed_m2m(psy_rel)
+        seed_m2o(psy_rel)
 
         print("Seeder was applied successfully!")
 
