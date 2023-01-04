@@ -11,6 +11,8 @@ def seed_psychologists(reader):
     print("Seeding psychologists...")
 
     relationships = pd.DataFrame.from_dict(DATA_DICT)
+    flag = False
+    flag_email = []
 
     for i, row in enumerate(reader):
         date_csv = row[0]
@@ -68,6 +70,10 @@ def seed_psychologists(reader):
                 date_csv = time
 
             if not User.objects.filter(email__iexact=email).exists():
+                print(">> email", email)
+
+                flag = True
+                flag_email.append(email)
 
                 psy_rel = pd.DataFrame(
                     [
@@ -113,4 +119,4 @@ def seed_psychologists(reader):
 
     print("Psychologists seeded!")
 
-    return relationships
+    return relationships, flag, flag_email

@@ -24,18 +24,41 @@ def seed_all():
 
         next(reader)
 
-        relationships = seed_psychologists(reader)
+        # if there are new psychologists, 'relationships' returns only those
+        relationships, flag, flag_email = seed_psychologists(reader)
         relationships.to_excel("seeder/data/relationships.xlsx")
 
-        psychologists = pd.DataFrame(list(Psychologist.objects.all().values()))
+        # before, there is no problem. The problem is, from here, below ->
+        print("flag_email", flag_email)
+        psychologists = pd.DataFrame(
+            list(Psychologist.objects.filter(email__in=flag_email).values())
+        )
 
         psy_rel = psychologists.join(relationships)
+
         psy_rel["date"] = psy_rel["date"].dt.tz_localize(None)
         psy_rel["date_joined"] = psy_rel["date_joined"].dt.tz_localize(None)
         psy_rel.to_excel("seeder/data/psy_rel.xlsx")
 
-        seed_m2m(psy_rel)
-        seed_m2o(psy_rel)
+        psy_rel = psy_rel.dropna(
+            subset=[
+                "therapeutic_model",
+                "specialization",
+                "work_population",
+                "work_population",
+                "province",
+                "gender_identity",
+                "gender_perspective",
+                "prepaid",
+                "education",
+            ]
+        )
+
+        print("psy_rel", psy_rel)
+
+        if flag:
+            seed_m2m(psy_rel)
+            seed_m2o(psy_rel)
 
         print("Seeder was applied successfully!")
 

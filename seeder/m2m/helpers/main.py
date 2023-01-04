@@ -18,6 +18,10 @@ def seed(new_df, column_name, model):
             )
 
     for row in new_df.itertuples():
+
+        print("row", row)
+        # it's assigning things to psychologists who are not the correct ones
+
         for option in model.objects.all().values():
             if row[2] == option["name"]:
                 model.objects.get(pk=option["id"]).psychologists.add(row[1])
