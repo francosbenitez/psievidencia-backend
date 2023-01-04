@@ -21,6 +21,6 @@ def seed_province(df):
         if not Province.objects.filter(id=row[0]).exists():
             if row[2] != "":
                 Province.objects.create(
-                    id=row[0], psychologists_id=row[1], name=row[2], slug=row[3]
+                    psychologists_id=row[1], name=row[2], slug=row[3]
                 )
     print("Province seeded!")
