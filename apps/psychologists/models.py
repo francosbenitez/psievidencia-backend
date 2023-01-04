@@ -24,7 +24,6 @@ class Psychologist(User):
 
 
 class Specialization(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(Psychologist, related_name="specializations")
 
@@ -33,7 +32,6 @@ class Specialization(models.Model):
 
 
 class TherapeuticModel(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(
         "Psychologist", related_name="therapeutic_models"
@@ -44,7 +42,6 @@ class TherapeuticModel(models.Model):
 
 
 class WorkPopulation(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(
         Psychologist, related_name="work_populations"
@@ -55,7 +52,6 @@ class WorkPopulation(models.Model):
 
 
 class WorkModality(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000, default="")
     psychologists = models.ManyToManyField(Psychologist, related_name="work_modalities")
 
