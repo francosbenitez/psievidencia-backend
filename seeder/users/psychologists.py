@@ -67,25 +67,26 @@ def seed_psychologists(reader):
                 time.strftime("%Y/%m/%d %H:%M:%S")
                 date_csv = time
 
-            psy_rel = pd.DataFrame(
-                [
-                    {
-                        "therapeutic_model": therapeutic_model,
-                        "specialization": specialization,
-                        "work_population": work_population,
-                        "work_modality": work_modality,
-                        "province": province,
-                        "gender_identity": gender_identity,
-                        "gender_perspective": gender_perspective,
-                        "prepaid": prepaid,
-                        "education": education,
-                    }
-                ]
-            )
-
-            relationships = pd.concat([relationships, psy_rel], ignore_index=True)
-
             if not User.objects.filter(email__iexact=email).exists():
+
+                psy_rel = pd.DataFrame(
+                    [
+                        {
+                            "therapeutic_model": therapeutic_model,
+                            "specialization": specialization,
+                            "work_population": work_population,
+                            "work_modality": work_modality,
+                            "province": province,
+                            "gender_identity": gender_identity,
+                            "gender_perspective": gender_perspective,
+                            "prepaid": prepaid,
+                            "education": education,
+                        }
+                    ]
+                )
+
+                relationships = pd.concat([relationships, psy_rel], ignore_index=True)
+
                 Psychologist.objects.create_user(
                     date=date_csv,
                     name=name,
