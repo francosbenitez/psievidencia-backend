@@ -13,7 +13,6 @@ def seed_gender_perspective(df):
     for row in gender_perspective_df.itertuples():
         if not GenderPerspective.objects.filter(id=row[0]).exists():
             GenderPerspective.objects.create(
-                id=row[0],
                 psychologists_id=row[1],
                 has_perspective=row[2],
             )

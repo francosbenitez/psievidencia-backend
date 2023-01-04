@@ -15,7 +15,6 @@ def seed_gender_identity(df):
     for row in gender_identity_df.itertuples():
         if not GenderIdentity.objects.filter(id=row[0]).exists():
             GenderIdentity.objects.create(
-                id=row[0],
                 psychologists_id=row[1],
                 gender_identity=row[2],
             )
