@@ -7,3 +7,5 @@ gcp_key.json
 **/.DS_Store
 script.sh
 backup
+seeder/data/psy_rel.xlsx
+seeder/data/relationships.xlsx
