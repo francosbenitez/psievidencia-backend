@@ -4,13 +4,11 @@ from rest_framework.response import Response
 
 
 class Register(generics.GenericAPIView):
-    """
-    Register psychologists.
-    """
+    """Register psychologists"""
 
     serializer_class = RegisterPsychologistSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         psychologist = serializer.save()
