@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     "apps.psychologists",
     "apps.patients",
     # auth
-    "dj_rest_auth",
     "rest_framework.authtoken",
+    "dj_rest_auth",
     "allauth",
 ]
 
