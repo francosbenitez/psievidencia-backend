@@ -1,15 +1,12 @@
 from rest_framework import serializers
 from apps.patients.models import Patient
+from apps.accounts.serializers import RegisterUserSerializer
 
 
-class RegisterPatientSerializer(serializers.ModelSerializer):
-    class Meta:
+class RegisterPatientSerializer(RegisterUserSerializer):
+    class Meta(RegisterUserSerializer.Meta):
         model = Patient
-        fields = ("id", "email", "password")
-        extra_kwargs = {
-            "email": {"required": True, "allow_blank": False},
-            "password": {"write_only": True},
-        }
+        fields = RegisterUserSerializer.Meta.fields + ()
 
     def create(self, validated_data):
         return Patient.objects.create_user(**validated_data)
