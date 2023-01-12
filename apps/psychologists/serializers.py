@@ -4,6 +4,10 @@ import apps.accounts.constants as constants
 
 
 class SocialNetworkSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the SocialNetwork model.
+    """
+
     class Meta:
         model = SocialNetwork
         fields = ("facebook", "twitter", "instagram", "whatsapp")
@@ -14,11 +18,11 @@ class RegisterPsychologistSerializer(serializers.ModelSerializer):
     Required fields on registering.
     """
 
-    social_networks = SocialNetworkSerializer()
+    social_networks = SocialNetworkSerializer(required=False)
 
     class Meta:
         model = Psychologist
-        fields = ("email", "password", "social_networks")
+        fields = ("email", "password", "avatar", "social_networks")
         extra_kwargs = {
             "email": {"required": True, "allow_blank": False},
             "password": {"write_only": True},
@@ -26,15 +30,19 @@ class RegisterPsychologistSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         psychologist = Psychologist.objects.create_user(
-            email=validated_data["email"], password=validated_data["password"]
+            email=validated_data["email"],
+            password=validated_data["password"],
         )
 
-        social_networks = validated_data["social_networks"]
-        social_networks = SocialNetwork.objects.create(**social_networks)
-        social_networks.save()
-
         psychologist.role = constants.PSYCHOLOGIST
-        psychologist.social_networks = social_networks
+
+        if "social_networks" in validated_data:
+            social_networks = validated_data["social_networks"]
+            social_networks = SocialNetwork.objects.create(**social_networks)
+            social_networks.save()
+            psychologist.social_networks = social_networks
+
+        psychologist.avatar = validated_data["avatar"]
         psychologist.save()
 
         return psychologist
