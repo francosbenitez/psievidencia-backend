@@ -39,10 +39,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    # docs
     "drf_yasg",
+    # apps
     "apps.accounts",
     "apps.psychologists",
     "apps.patients",
+    # auth
+    "dj_rest_auth",
+    "rest_framework.authtoken",
+    "allauth",
 ]
 
 MIDDLEWARE = [
