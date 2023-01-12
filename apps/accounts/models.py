@@ -41,9 +41,7 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    role = models.CharField(
-        max_length=12, choices=constants.ROLE_CHOICES, default=constants.PATIENT
-    )
+    role = models.CharField(max_length=12, choices=constants.ROLE_CHOICES, null=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -51,6 +49,7 @@ class User(AbstractBaseUser):
     lng = models.CharField(max_length=30, blank=True, null=True)
     avatar = models.ImageField(upload_to="avatars")
     is_email_verified = models.BooleanField(default=False)
+    date_joined = models.DateField(auto_now_add=True)
 
     def has_perm(self, perm, obj=None):
         return True
