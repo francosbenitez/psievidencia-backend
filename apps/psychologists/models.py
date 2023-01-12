@@ -11,10 +11,11 @@ class SocialNetwork(models.Model):
 
 
 class Prepaid(models.Model):
-    """
-    Represents if the psychologist works affiliated to a prepaid and/or social work.
-    """
+    has = models.BooleanField(default=False)
+    name = models.CharField(max_length=255, blank=True)
 
+
+class SocialWork(models.Model):
     has = models.BooleanField(default=False)
     name = models.CharField(max_length=255, blank=True)
 
@@ -27,7 +28,7 @@ class Institution(models.Model):
 
 class Registration(models.Model):
     name = models.CharField(
-        choices=constants.REGISTRATION_NAMES, max_length=255, default=constants.P
+        choices=constants.REGISTRATION_NAMES, max_length=255, blank=False, null=False
     )
     number = models.IntegerField()
 
@@ -47,11 +48,13 @@ class Psychologist(User):
     )
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True)
     prepaid = models.ForeignKey(Prepaid, on_delete=models.CASCADE, null=True)
+    social_work = models.ForeignKey(SocialWork, on_delete=models.CASCADE, null=True)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE, null=True)
     has_perspective = models.BooleanField(default=False)
     has_team = models.BooleanField(default=False)
     offers_invoice = models.BooleanField(default=False)
     offers_online = models.BooleanField(default=False)
+    offers_first_free = models.BooleanField(default=False)
     knows_sign_language = models.BooleanField(default=False)
     price_hour = models.DecimalField(
         decimal_places=2, max_digits=20, blank=True, null=True
@@ -60,7 +63,11 @@ class Psychologist(User):
 
 
 class Language(models.Model):
-    name = models.CharField(max_length=255, null=True)
+    name = models.CharField(
+        max_length=10,
+        choices=constants.LANGUAGES,
+        null=True,
+    )
     psychologists = models.ManyToManyField(Psychologist)
 
 
