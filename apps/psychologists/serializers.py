@@ -4,9 +4,7 @@ import apps.accounts.constants as constants
 
 
 class SocialNetworkSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the SocialNetwork model.
-    """
+    """Serializer for the SocialNetwork model"""
 
     class Meta:
         model = SocialNetwork
@@ -14,9 +12,7 @@ class SocialNetworkSerializer(serializers.ModelSerializer):
 
 
 class RegisterPsychologistSerializer(serializers.ModelSerializer):
-    """
-    Required fields on registering.
-    """
+    """Required fields on registering"""
 
     social_networks = SocialNetworkSerializer(required=False)
 
@@ -33,7 +29,6 @@ class RegisterPsychologistSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             password=validated_data["password"],
         )
-
         psychologist.role = constants.PSYCHOLOGIST
 
         if "social_networks" in validated_data:
@@ -44,14 +39,11 @@ class RegisterPsychologistSerializer(serializers.ModelSerializer):
 
         psychologist.avatar = validated_data["avatar"]
         psychologist.save()
-
         return psychologist
 
 
 class PsychologistSerializer(serializers.ModelSerializer):
-    """
-    Returned fields after registering.
-    """
+    """Returned fields after registering"""
 
     class Meta:
         model = Psychologist
