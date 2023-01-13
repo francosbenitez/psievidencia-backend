@@ -47,7 +47,7 @@ class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=20, blank=True)
     lat = models.CharField(max_length=30, blank=True)
     lng = models.CharField(max_length=30, blank=True)
-    avatar = models.ImageField(upload_to="avatars")
+    avatar = models.ImageField(upload_to="avatars", blank=True)
     is_email_verified = models.BooleanField(default=False)
     date_joined = models.DateField(auto_now_add=True)
 
