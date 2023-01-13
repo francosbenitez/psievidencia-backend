@@ -41,12 +41,12 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    role = models.CharField(max_length=12, choices=constants.ROLE_CHOICES, null=True)
+    role = models.CharField(max_length=12, choices=constants.ROLE_CHOICES)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20, blank=True)
-    lat = models.CharField(max_length=30, blank=True, null=True)
-    lng = models.CharField(max_length=30, blank=True, null=True)
+    lat = models.CharField(max_length=30, blank=True)
+    lng = models.CharField(max_length=30, blank=True)
     avatar = models.ImageField(upload_to="avatars")
     is_email_verified = models.BooleanField(default=False)
     date_joined = models.DateField(auto_now_add=True)
