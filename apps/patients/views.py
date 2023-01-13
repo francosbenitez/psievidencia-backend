@@ -4,15 +4,15 @@ from rest_framework.response import Response
 
 
 class Register(generics.GenericAPIView):
+    """Register patients"""
+
     serializer_class = RegisterPatientSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-
-        # send_activation_email(user, request)
+        patient = serializer.save()
 
         return Response(
-            PatientSerializer(user, context=self.get_serializer_context()).data
+            PatientSerializer(patient, context=self.get_serializer_context()).data
         )
