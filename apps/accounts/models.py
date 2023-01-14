@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = None
     email = models.EmailField(
-        unique=True, error_messages={"unique": "This email is already registered."}
+        unique=True, error_messages={"unique": "Este email ya está registrado."}
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
