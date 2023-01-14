@@ -15,4 +15,4 @@ class RegisterPatientSerializer(RegisterUserSerializer):
         fields = RegisterUserSerializer.Meta.fields
 
     def create(self, validated_data):
-        return RegisterUserSerializer.create(self, validated_data)
+        return super().create(validated_data)
