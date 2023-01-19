@@ -4,14 +4,12 @@ import apps.accounts.constants as constants
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Users must have an email address")
 
         email = self.normalize_email(email)
-        user = self.model(
-            email=email,
-        )
+        user = self.model(email=email, **extra_fields)
 
         user.set_password(password)
         user.save()
@@ -43,7 +41,9 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    role = models.CharField(max_length=12, choices=constants.ROLE_CHOICES)
+    role = models.CharField(
+        max_length=12, choices=constants.ROLE_CHOICES, null=False, blank=False
+    )
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -51,7 +51,6 @@ class User(AbstractBaseUser):
     lng = models.CharField(max_length=30, blank=True)
     avatar = models.ImageField(upload_to="avatars", blank=True)
     is_email_verified = models.BooleanField(default=False)
-    date_joined = models.DateField(auto_now_add=True)
 
     def has_perm(self, perm, obj=None):
         return True

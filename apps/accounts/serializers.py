@@ -5,27 +5,41 @@ from apps.accounts.models import User
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for users data"""
 
-    name = serializers.SerializerMethodField(read_only=True)
+    full_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        read_only_fields = ["name"]
+        fields = (
+            "id",
+            "email",
+            "role",
+            "first_name",
+            "last_name",
+            "full_name",
+            "phone_number",
+            "lat",
+            "lng",
+            "avatar",
+        )
 
-    def get_name(self, obj):
-        name = obj.first_name + " " + obj.last_name
-        if name == "":
-            name = obj.email
-        return name
+    def get_full_name(self, obj):
+        full_name = obj.first_name + " " + obj.last_name
+
+        if full_name == "":
+            full_name = obj.email
+
+        return full_name
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
-    """Required fields on registering users"""
+    """Required fields on registering"""
 
     class Meta:
         model = User
         fields = (
             "email",
             "password",
+            "role",
             "first_name",
             "last_name",
             "phone_number",
@@ -34,14 +48,12 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             "avatar",
         )
 
-    def create(self, validated_data):
-        validated_user = {
-            "email": validated_data["email"],
-            "password": validated_data["password"],
-        }
+    def validate_password(self, password):
+        password_minimum_length = 8
 
-        user = User.objects.create_user(**validated_user)
+        if len(password) < password_minimum_length:
+            raise serializers.ValidationError(
+                f"Password minimum length allowed is {password_minimum_length}"
+            )
 
-        print("validated_data", validated_data)
-
-        return user
+        return password

@@ -36,12 +36,10 @@ class Registration(models.Model):
 class Psychologist(User):
     description = models.TextField(max_length=255)
     gender_identity = models.CharField(
-        max_length=10,
-        choices=constants.GENDER_IDENTITIES,
-        default=constants.WOMAN,
+        max_length=10, choices=constants.GENDER_IDENTITIES, null=False, blank=False
     )
     education = models.CharField(
-        choices=constants.EDUCATIONS, max_length=255, default=constants.LICENSURE
+        choices=constants.EDUCATIONS, max_length=255, null=False, blank=False
     )
     social_networks = models.ForeignKey(
         SocialNetwork, on_delete=models.CASCADE, null=True
