@@ -3,20 +3,29 @@ import apps.psychologists.constants as constants
 from apps.accounts.models import User
 
 
-class Institution(models.Model):
-    name = models.CharField(max_length=255, blank=True)
+class BaseModel(models.Model):
+    name = models.CharField(max_length=255, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        abstract = True
+
+
+class Institution(BaseModel):
     url = models.CharField(max_length=255, blank=True)
 
 
-class RegularHealth(models.Model):
-    name = models.CharField(max_length=255, blank=True)
+class RegularHealth(BaseModel):
+    pass
 
 
-class PrepaidHealth(models.Model):
-    name = models.CharField(max_length=255, blank=True)
+class PrepaidHealth(BaseModel):
+    pass
 
 
-class Language(models.Model):
+class SessionLanguage(BaseModel):
     name = models.CharField(
         max_length=10,
         choices=constants.LANGUAGES,
@@ -24,20 +33,20 @@ class Language(models.Model):
     )
 
 
-class Specialization(models.Model):
-    name = models.CharField(max_length=255, null=True)
+class Specialization(BaseModel):
+    pass
 
 
-class TherapeuticModel(models.Model):
-    name = models.CharField(max_length=255, null=True)
+class TherapeuticModel(BaseModel):
+    pass
 
 
-class WorkPopulation(models.Model):
-    name = models.CharField(max_length=255, null=True)
+class WorkPopulation(BaseModel):
+    pass
 
 
-class WorkModality(models.Model):
-    name = models.CharField(max_length=255, null=True)
+class WorkModality(BaseModel):
+    pass
 
 
 class Psychologist(User):
@@ -61,17 +70,15 @@ class Psychologist(User):
     offers_first_session_free = models.BooleanField(default=False)
     knows_sign_language = models.BooleanField(default=False)
     price_hour = models.DecimalField(decimal_places=2, max_digits=20, null=True)
+    institution = models.ManyToManyField(Institution, null=True)
+    regular_health = models.ManyToManyField(RegularHealth, null=True)
+    prepaid_health = models.ManyToManyField(RegularHealth, null=True)
+    session_language = models.ManyToManyField(SessionLanguage, null=False)
+    specialization = models.ManyToManyField(Specialization, null=False)
+    therapeutic_model = models.ManyToManyField(TherapeuticModel, null=False)
+    work_population = models.ManyToManyField(WorkPopulation, null=False)
+    work_modality = models.ManyToManyField(WorkModality, null=False)
 
     rating_average = models.FloatField(default=0)
     review_count = models.IntegerField(default=0)
-
-    institution = models.ManyToManyField(Institution)
-    regular_health = models.ManyToManyField(RegularHealth)
-    prepaid_health = models.ManyToManyField(RegularHealth)
-    language = models.ManyToManyField(Language)
-    specialization = models.ManyToManyField(Specialization)
-    therapeutic_model = models.ManyToManyField(TherapeuticModel)
-    work_population = models.ManyToManyField(WorkPopulation)
-    work_modality = models.ManyToManyField(WorkModality)
-
     was_liked = models.BooleanField(default=False)
