@@ -1,7 +1,6 @@
-from rest_framework import serializers
-from apps.psychologists.models import Psychologist, SocialNetwork
-import apps.accounts.constants as constants
+from apps.psychologists.models import Psychologist
 from apps.accounts.serializers import UserSerializer, RegisterUserSerializer
+from apps.psychologists.utils import validate_profile
 
 
 class PsychologistSerializer(UserSerializer):
@@ -13,22 +12,13 @@ class PsychologistSerializer(UserSerializer):
             "description",
             "gender_identity",
             "education",
-            "social_networks",
+            "instagram_profile",
+            "linkedin_profile",
         )
-
-
-class SocialNetworkSerializer(serializers.ModelSerializer):
-    """Serializer for the SocialNetwork model"""
-
-    class Meta:
-        model = SocialNetwork
-        fields = ("facebook", "twitter", "instagram", "whatsapp")
 
 
 class RegisterPsychologistSerializer(RegisterUserSerializer):
     """Required fields on registering"""
-
-    social_networks = SocialNetworkSerializer(required=False)
 
     class Meta(RegisterUserSerializer.Meta):
         model = Psychologist
@@ -36,8 +26,15 @@ class RegisterPsychologistSerializer(RegisterUserSerializer):
             "description",
             "gender_identity",
             "education",
-            "social_networks",
+            "instagram_profile",
+            "linkedin_profile",
         )
+
+    def validate_linkedin_profile(self, linkedin_profile):
+        validate_profile(linkedin_profile)
+
+    def validate_instagram_profile(self, instagram_profile):
+        validate_profile(instagram_profile)
 
     def create(self, validated_data):
         psychologist = Psychologist.objects.create_user(**validated_data)
