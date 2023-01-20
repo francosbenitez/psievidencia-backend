@@ -6,6 +6,8 @@ def validate_profile(profile):
 
     for string in strings_to_check:
         if string in profile:
-            raise serializers.ValidationError("Por favor, ingresá el nombre de usuario")
+            raise serializers.ValidationError(
+                "Por favor, ingresá el nombre de usuario."
+            )
 
     return profile

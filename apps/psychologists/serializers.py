@@ -14,6 +14,8 @@ class PsychologistSerializer(UserSerializer):
             "education",
             "instagram_profile",
             "linkedin_profile",
+            "registration_name",
+            "registration_number",
         )
 
 
@@ -28,13 +30,15 @@ class RegisterPsychologistSerializer(RegisterUserSerializer):
             "education",
             "instagram_profile",
             "linkedin_profile",
+            "registration_name",
+            "registration_number",
         )
 
     def validate_linkedin_profile(self, linkedin_profile):
-        validate_profile(linkedin_profile)
+        return validate_profile(linkedin_profile)
 
     def validate_instagram_profile(self, instagram_profile):
-        validate_profile(instagram_profile)
+        return validate_profile(instagram_profile)
 
     def create(self, validated_data):
         psychologist = Psychologist.objects.create_user(**validated_data)
