@@ -1,9 +1,5 @@
 name: flat
-
-on:
-  schedule:
-    - cron: "0 15 * * *"
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   scheduled:
     runs-on: ubuntu-latest
